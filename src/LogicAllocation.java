@@ -18,11 +18,12 @@ public class LogicAllocation {
 		case ADD_TIMED_DATED:
 			return addTimedDated(instruction);		
 		case INVALID:
-			return String.format(MESSAGE_INVALID_FORMAT, userCommand); //or rasie some sort of exception
+			return String.format(MESSAGE_INVALID_FORMAT, userCommand); //or raise some sort of exception
 		case EXIT:
 			System.exit(0);
 		default:
 			//throw an error if the command is not recognized
+			//or raise some sort of exception
 			throw new Error("Unrecognized command type");
 		}
 	}
