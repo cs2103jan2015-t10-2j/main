@@ -1,5 +1,6 @@
 public class Event {
 
+    private int taskID;
     private String taskName;
     private String taskTime;
     private String taskDate;
@@ -8,6 +9,14 @@ public class Event {
     private TaskPriority taskPriority;
     private boolean isDone;
     private boolean isRecurring;
+
+    public int getTaskID() {
+        return taskID;
+    }
+
+    public void setTaskID(int taskID) {
+        this.taskID = taskID;
+    }
 
     public String getTaskName() {
         return taskName;
