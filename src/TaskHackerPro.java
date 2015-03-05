@@ -13,11 +13,13 @@ public class TaskHackerPro {
 
     private Map<String, ICommandHandler> commandHandlerMap;
     private boolean isContinue = true;
+    private Event event;
 
     public TaskHackerPro() {
         commandHandlerMap = new HashMap<String, ICommandHandler>();
         commandHandlerMap.put("add", new AddCommandHandler());
         commandHandlerMap.put("exit", new ExitCommandHandler(this));
+        commandHandlerMap.put("done", new DoneCommandHandler(event));
     }
 
     public void printErrorMsg() {
