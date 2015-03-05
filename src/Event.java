@@ -1,9 +1,13 @@
-public class Event {
+import java.io.Serializable;
+import java.util.Calendar;
+
+public class Event implements Serializable {
+
+    private static final long serialVersionUID = -6301813687015638579L;
 
     private int taskID;
     private String taskName;
-    private String taskTime;
-    private String taskDate;
+    private Calendar taskDate;
     private String taskLocation;
     private String taskDescription;
     private TaskPriority taskPriority;
@@ -26,19 +30,11 @@ public class Event {
         this.taskName = taskName;
     }
 
-    public String getTaskTime() {
-        return taskTime;
-    }
-
-    public void setTaskTime(String taskTime) {
-        this.taskTime = taskTime;
-    }
-
-    public String getTaskDate() {
+    public Calendar getTaskDate() {
         return taskDate;
     }
 
-    public void setTaskDate(String taskDate) {
+    public void setTaskDate(Calendar taskDate) {
         this.taskDate = taskDate;
     }
 
@@ -82,4 +78,15 @@ public class Event {
         this.isRecurring = isRecurring;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Event)) {
+            return false;
+        }
+
+        Event e = (Event) o;
+        boolean isSame = (this.taskID == e.taskID);
+
+        return isSame;
+    }
 }
