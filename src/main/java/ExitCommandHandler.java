@@ -15,9 +15,10 @@ public class ExitCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public void parseCommand(String command) {
+    public boolean parseCommand(String command) {
         taskHackerPro.setContinue(false);
         System.out.println("Bye!");
+        return true;
     }
 
 }

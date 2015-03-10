@@ -16,8 +16,8 @@ public class AddCommandHandler implements ICommandHandler {
      * @see ICommandHandler#parseCommand(java.lang.String)
      */
     @Override
-    public void parseCommand(String command) {
-        System.out.println(command);
+    public boolean parseCommand(String command) {
+        return true;
     }
 
 }
