@@ -12,12 +12,15 @@ import java.util.Scanner;
 public class TaskHackerPro {
 
     private Map<String, ICommandHandler> commandHandlerMap;
+    private TaskData taskData;
     private boolean isContinue = true;
     private Event event;
 
     public TaskHackerPro() {
+        taskData = new TaskData();
+
         commandHandlerMap = new HashMap<String, ICommandHandler>();
-        commandHandlerMap.put("add", new AddCommandHandler());
+        commandHandlerMap.put("add", new AddCommandHandler(taskData));
         commandHandlerMap.put("exit", new ExitCommandHandler(this));
         commandHandlerMap.put("done", new DoneCommandHandler(event));
     }
@@ -36,8 +39,8 @@ public class TaskHackerPro {
             if (handler == null) {
                 printErrorMsg();
             } else if (handler.isValid(inputLine)) {
-                if(handler.parseCommand(inputLine)) {
-                    if(!handler.executeCommand()) {
+                if (handler.parseCommand(inputLine)) {
+                    if (!handler.executeCommand()) {
                         printErrorMsg();
                     }
                 } else {
