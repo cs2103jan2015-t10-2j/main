@@ -60,6 +60,11 @@ public class AddCommandHandler implements ICommandHandler {
         return true;
     }
 
+    @Override
+    public boolean executeCommand() {
+        return false;
+    }
+
     public Event getEvent() {
         return event;
     }

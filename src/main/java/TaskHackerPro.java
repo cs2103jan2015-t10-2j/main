@@ -36,7 +36,13 @@ public class TaskHackerPro {
             if (handler == null) {
                 printErrorMsg();
             } else if (handler.isValid(inputLine)) {
-                handler.parseCommand(inputLine);
+                if(handler.parseCommand(inputLine)) {
+                    if(!handler.executeCommand()) {
+                        printErrorMsg();
+                    }
+                } else {
+                    printErrorMsg();
+                }
             } else {
                 printErrorMsg();
             }
