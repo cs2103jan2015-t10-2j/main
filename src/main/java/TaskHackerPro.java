@@ -14,7 +14,6 @@ public class TaskHackerPro {
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;
-    private Event event;
 
     public TaskHackerPro() {
         taskData = new TaskData();
@@ -22,7 +21,7 @@ public class TaskHackerPro {
         commandHandlerMap = new HashMap<String, ICommandHandler>();
         commandHandlerMap.put("add", new AddCommandHandler(taskData));
         commandHandlerMap.put("exit", new ExitCommandHandler(this));
-        commandHandlerMap.put("done", new DoneCommandHandler(event));
+        commandHandlerMap.put("done", new DoneCommandHandler(taskData));
     }
 
     public void printErrorMsg() {
