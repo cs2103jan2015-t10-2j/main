@@ -176,4 +176,5 @@ public class DataManagerTest {
         assertFalse(dataManager.hasKeyWord(event2, "Name3"));
     	
     }
+    
 }
