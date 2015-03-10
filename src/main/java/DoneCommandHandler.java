@@ -20,9 +20,12 @@ public class DoneCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public void parseCommand(String command) {
-        
-
+    public boolean parseCommand(String command) {
+        return true;
     }
 
+    @Override
+    public boolean executeCommand() {
+        return false;
+    }
 }
