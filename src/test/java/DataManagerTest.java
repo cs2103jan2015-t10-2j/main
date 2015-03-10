@@ -25,14 +25,22 @@ public class DataManagerTest {
     
     @Test
     public void testSaveAndLoad() {
+        TaskData taskDataToSave = new TaskData();
         Event eventToSave = new Event();
+        
         eventToSave.setTaskID(23456);
         eventToSave.setTaskName("Task Name");
+        taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
-        dataManager.saveEventToFile(testFilePath, eventToSave);
-        Event eventLoaded = dataManager.loadEventFromFile(testFilePath);
+        eventToSave = new Event();
+        eventToSave.setTaskID(45678);
+        eventToSave.setTaskName("Task Name 2");
+        taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);        
+
+        dataManager.saveTaskDataToFile(testFilePath, taskDataToSave);
+        TaskData taskDataToLoad = dataManager.loadTaskDataFromFile(testFilePath);
         
-        assertEquals(eventToSave, eventLoaded);
+        assertEquals(taskDataToSave, taskDataToLoad);
     }
 
 }

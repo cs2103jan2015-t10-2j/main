@@ -6,12 +6,12 @@ import java.io.ObjectOutputStream;
 
 public class DataManager {
 
-    public void saveEventToFile(String filePath, Event event) {
+    public void saveTaskDataToFile(String filePath, TaskData taskData) {
         try {
             FileOutputStream fos = new FileOutputStream(filePath);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-            oos.writeObject(event);
+            oos.writeObject(taskData);
 
             oos.close();
 
@@ -20,17 +20,17 @@ public class DataManager {
         }
     }
 
-    public Event loadEventFromFile(String filePath) {
+    public TaskData loadTaskDataFromFile(String filePath) {
         FileInputStream fis;
         try {
             fis = new FileInputStream(filePath);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
-            Event e = (Event) ois.readObject();
+            TaskData taskData = (TaskData) ois.readObject();
             ois.close();
-            return e;
-        } catch (IOException | ClassNotFoundException e1) {
-            e1.printStackTrace();
+            return taskData;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return null;
     }
