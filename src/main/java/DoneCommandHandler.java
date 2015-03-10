@@ -24,4 +24,8 @@ public class DoneCommandHandler implements ICommandHandler {
         return true;
     }
 
+    @Override
+    public boolean executeCommand() {
+        return false;
+    }
 }
