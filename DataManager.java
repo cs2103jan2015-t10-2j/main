@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class DataManager {
 	
-
+	//save events one by one to file
     public void saveEventToFile(String filePath, Event event) {
     	   File file = new File(filePath);
            ObjectOutputStream out = null;
