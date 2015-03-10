@@ -5,22 +5,25 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class AddCommandHandler implements ICommandHandler {
 
-    private Event event;
+    private TaskData taskData;
     private Pattern patternAddCommand;
+    private Event event;
+
     private Matcher patternMatcher;
     private SimpleDateFormat timeFormat;
-    
+
     private String addCommandFormat = "add at (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
     private String timeFormatString = "h:m d/M/y";
-    
-    public AddCommandHandler() {
+
+    public AddCommandHandler(TaskData taskData) {
+        this.taskData = taskData;
+
         patternAddCommand = Pattern.compile(addCommandFormat);
         timeFormat = new SimpleDateFormat(timeFormatString);
     }
-    
+
     @Override
     public boolean isValid(String command) {
         if (command.isEmpty()) {
@@ -31,10 +34,11 @@ public class AddCommandHandler implements ICommandHandler {
         }
     }
 
-    /* 
+    /*
      * add at [time] [date] @ [location] desc "[description]"
      * 
      * (non-Javadoc)
+     * 
      * @see ICommandHandler#parseCommand(java.lang.String)
      */
     @Override
@@ -43,7 +47,7 @@ public class AddCommandHandler implements ICommandHandler {
         String location = patternMatcher.group("location");
         String description = patternMatcher.group("description");
         Calendar taskDate = Calendar.getInstance();
-        
+
         try {
             Date parsedDate = timeFormat.parse(time);
             taskDate.setTime(parsedDate);
@@ -51,18 +55,25 @@ public class AddCommandHandler implements ICommandHandler {
             e.printStackTrace();
             return false;
         }
-        
+
         event = new Event();
         event.setTaskLocation(location);
         event.setTaskDescription(description);
         event.setTaskDate(taskDate);
-        
+
         return true;
     }
 
     @Override
     public boolean executeCommand() {
-        return false;
+        boolean isExist = taskData.getEventMap().containsKey(event.getTaskID());
+
+        if (isExist) {
+            return false;
+        } else {
+            taskData.getEventMap().put(event.getTaskID(), event);
+            return true;
+        }
     }
 
     public Event getEvent() {
