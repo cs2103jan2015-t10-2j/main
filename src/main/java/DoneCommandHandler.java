@@ -1,22 +1,33 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DoneCommandHandler implements ICommandHandler {
 
-    private Event event;
+    private TaskData taskData;
+    private int taskId;
 
-    public DoneCommandHandler(Event event) {
-        this.event = event;
+    private Pattern patternDoneCommand;
+
+    private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
+
+    public DoneCommandHandler(TaskData taskData) {
+        this.taskData = taskData;
+        patternDoneCommand = Pattern.compile(doneCommandFormat);
     }
-    
+
     @Override
     public boolean isValid(String command) {
         try {
-            if (Integer.parseInt(command)==(event.getTaskID())){
+            Matcher matcher = patternDoneCommand.matcher(command);
+            if (matcher.matches()) {
+                taskId = Integer.parseInt(matcher.group("taskId"));
                 return true;
+            } else {
+                return false;
             }
         } catch (NumberFormatException e) {
             return false;
         }
-        return false;
     }
 
     @Override
@@ -26,6 +37,16 @@ public class DoneCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-        return false;
+        boolean isExist = (taskData.getEventMap() != null 
+                && taskData.getEventMap().containsKey(taskId));
+
+        if (isExist) {
+            Event eventDone = taskData.getEventMap().get(taskId);
+            eventDone.setDone(true);
+            
+            return true;
+        } else {
+            return false;
+        }
     }
 }
