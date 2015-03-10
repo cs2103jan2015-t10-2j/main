@@ -12,7 +12,23 @@ public class TaskData implements Serializable {
         eventMap = new HashMap<Integer, Event>();
     }
 
-    public Map<Integer, Event> getEventMap() {
+    public Map<Integer, Event> getEventMap() {        
         return eventMap;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof TaskData)) {
+            return false;
+        }
+
+        TaskData taskData = (TaskData) obj;
+        if(this.eventMap == null || taskData.eventMap == null) {
+            return false;
+        } else if(!this.eventMap.equals(taskData.eventMap)) {
+            return false;
+        }
+        
+        return true;
     }
 }
