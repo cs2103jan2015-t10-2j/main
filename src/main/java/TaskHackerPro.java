@@ -1,7 +1,5 @@
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * 
@@ -11,6 +9,7 @@ import java.util.Scanner;
 
 public class TaskHackerPro {
 
+    private IInputSource inputSource;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;
@@ -19,19 +18,25 @@ public class TaskHackerPro {
         System.out.println("Error!");
     }
 
-    public void parseCommand(InputStream is) {
-        Scanner scanner = new Scanner(is);
-
-        do {
-            String command = scanner.next();
+    public void parseCommand() {
+        while (isContinue && inputSource.hasNextLine()) {
+            String inputLine = inputSource.getNextLine();
+            int commandEndPosition = inputLine.indexOf(' ');
+            String command;
+            
+            if(commandEndPosition >= 0) {
+                command = inputLine.substring(0, commandEndPosition);
+            } else {
+                command = inputLine;
+            }
+            
             ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
+            boolean isExtraInputNeeded = false;
 
             if (handler == null) {
                 printErrorMsg();
             } else {
                 do {
-                    String inputLine = (command + scanner.nextLine()).trim();
-
                     if (handler.parseCommand(inputLine)) {
                         if (!handler.executeCommand()) {
                             printErrorMsg();
@@ -39,11 +44,14 @@ public class TaskHackerPro {
                     } else {
                         printErrorMsg();
                     }
-                } while (handler.isExtraInputNeeded());
-            }
-        } while (isContinue);
 
-        scanner.close();
+                    isExtraInputNeeded = handler.isExtraInputNeeded();
+                    if (isExtraInputNeeded) {
+                        inputLine = inputSource.getNextLine();
+                    }
+                } while (isExtraInputNeeded);
+            }
+        }
     }
 
     public TaskData getTaskData() {
@@ -53,6 +61,10 @@ public class TaskHackerPro {
     public void setCommandHandlerMap(
             Map<String, ICommandHandler> commandHandlerMap) {
         this.commandHandlerMap = commandHandlerMap;
+    }
+
+    public void setInputSource(IInputSource inputSource) {
+        this.inputSource = inputSource;
     }
 
     public void setTaskData(TaskData taskData) {
@@ -67,6 +79,7 @@ public class TaskHackerPro {
         System.out.println("Welcome to TaskHackerPro!");
 
         TaskHackerPro taskHackerPro = new TaskHackerPro();
+        IInputSource inputSorurce = new ConsoleInputSource(System.in);
         Map<String, ICommandHandler> commandHandlerMap = new HashMap<String, ICommandHandler>();
         TaskData taskData = new TaskData();
 
@@ -74,7 +87,8 @@ public class TaskHackerPro {
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
         commandHandlerMap.put("done", new DoneCommandHandler(taskData));
 
+        taskHackerPro.setInputSource(inputSorurce);
         taskHackerPro.setCommandHandlerMap(commandHandlerMap);
-        taskHackerPro.parseCommand(System.in);
+        taskHackerPro.parseCommand();
     }
 }
