@@ -6,17 +6,19 @@ public class DoneCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private int taskId;
 
-    private Pattern patternDoneCommand;
-
     private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
+    private static final Pattern patternDoneCommand;
 
-    public DoneCommandHandler(TaskData taskData) {
-        this.taskData = taskData;
+    static {
         patternDoneCommand = Pattern.compile(doneCommandFormat);
     }
 
+    public DoneCommandHandler(TaskData taskData) {
+        this.taskData = taskData;
+    }
+
     @Override
-    public boolean isValid(String command) {
+    public boolean parseCommand(String command) {
         try {
             Matcher matcher = patternDoneCommand.matcher(command);
             if (matcher.matches()) {
@@ -31,11 +33,6 @@ public class DoneCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean parseCommand(String command) {
-        return true;
-    }
-
-    @Override
     public boolean executeCommand() {
         boolean isExist = (taskData.getEventMap() != null 
                 && taskData.getEventMap().containsKey(taskId));
@@ -43,7 +40,7 @@ public class DoneCommandHandler implements ICommandHandler {
         if (isExist) {
             Event eventDone = taskData.getEventMap().get(taskId);
             eventDone.setDone(true);
-            
+
             return true;
         } else {
             return false;
