@@ -46,4 +46,9 @@ public class DoneCommandHandler implements ICommandHandler {
             return false;
         }
     }
+
+    @Override
+    public boolean isExtraInputNeeded() {
+        return false;
+    }
 }

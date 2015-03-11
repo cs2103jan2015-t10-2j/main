@@ -8,7 +8,7 @@ public class ExitCommandHandler implements ICommandHandler {
 
     @Override
     public boolean parseCommand(String command) {
-        if (command.isEmpty()) {
+        if ("exit".equals(command)) {
             return true;
         }
         return false;
@@ -19,5 +19,10 @@ public class ExitCommandHandler implements ICommandHandler {
         taskHackerPro.setContinue(false);
         System.out.println("Bye!");
         return true;
+    }
+
+    @Override
+    public boolean isExtraInputNeeded() {
+        return false;
     }
 }

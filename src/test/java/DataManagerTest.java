@@ -1,6 +1,7 @@
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.util.Calendar;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,14 +27,23 @@ public class DataManagerTest {
     public void testSaveAndLoad() {
         TaskData taskDataToSave = new TaskData();
         Event eventToSave = new Event();
+        Calendar c1 = Calendar.getInstance();
+        c1.set(2012, 9, 14);
 
         eventToSave.setTaskID(23456);
-        eventToSave.setTaskName("Task Name");
+        eventToSave.setTaskName("Task Name 1");
+        eventToSave.setTaskDate(c1);
+        eventToSave.setTaskPriority(TaskPriority.MEDIUM);
+        eventToSave.setTaskLocation("Woodlands");
+        eventToSave.setTaskDescription("be in Woodlands for dinner");
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
         eventToSave = new Event();
-        eventToSave.setTaskID(45678);
-        eventToSave.setTaskName("Task Name 2");
+        eventToSave.setTaskID(98765);
+        eventToSave.setTaskName("Task Name2");
+        eventToSave.setTaskPriority(TaskPriority.HIGH);
+        eventToSave.setTaskLocation("IMM");
+        eventToSave.setTaskDescription("Shopping in IMM");
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
         dataManager.saveTaskDataToFile(testFilePath, taskDataToSave);
