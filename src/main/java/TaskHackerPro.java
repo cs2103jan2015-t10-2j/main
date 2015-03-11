@@ -15,15 +15,6 @@ public class TaskHackerPro {
     private TaskData taskData;
     private boolean isContinue = true;
 
-    public TaskHackerPro() {
-        taskData = new TaskData();
-
-        commandHandlerMap = new HashMap<String, ICommandHandler>();
-        commandHandlerMap.put("add", new AddCommandHandler(taskData));
-        commandHandlerMap.put("exit", new ExitCommandHandler(this));
-        commandHandlerMap.put("done", new DoneCommandHandler(taskData));
-    }
-
     public void printErrorMsg() {
         System.out.println("Error!");
     }
@@ -55,12 +46,35 @@ public class TaskHackerPro {
         scanner.close();
     }
 
-    public static void main(String[] args) {
-        System.out.println("Welcome to TaskHackerPro!");
-        new TaskHackerPro().parseCommand(System.in);
+    public TaskData getTaskData() {
+        return taskData;
+    }
+
+    public void setCommandHandlerMap(
+            Map<String, ICommandHandler> commandHandlerMap) {
+        this.commandHandlerMap = commandHandlerMap;
+    }
+
+    public void setTaskData(TaskData taskData) {
+        this.taskData = taskData;
     }
 
     public void setContinue(boolean isContinue) {
         this.isContinue = isContinue;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to TaskHackerPro!");
+
+        TaskHackerPro taskHackerPro = new TaskHackerPro();
+        Map<String, ICommandHandler> commandHandlerMap = new HashMap<String, ICommandHandler>();
+        TaskData taskData = new TaskData();
+
+        commandHandlerMap.put("add", new AddCommandHandler(taskData));
+        commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
+        commandHandlerMap.put("done", new DoneCommandHandler(taskData));
+
+        taskHackerPro.setCommandHandlerMap(commandHandlerMap);
+        taskHackerPro.parseCommand(System.in);
     }
 }
