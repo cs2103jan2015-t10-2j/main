@@ -37,12 +37,8 @@ public class TaskHackerPro {
             ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
             if (handler == null) {
                 printErrorMsg();
-            } else if (handler.isValid(inputLine)) {
-                if (handler.parseCommand(inputLine)) {
-                    if (!handler.executeCommand()) {
-                        printErrorMsg();
-                    }
-                } else {
+            } else if (handler.parseCommand(inputLine)) {
+                if (!handler.executeCommand()) {
                     printErrorMsg();
                 }
             } else {
