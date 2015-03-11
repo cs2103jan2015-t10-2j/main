@@ -39,7 +39,7 @@ public class TaskHackerPro {
                     } else {
                         printErrorMsg();
                     }
-                } while (!handler.isExtraInputNeeded());
+                } while (handler.isExtraInputNeeded());
             }
         } while (isContinue);
 
