@@ -33,16 +33,22 @@ public class TaskHackerPro {
 
         do {
             String command = scanner.next();
-            String inputLine = scanner.nextLine().trim();
             ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
+
             if (handler == null) {
                 printErrorMsg();
-            } else if (handler.parseCommand(inputLine)) {
-                if (!handler.executeCommand()) {
-                    printErrorMsg();
-                }
             } else {
-                printErrorMsg();
+                do {
+                    String inputLine = (command + scanner.nextLine()).trim();
+
+                    if (handler.parseCommand(inputLine)) {
+                        if (!handler.executeCommand()) {
+                            printErrorMsg();
+                        }
+                    } else {
+                        printErrorMsg();
+                    }
+                } while (!handler.isExtraInputNeeded());
             }
         } while (isContinue);
 
