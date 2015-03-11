@@ -8,30 +8,20 @@ import java.util.regex.Pattern;
 public class AddCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
-    private Pattern patternAddCommand;
     private Event event;
 
-    private Matcher patternMatcher;
-    private SimpleDateFormat timeFormat;
+    private static final String addCommandFormat = "add at (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
+    private static final String timeFormatString = "h:m d/M/y";
+    private static final Pattern patternAddCommand;
+    private static final SimpleDateFormat timeFormat;
 
-    private String addCommandFormat = "add at (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
-    private String timeFormatString = "h:m d/M/y";
-
-    public AddCommandHandler(TaskData taskData) {
-        this.taskData = taskData;
-
+    static {
         patternAddCommand = Pattern.compile(addCommandFormat);
         timeFormat = new SimpleDateFormat(timeFormatString);
     }
 
-    @Override
-    public boolean isValid(String command) {
-        if (command.isEmpty()) {
-            return false;
-        } else {
-            patternMatcher = patternAddCommand.matcher(command);
-            return patternMatcher.matches();
-        }
+    public AddCommandHandler(TaskData taskData) {
+        this.taskData = taskData;
     }
 
     /*
@@ -43,6 +33,17 @@ public class AddCommandHandler implements ICommandHandler {
      */
     @Override
     public boolean parseCommand(String command) {
+        Matcher patternMatcher;
+
+        if (command.isEmpty()) {
+            return false;
+        } else {
+            patternMatcher = patternAddCommand.matcher(command);
+            if (!patternMatcher.matches()) {
+                return false;
+            }
+        }
+
         String time = patternMatcher.group("time");
         String location = patternMatcher.group("location");
         String description = patternMatcher.group("description");

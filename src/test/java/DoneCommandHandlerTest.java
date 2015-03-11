@@ -25,7 +25,6 @@ public class DoneCommandHandlerTest {
         taskData.getEventMap().put(event.getTaskID(), event);
 
         assertFalse(taskData.getEventMap().get(taskId).isDone());
-        assertTrue(doneCommandHandler.isValid(commandDone));
         assertTrue(doneCommandHandler.parseCommand(commandDone));
         assertTrue(doneCommandHandler.executeCommand());
         assertTrue(taskData.getEventMap().get(taskId).isDone());
