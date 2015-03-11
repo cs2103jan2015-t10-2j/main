@@ -15,7 +15,7 @@ public class DeleteCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean isValid(String command) {
+    public boolean parseCommand(String command) {
         if (command.isEmpty()) {
             return false;
         } else {
@@ -27,11 +27,6 @@ public class DeleteCommandHandler implements ICommandHandler {
                 return false;
             }
         }
-    }
-
-    @Override
-    public boolean parseCommand(String command) {
-        return true;
     }
 
     @Override
