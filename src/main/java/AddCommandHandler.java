@@ -11,7 +11,6 @@ public class AddCommandHandler implements ICommandHandler {
     private Pattern patternAddCommand;
     private Event event;
 
-    private Matcher patternMatcher;
     private SimpleDateFormat timeFormat;
 
     private String addCommandFormat = "add at (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
@@ -24,16 +23,6 @@ public class AddCommandHandler implements ICommandHandler {
         timeFormat = new SimpleDateFormat(timeFormatString);
     }
 
-    @Override
-    public boolean isValid(String command) {
-        if (command.isEmpty()) {
-            return false;
-        } else {
-            patternMatcher = patternAddCommand.matcher(command);
-            return patternMatcher.matches();
-        }
-    }
-
     /*
      * add at [time] [date] @ [location] desc "[description]"
      * 
@@ -43,6 +32,17 @@ public class AddCommandHandler implements ICommandHandler {
      */
     @Override
     public boolean parseCommand(String command) {
+        Matcher patternMatcher;
+        
+        if (command.isEmpty()) {
+            return false;
+        } else {
+            patternMatcher = patternAddCommand.matcher(command);
+            if(!patternMatcher.matches()) {
+                return false;
+            }
+        }
+
         String time = patternMatcher.group("time");
         String location = patternMatcher.group("location");
         String description = patternMatcher.group("description");

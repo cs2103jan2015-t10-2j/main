@@ -21,7 +21,6 @@ public class AddCommandHandlerTest {
 
     @Test
     public void testParseCommand() {
-        assertTrue(addCommandHandler.isValid(commandAdd));
         assertTrue(addCommandHandler.parseCommand(commandAdd));
 
         Event event = addCommandHandler.getEvent();
@@ -31,7 +30,6 @@ public class AddCommandHandlerTest {
 
     @Test
     public void testExecuteCommand() {
-        assertTrue(addCommandHandler.isValid(commandAdd));
         assertTrue(addCommandHandler.parseCommand(commandAdd));
         assertTrue(addCommandHandler.executeCommand());
 

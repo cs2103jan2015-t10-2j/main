@@ -26,7 +26,6 @@ public class DeleteCommandHandlerTest {
         taskData.getEventMap().put(event.getTaskID(), event);
 
         assertTrue(taskData.getEventMap().containsKey(taskId));
-        assertTrue(deleteCommandHandler.isValid(commandDelete));
         assertTrue(deleteCommandHandler.parseCommand(commandDelete));
         assertTrue(deleteCommandHandler.executeCommand());
         assertFalse(taskData.getEventMap().containsKey(taskId));
