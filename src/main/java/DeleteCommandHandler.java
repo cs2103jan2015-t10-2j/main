@@ -42,4 +42,8 @@ public class DeleteCommandHandler implements ICommandHandler {
         return false;
     }
 
+    @Override
+    public boolean isExtraInputNeeded() {
+        return false;
+    }
 }
