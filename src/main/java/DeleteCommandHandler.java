@@ -6,20 +6,23 @@ public class DeleteCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private int taskId;
 
-    private Pattern patternAddCommand;
     private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
+    private static final Pattern patternDelteCommand;
+
+    static {
+        patternDelteCommand = Pattern.compile(deleteCommandFormat);
+    }
 
     public DeleteCommandHandler(TaskData taskData) {
         this.taskData = taskData;
-        patternAddCommand = Pattern.compile(deleteCommandFormat);
     }
 
     @Override
-    public boolean isValid(String command) {
+    public boolean parseCommand(String command) {
         if (command.isEmpty()) {
             return false;
         } else {
-            Matcher patternMatcher = patternAddCommand.matcher(command);
+            Matcher patternMatcher = patternDelteCommand.matcher(command);
             if (patternMatcher.matches()) {
                 taskId = Integer.parseInt(patternMatcher.group("taskId"));
                 return true;
@@ -27,11 +30,6 @@ public class DeleteCommandHandler implements ICommandHandler {
                 return false;
             }
         }
-    }
-
-    @Override
-    public boolean parseCommand(String command) {
-        return true;
     }
 
     @Override
