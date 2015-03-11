@@ -6,13 +6,15 @@ public class DoneCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private int taskId;
 
-    private Pattern patternDoneCommand;
-
     private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
+    private static final Pattern patternDoneCommand;
+
+    static {
+        patternDoneCommand = Pattern.compile(doneCommandFormat);
+    }
 
     public DoneCommandHandler(TaskData taskData) {
         this.taskData = taskData;
-        patternDoneCommand = Pattern.compile(doneCommandFormat);
     }
 
     @Override
