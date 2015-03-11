@@ -5,32 +5,30 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddCommandHandler implements ICommandHandler {
+public class AlterCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
-    private Event event;
+    private int eventId;
+    private String time;
+    private String location;
+    private String description;
+    private Calendar taskDate;
 
-    private static final String addCommandFormat = "add at (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
+    // for V0.2, we shall require that users pass us all the fields again.
+    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+) as (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
     private static final String timeFormatString = "h:m d/M/y";
-    private static final Pattern patternAddCommand;
+    private static final Pattern patternUpdateCommand;
     private static final SimpleDateFormat timeFormat;
 
     static {
-        patternAddCommand = Pattern.compile(addCommandFormat);
+        patternUpdateCommand = Pattern.compile(updateCommandFormat);
         timeFormat = new SimpleDateFormat(timeFormatString);
     }
 
-    public AddCommandHandler(TaskData taskData) {
+    public AlterCommandHandler(TaskData taskData) {
         this.taskData = taskData;
     }
 
-    /*
-     * add at [time] [date] @ [location] desc "[description]"
-     * 
-     * (non-Javadoc)
-     * 
-     * @see ICommandHandler#parseCommand(java.lang.String)
-     */
     @Override
     public boolean parseCommand(String command) {
         Matcher patternMatcher;
@@ -38,16 +36,17 @@ public class AddCommandHandler implements ICommandHandler {
         if (command.isEmpty()) {
             return false;
         } else {
-            patternMatcher = patternAddCommand.matcher(command);
+            patternMatcher = patternUpdateCommand.matcher(command);
             if (!patternMatcher.matches()) {
                 return false;
             }
         }
 
-        String time = patternMatcher.group("time");
-        String location = patternMatcher.group("location");
-        String description = patternMatcher.group("description");
-        Calendar taskDate = Calendar.getInstance();
+        eventId = Integer.parseInt(patternMatcher.group("eventID"));
+        time = patternMatcher.group("time");
+        location = patternMatcher.group("location");
+        description = patternMatcher.group("description");
+        taskDate = Calendar.getInstance();
 
         try {
             Date parsedDate = timeFormat.parse(time);
@@ -57,22 +56,20 @@ public class AddCommandHandler implements ICommandHandler {
             return false;
         }
 
-        event = new Event();
-        event.setTaskLocation(location);
-        event.setTaskDescription(description);
-        event.setTaskDate(taskDate);
-
         return true;
     }
 
     @Override
     public boolean executeCommand() {
-        boolean isExist = taskData.getEventMap().containsKey(event.getTaskID());
+        boolean isExist = taskData.getEventMap().containsKey(eventId);
 
         if (isExist) {
             return false;
         } else {
-            taskData.getEventMap().put(event.getTaskID(), event);
+            Event event = taskData.getEventMap().get(eventId);
+            event.setTaskLocation(location);
+            event.setTaskDescription(description);
+            event.setTaskDate(taskDate);
             return true;
         }
     }
@@ -80,9 +77,5 @@ public class AddCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return false;
-    }
-
-    public Event getEvent() {
-        return event;
     }
 }
