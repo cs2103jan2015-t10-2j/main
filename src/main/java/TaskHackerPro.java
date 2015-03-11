@@ -86,6 +86,8 @@ public class TaskHackerPro {
         commandHandlerMap.put("add", new AddCommandHandler(taskData));
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
         commandHandlerMap.put("done", new DoneCommandHandler(taskData));
+        commandHandlerMap.put("search", new SearchCommandHandler(taskData));
+        commandHandlerMap.put("view_diff_time", new CalendarViewCommandHandler(taskData));
 
         taskHackerPro.setInputSource(inputSorurce);
         taskHackerPro.setCommandHandlerMap(commandHandlerMap);
