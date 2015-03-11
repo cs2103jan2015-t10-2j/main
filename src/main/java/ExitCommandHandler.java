@@ -20,4 +20,9 @@ public class ExitCommandHandler implements ICommandHandler {
         System.out.println("Bye!");
         return true;
     }
+
+    @Override
+    public boolean isExtraInputNeeded() {
+        return false;
+    }
 }

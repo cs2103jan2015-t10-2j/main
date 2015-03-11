@@ -77,6 +77,11 @@ public class AddCommandHandler implements ICommandHandler {
         }
     }
 
+    @Override
+    public boolean isExtraInputNeeded() {
+        return false;
+    }
+
     public Event getEvent() {
         return event;
     }
