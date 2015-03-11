@@ -14,13 +14,17 @@ public class TaskHackerPro {
     private Map<String, ICommandHandler> commandHandlerMap;
     private boolean isContinue = true;
     private Event event;
+    private String filePath = "TaskHackerPro.dat";
 
     public TaskHackerPro() {
         commandHandlerMap = new HashMap<String, ICommandHandler>();
         commandHandlerMap.put("add", new AddCommandHandler());
         commandHandlerMap.put("exit", new ExitCommandHandler(this));
         commandHandlerMap.put("done", new DoneCommandHandler(event));
+        commandHandlerMap.put("search", new SearchCommandHandler());
+        commandHandlerMap.put("view_diff_time", new CalendarView());
     }
+    
 
     public void printErrorMsg() {
         System.out.println("Error!");
@@ -43,6 +47,10 @@ public class TaskHackerPro {
         } while (isContinue);
 
         scanner.close();
+    }
+    
+    public String getFileName(){
+    	return filePath;
     }
 
     public static void main(String[] args) {
