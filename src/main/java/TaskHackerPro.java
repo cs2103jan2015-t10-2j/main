@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +15,13 @@ public class TaskHackerPro {
     private TaskData taskData;
     private boolean isContinue = true;
 
-    public void printErrorMsg() {
-        System.out.println("Error!");
+    private static final String PATH_TO_LOAD_AND_SAVE_DATA = "bin/TaskHackerPro.dat";
+    private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
+    private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
+    private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
+
+    public void printErrorMsg(String command, String message) {
+        System.out.printf("%s: %s\n", command, message);
     }
 
     public void parseCommand() {
@@ -23,26 +29,27 @@ public class TaskHackerPro {
             String inputLine = inputSource.getNextLine();
             int commandEndPosition = inputLine.indexOf(' ');
             String command;
-            
-            if(commandEndPosition >= 0) {
+
+            if (commandEndPosition >= 0) {
                 command = inputLine.substring(0, commandEndPosition);
             } else {
                 command = inputLine;
             }
-            
-            ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
+
+            ICommandHandler handler = commandHandlerMap.get(command
+                    .toLowerCase());
             boolean isExtraInputNeeded = false;
 
             if (handler == null) {
-                printErrorMsg();
+                printErrorMsg(command, MESSAGE_COMMAND_NOT_FOUND);
             } else {
                 do {
                     if (handler.parseCommand(inputLine)) {
                         if (!handler.executeCommand()) {
-                            printErrorMsg();
+                            printErrorMsg(command, MESSAGE_FAIL_EXECUTION);
                         }
                     } else {
-                        printErrorMsg();
+                        printErrorMsg(command, MESSAGE_FORMAT_INCORRECT);
                     }
 
                     isExtraInputNeeded = handler.isExtraInputNeeded();
@@ -52,6 +59,8 @@ public class TaskHackerPro {
                 } while (isExtraInputNeeded);
             }
         }
+
+        inputSource.closeSource();
     }
 
     public TaskData getTaskData() {
@@ -81,17 +90,40 @@ public class TaskHackerPro {
         TaskHackerPro taskHackerPro = new TaskHackerPro();
         IInputSource inputSorurce = new ConsoleInputSource(System.in);
         Map<String, ICommandHandler> commandHandlerMap = new HashMap<String, ICommandHandler>();
-        TaskData taskData = new TaskData();
+        TaskData taskData = null;
+        DataManager dataManager = new DataManager();
+
+        try {
+            taskData = dataManager.loadTaskDataFromFile(PATH_TO_LOAD_AND_SAVE_DATA);
+            System.out.printf("Data file loaded successfully with %d events!\n",
+                    taskData.getEventMap().size());
+        } catch (IOException e) {
+            System.out.println("Data file not found");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Data file cannot be loaded");
+        }
+
+        if (taskData == null) {
+            taskData = new TaskData();
+        }
 
         commandHandlerMap.put("add", new AddCommandHandler(taskData));
-        commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
+        commandHandlerMap.put("delete", new DeleteCommandHandler(taskData));
         commandHandlerMap.put("done", new DoneCommandHandler(taskData));
         commandHandlerMap.put("search", new SearchCommandHandler(taskData));
         commandHandlerMap.put("view_diff_time", new CalendarViewCommandHandler(taskData));
         commandHandlerMap.put("alter", new AlterCommandHandler(taskData));
+        commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
 
         taskHackerPro.setInputSource(inputSorurce);
+        taskHackerPro.setTaskData(taskData);
         taskHackerPro.setCommandHandlerMap(commandHandlerMap);
         taskHackerPro.parseCommand();
+
+        try {
+            dataManager.saveTaskDataToFile(PATH_TO_LOAD_AND_SAVE_DATA, taskData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
