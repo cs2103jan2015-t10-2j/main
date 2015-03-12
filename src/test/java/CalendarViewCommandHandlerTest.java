@@ -38,6 +38,14 @@ public class CalendarViewCommandHandlerTest {
             taskData.getEventMap().put(events[i].getTaskID(), events[i]);
         }
     }
+    
+    @Test
+    public void testExecuteCommand() {
+        assertTrue(calendarViewCommandHandler.parseCommand("view_diff_time 15/11/2015"));
+        assertTrue(calendarViewCommandHandler.executeCommand());
+        assertTrue(calendarViewCommandHandler.parseCommand("1"));
+        assertTrue(calendarViewCommandHandler.executeCommand());
+    }
 
     @Test
     public void testWeekTasks() {
