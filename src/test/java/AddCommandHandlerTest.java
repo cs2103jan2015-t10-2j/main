@@ -34,8 +34,9 @@ public class AddCommandHandlerTest {
         assertTrue(addCommandHandler.executeCommand());
 
         assertEquals(1, taskData.getEventMap().size());
-
-        testTask(taskData.getEventMap().get(0));
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        
+        testTask(taskData.getEventMap().get(taskId));
     }
 
     private void testTask(Event event) {
