@@ -6,33 +6,23 @@ import java.io.ObjectOutputStream;
 
 public class DataManager {
 
-    public void saveTaskDataToFile(String filePath, TaskData taskData) {
-        try {
-            FileOutputStream fos = new FileOutputStream(filePath);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
+    public void saveTaskDataToFile(String filePath, TaskData taskData) throws IOException
+             {
+        FileOutputStream fos = new FileOutputStream(filePath);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-            oos.writeObject(taskData);
-
-            oos.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        oos.writeObject(taskData);
+        oos.close();
     }
 
-    public TaskData loadTaskDataFromFile(String filePath) {
-        FileInputStream fis;
-        try {
-            fis = new FileInputStream(filePath);
-            ObjectInputStream ois = new ObjectInputStream(fis);
+    public TaskData loadTaskDataFromFile(String filePath) 
+            throws ClassNotFoundException, IOException {
+        FileInputStream fis = new FileInputStream(filePath);
+        ObjectInputStream ois = new ObjectInputStream(fis);
 
-            TaskData taskData = (TaskData) ois.readObject();
-            ois.close();
-            return taskData;
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+        TaskData taskData = (TaskData) ois.readObject();
+        ois.close();
+        
+        return taskData;
     }
-
 }

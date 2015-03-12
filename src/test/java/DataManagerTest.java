@@ -1,6 +1,7 @@
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 
 import org.junit.After;
@@ -46,10 +47,15 @@ public class DataManagerTest {
         eventToSave.setTaskDescription("Shopping in IMM");
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
-        dataManager.saveTaskDataToFile(testFilePath, taskDataToSave);
-        TaskData taskDataToLoad = dataManager.loadTaskDataFromFile(testFilePath);
+        try {
+            dataManager.saveTaskDataToFile(testFilePath, taskDataToSave);
+            TaskData taskDataToLoad = dataManager.loadTaskDataFromFile(testFilePath);
 
-        assertEquals(taskDataToSave, taskDataToLoad);
+            assertEquals(taskDataToSave, taskDataToLoad);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
