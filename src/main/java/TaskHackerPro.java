@@ -19,6 +19,10 @@ public class TaskHackerPro {
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
+    
+    private static final String MESSAGE_DATA_FILE_NOT_FOUND = "Data file is created\n";
+    private static final String MESSAGE_DATA_FILE_LOADED = "Data file loaded successfully with %d event(s)!\n";
+    private static final String MESSAGE_DATA_FILE_FAIL_TO_LOAD = "Data file cannot be loaded. New data file is created\n";
 
     public void printErrorMsg(String command, String message) {
         System.out.printf("%s: %s\n", command, message);
@@ -95,12 +99,11 @@ public class TaskHackerPro {
 
         try {
             taskData = dataManager.loadTaskDataFromFile(PATH_TO_LOAD_AND_SAVE_DATA);
-            System.out.printf("Data file loaded successfully with %d events!\n",
-                    taskData.getEventMap().size());
+            System.out.printf(MESSAGE_DATA_FILE_LOADED, taskData.getEventMap().size());
         } catch (IOException e) {
-            System.out.println("Data file not found");
+            System.out.printf(MESSAGE_DATA_FILE_NOT_FOUND);
         } catch (ClassNotFoundException e) {
-            System.out.println("Data file cannot be loaded");
+            System.out.printf(MESSAGE_DATA_FILE_FAIL_TO_LOAD);
         }
 
         if (taskData == null) {
