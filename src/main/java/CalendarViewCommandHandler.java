@@ -1,6 +1,11 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CalendarViewCommandHandler implements ICommandHandler {
 
@@ -10,6 +15,16 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     private boolean isExtraInputNeeded;
     private ViewOption chosenView = ViewOption.NOT_CHOSEN;
+
+    private static final String viewCommandString = "view_diff_time (?<date>.+)";
+    private static final String dateFormatString = "d/M/y";
+    private static final Pattern patternViewCommand;
+    private static final SimpleDateFormat dateFormat;
+
+    static {
+        patternViewCommand = Pattern.compile(viewCommandString);
+        dateFormat = new SimpleDateFormat(dateFormatString);
+    }
 
     public CalendarViewCommandHandler(TaskData taskData) {
         this.taskData = taskData;
@@ -21,11 +36,22 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         isExtraInputNeeded = false;
 
         if (dateViewing == null) {
-            if (isCorrectDateFormat(command)) {
+            Matcher matcher = patternViewCommand.matcher(command);
+
+            if (matcher.matches()) {
+                try {
+                    Date parsedDate = dateFormat.parse(matcher.group("date"));
+                    dateViewing = Calendar.getInstance();
+                    dateViewing.setTime(parsedDate);
+                } catch (ParseException e) {
+                    System.out.println("Incorrect format");
+                    System.out.println("Please enter date again in dd/MM/YYYY format");
+                    return false;
+                }
                 return true;
             } else {
                 System.out.println("Incorrect format");
-                System.out.println("Please enter date again in dd MM YYYY format");
+                System.out.println("Please enter date again in dd/MM/YYYY format");
 
                 isExtraInputNeeded = true;
                 return false;
@@ -79,6 +105,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 System.out.println(taskId);
             }
 
+            dateViewing = null;
+            chosenView = ViewOption.NOT_CHOSEN;
             return true;
         }
 
@@ -90,6 +118,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 System.out.println(taskId);
             }
 
+            dateViewing = null;
+            chosenView = ViewOption.NOT_CHOSEN;
             return true;
         }
 
@@ -101,6 +131,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 System.out.println(taskId);
             }
 
+            dateViewing = null;
+            chosenView = ViewOption.NOT_CHOSEN;
             return true;
         }
         }
@@ -146,44 +178,6 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         }
 
         return returnTaskIds;
-    }
-
-    public boolean isCorrectDateFormat(String date) {
-        if (!(date.matches("[0-9]+") || (date.length() == 10 && date
-                .contains(" ")))) {
-            return false;
-        }
-
-        String[] dateParts = date.split(" ");
-
-        int day = Integer.parseInt(dateParts[0]);
-        int month = Integer.parseInt(dateParts[1]);
-        int year = Integer.parseInt(dateParts[2]);
-
-        if (!(hasLogicalDate(day, month, year))) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean hasLogicalDate(int date, int month, int year) {
-        int[] monthDays = new int[] { 31, 28, 31, 30, 30, 30, 31, 31, 30, 31, 30, 31 };
-
-        if (date < 0 || month < 0 || month > 12 || year < 0)
-            return false;
-
-        // Check for leap year
-        if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0)) {
-            monthDays[1] = 29;
-        }
-
-        month = month - 1;
-
-        if (date > monthDays[month])
-            return false;
-
-        return true;
     }
 
     public static enum ViewOption {

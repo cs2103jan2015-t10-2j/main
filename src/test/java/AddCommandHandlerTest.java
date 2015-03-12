@@ -11,7 +11,7 @@ public class AddCommandHandlerTest {
     private TaskData taskData;
     private AddCommandHandler addCommandHandler;
 
-    private String commandAdd = "add at 4:00 11/3/2015 @ Tembusu College desc \"Work on CS2103 project\"";
+    private String commandAdd = "add Homework at 4:00 11/3/2015 @ Tembusu College desc \"Work on CS2103 project\"";
 
     @Before
     public void setUp() throws Exception {
@@ -34,15 +34,18 @@ public class AddCommandHandlerTest {
         assertTrue(addCommandHandler.executeCommand());
 
         assertEquals(1, taskData.getEventMap().size());
-
-        testTask(taskData.getEventMap().get(0));
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        
+        testTask(taskData.getEventMap().get(taskId));
     }
 
     private void testTask(Event event) {
+        String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
         String actualTaskDescription = event.getTaskDescription();
         Calendar actualTaskDate = event.getTaskDate();
 
+        assertEquals("Homework", actualTaskName);
         assertEquals("Tembusu College", actualTaskLocation);
         assertEquals("Work on CS2103 project", actualTaskDescription);
         assertEquals(4, actualTaskDate.get(Calendar.HOUR_OF_DAY));
