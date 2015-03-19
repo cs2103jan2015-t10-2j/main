@@ -1,3 +1,5 @@
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,9 +10,11 @@ public class DeleteCommandHandler implements ICommandHandler {
 
     private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
     private static final Pattern patternDelteCommand;
+    private static final Logger logger;
 
     static {
         patternDelteCommand = Pattern.compile(deleteCommandFormat);
+        logger = Logger.getLogger("DeleteCommandHandler");
     }
 
     public DeleteCommandHandler(TaskData taskData) {
@@ -36,6 +40,7 @@ public class DeleteCommandHandler implements ICommandHandler {
     public boolean executeCommand() {
         if (taskData.getEventMap().containsKey(taskId)) {
             taskData.getEventMap().remove(taskId);
+            logger.log(Level.INFO, String.format("No. of events=%d", taskData.getEventMap().size()));
             return true;
         }
 
