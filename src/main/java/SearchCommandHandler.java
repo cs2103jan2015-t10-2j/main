@@ -27,12 +27,6 @@ public class SearchCommandHandler implements ICommandHandler {
     @Override
     public boolean executeCommand() {
         
-    	//<Integer> taskIds = taskData.searchByKeyword(keyword);
-<<<<<<< HEAD
-=======
-    	//testing Exception
->>>>>>> origin/develop
-    	
     	try{
     		
     		List<Integer> taskIds = taskData.searchByKeyword(keyword);
@@ -47,15 +41,7 @@ public class SearchCommandHandler implements ICommandHandler {
     	catch (Exception e) {
     		System.out.println(e.getMessage());
     	}
-    	/*
-
-        System.out.println("Your returned searched IDs of your requested keyword");
-        for (Integer taskId : taskIds) {
-            System.out.println(taskId);
-        }
-
-        return true;
-        */
+    	
     	
     	return true;
     }
