@@ -26,7 +26,7 @@ public class SearchCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-        
+        //Doing Exception
     	try{
     		
     		List<Integer> taskIds = taskData.searchByKeyword(keyword);
