@@ -1,0 +1,6 @@
+INDEX VERSION 1.127+C:\GIT_ROOT\test merging\.metadata\.plugins\org.eclipse.jdt.core
+2138114064.index
+3713821348.index
+478959128.index
+414352937.index
+2870307119.index

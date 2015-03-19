@@ -1,8 +1,0 @@
-/bin/*
-/bin/
-/build/
-
-.gradle
-.settings
-.DS_Store
-.metadata
