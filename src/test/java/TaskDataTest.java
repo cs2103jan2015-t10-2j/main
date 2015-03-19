@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.List;
+import java.lang.Exception;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,19 +42,32 @@ public class TaskDataTest {
 
     @Test
     public void testSearchDescription() {
+    	try{
         List<Integer> searchedEvents = taskData.searchByKeyword("Shopping");
+        
 
         assertEquals(1, searchedEvents.size());
         assertEquals(98765, (int) searchedEvents.get(0));
+    	}
+    	
+    	catch (Exception e) {
+    		System.out.println("Invalid input" + e.getMessage());
+    	}
     }
 
     @Test
     public void testSearch() {
+    	
+    	try{
         List<Integer> searchedEvents = taskData.searchByKeyword("in");
         assertEquals(2, searchedEvents.size());
 
         assertTrue(searchedEvents.contains(23456));
         assertTrue(searchedEvents.contains(98765));
+    	}
+    	catch (Exception e) {
+    		System.out.println("Invalid input" + e.getMessage());
+    	}
     }
 
     @Test
