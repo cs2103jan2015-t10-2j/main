@@ -2,19 +2,29 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.Exception;
 
 public class TaskData implements Serializable {
 
     private static final long serialVersionUID = 6897919790578039077L;
 
     private Map<Integer, Event> eventMap;
+    SearchCommandHandler search;
 
     public TaskData() {
         eventMap = new HashMap<Integer, Event>();
     }
+    
 
-    public ArrayList<Integer> searchByKeyword(String keyword) {
+
+    public ArrayList<Integer> searchByKeyword(String keyword) throws Exception{
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
+        
+        if(eventMap.isEmpty()){
+        	throw new Exception("File is empty!");
+        }
+        
+        else {
 
         for (Integer taskId : eventMap.keySet()) {
             Event event = eventMap.get(taskId);
@@ -22,6 +32,7 @@ public class TaskData implements Serializable {
             if (hasKeyWord(event, keyword)) {
                 matchedTaskIds.add(taskId);
             }
+        }
         }
 
         return matchedTaskIds;
