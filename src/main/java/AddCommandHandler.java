@@ -24,7 +24,7 @@ public class AddCommandHandler implements ICommandHandler {
     public AddCommandHandler(TaskData taskData) {
         this.taskData = taskData;
     }
-
+    
     /*
      * add [name] at [time] [date] @ [location] desc "[description]"
      * 
