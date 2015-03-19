@@ -5,4 +5,5 @@
 .gradle
 .settings
 .DS_Store
-.metadata
+.classpath
+
