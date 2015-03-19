@@ -1,4 +1,6 @@
 import java.util.List;
+import java.lang.Exception;
+
 
 public class SearchCommandHandler implements ICommandHandler {
 
@@ -24,7 +26,25 @@ public class SearchCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-        List<Integer> taskIds = taskData.searchByKeyword(keyword);
+        
+    	//<Integer> taskIds = taskData.searchByKeyword(keyword);
+    	//testing Exception
+    	
+    	try{
+    		
+    		List<Integer> taskIds = taskData.searchByKeyword(keyword);
+    		System.out.println("Your returned searched IDs of your requested keyword");
+            for (Integer taskId : taskIds) {
+                System.out.println(taskId);
+            }
+            return true;
+    		
+    	}
+    	
+    	catch (Exception e) {
+    		System.out.println(e.getMessage());
+    	}
+    	/*
 
         System.out.println("Your returned searched IDs of your requested keyword");
         for (Integer taskId : taskIds) {
@@ -32,6 +52,9 @@ public class SearchCommandHandler implements ICommandHandler {
         }
 
         return true;
+        */
+    	
+    	return true;
     }
 
     @Override
