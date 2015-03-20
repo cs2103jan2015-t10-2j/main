@@ -10,11 +10,9 @@ public class Event implements Serializable {
     private Calendar taskDate;
     private String taskLocation;
     private String taskDescription;
-    private TaskPriority taskPriority = TaskPriority.MEDIUM;
+    private TaskPriority taskPriority;
     private boolean isDone;
     private boolean isRecurring;
-
-    private static final String toStringFormat = "ID=%d, Name=\"%s\", Location=\"%s\", Description=\"%s\", Date=%s, Priority=%s, Done=%b, Recurring=%b";
 
     public int getTaskID() {
         return taskID;
@@ -90,13 +88,5 @@ public class Event implements Serializable {
         boolean isSame = (this.taskID == e.taskID);
 
         return isSame;
-    }
-
-    @Override
-    public String toString() {
-        String timeString = getTaskDate().getTime().toString();
-        return String.format(toStringFormat, getTaskID(), getTaskName(),
-                getTaskLocation(), getTaskDescription(), timeString,
-                getTaskPriority(), isDone(), isRecurring());
     }
 }
