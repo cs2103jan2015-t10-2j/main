@@ -1,0 +1,7 @@
+language: java
+notifications:
+  email:
+    recipients:
+      - ymll@live.hk
+      - anshumanmohan@live.com
+      - jerome_derrick@hotmail.com
