@@ -8,19 +8,27 @@ public class TaskData implements Serializable {
     private static final long serialVersionUID = 6897919790578039077L;
 
     private Map<Integer, Event> eventMap;
+    SearchCommandHandler search;
 
     public TaskData() {
-        eventMap = new HashMap<Integer, Event>();
+        this.eventMap = new HashMap<Integer, Event>();
     }
 
-    public ArrayList<Integer> searchByKeyword(String keyword) {
+    public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
 
-        for (Integer taskId : eventMap.keySet()) {
-            Event event = eventMap.get(taskId);
+        if (this.eventMap.isEmpty()) {
+            throw new Exception("File is empty!");
+        }
 
-            if (hasKeyWord(event, keyword)) {
-                matchedTaskIds.add(taskId);
+        else {
+
+            for (Integer taskId : this.eventMap.keySet()) {
+                Event event = this.eventMap.get(taskId);
+
+                if (this.hasKeyWord(event, keyword)) {
+                    matchedTaskIds.add(taskId);
+                }
             }
         }
 
@@ -29,14 +37,14 @@ public class TaskData implements Serializable {
 
     public boolean hasKeyWord(Event event, String keyWord) {
 
-        if (event == null || keyWord == null)
+        if (event == null || keyWord == null) {
             return false;
+        }
 
         if (Integer.toString(event.getTaskID()) != null
                 && Integer.toString(event.getTaskID()).contains(keyWord)) {
             return true;
-        } else if (event.getTaskName() != null
-                && event.getTaskName().contains(keyWord)) {
+        } else if (event.getTaskName() != null && event.getTaskName().contains(keyWord)) {
             return true;
         } else if (event.getTaskLocation() != null
                 && event.getTaskLocation().contains(keyWord)) {
@@ -56,7 +64,7 @@ public class TaskData implements Serializable {
     }
 
     public Map<Integer, Event> getEventMap() {
-        return eventMap;
+        return this.eventMap;
     }
 
     @Override

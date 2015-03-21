@@ -14,7 +14,7 @@ public class TaskDataTest {
 
     @Before
     public void setUp() throws Exception {
-        taskData = new TaskData();
+        this.taskData = new TaskData();
 
         Calendar c1 = Calendar.getInstance();
         c1.set(2012, 9, 14);
@@ -26,8 +26,7 @@ public class TaskDataTest {
         eventToBeSearched.setTaskPriority(TaskPriority.MEDIUM);
         eventToBeSearched.setTaskLocation("Woodlands");
         eventToBeSearched.setTaskDescription("be in Woodlands for dinner");
-        taskData.getEventMap().put(eventToBeSearched.getTaskID(),
-                eventToBeSearched);
+        this.taskData.getEventMap().put(eventToBeSearched.getTaskID(), eventToBeSearched);
 
         eventToBeSearched = new Event();
         eventToBeSearched.setTaskID(98765);
@@ -35,21 +34,27 @@ public class TaskDataTest {
         eventToBeSearched.setTaskPriority(TaskPriority.HIGH);
         eventToBeSearched.setTaskLocation("IMM");
         eventToBeSearched.setTaskDescription("Shopping in IMM");
-        taskData.getEventMap().put(eventToBeSearched.getTaskID(),
-                eventToBeSearched);
+        this.taskData.getEventMap().put(eventToBeSearched.getTaskID(), eventToBeSearched);
     }
 
     @Test
     public void testSearchDescription() {
-        List<Integer> searchedEvents = taskData.searchByKeyword("Shopping");
+        try {
+            List<Integer> searchedEvents = this.taskData.searchByKeyword("Shopping");
 
-        assertEquals(1, searchedEvents.size());
-        assertEquals(98765, (int) searchedEvents.get(0));
+            assertEquals(1, searchedEvents.size());
+            assertEquals(98765, (int) searchedEvents.get(0));
+        }
+
+        catch (Exception e) {
+            System.out.println("Invalid input" + e.getMessage());
+        }
     }
 
     @Test
-    public void testSearch() {
-        List<Integer> searchedEvents = taskData.searchByKeyword("in");
+    public void testSearch() throws Exception {
+
+        List<Integer> searchedEvents = this.taskData.searchByKeyword("in");
         assertEquals(2, searchedEvents.size());
 
         assertTrue(searchedEvents.contains(23456));
@@ -64,13 +69,13 @@ public class TaskDataTest {
 
         eventTest.setTaskID(12345);
 
-        assertFalse(taskData.hasKeyWord(eventTextNull, "the"));
-        assertFalse(taskData.hasKeyWord(eventTest, keyWordTestNull));
-        assertFalse(taskData.hasKeyWord(eventTextNull, null));
+        assertFalse(this.taskData.hasKeyWord(eventTextNull, "the"));
+        assertFalse(this.taskData.hasKeyWord(eventTest, keyWordTestNull));
+        assertFalse(this.taskData.hasKeyWord(eventTextNull, null));
 
-        assertTrue(taskData.hasKeyWord(taskData.getEventMap().get(23456), "Woodland"));
-        assertFalse(taskData.hasKeyWord(taskData.getEventMap().get(23456), "Clementi"));
-        assertTrue(taskData.hasKeyWord(taskData.getEventMap().get(98765), "Task Name2"));
-        assertFalse(taskData.hasKeyWord(taskData.getEventMap().get(98765), "Name3"));
+        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(23456), "Woodland"));
+        assertFalse(this.taskData.hasKeyWord(this.taskData.getEventMap().get(23456), "Clementi"));
+        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765), "Task Name2"));
+        assertFalse(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765), "Name3"));
     }
 }

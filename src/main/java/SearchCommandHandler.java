@@ -18,19 +18,22 @@ public class SearchCommandHandler implements ICommandHandler {
             return false;
         }
 
-        keyword = command.substring(firstSpace + 1);
+        this.keyword = command.substring(firstSpace + 1);
         return true;
     }
 
     @Override
     public boolean executeCommand() {
-        List<Integer> taskIds = taskData.searchByKeyword(keyword);
-
-        System.out.println("Your returned searched IDs of your requested keyword");
-        for (Integer taskId : taskIds) {
-            System.out.println(taskId);
+        try {
+            List<Integer> taskIds = this.taskData.searchByKeyword(this.keyword);
+            System.out.println("Your returned searched IDs of your requested keyword");
+            for (Integer taskId : taskIds) {
+                System.out.println(taskId);
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
         return true;
     }
 
@@ -38,5 +41,4 @@ public class SearchCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return false;
     }
-
 }
