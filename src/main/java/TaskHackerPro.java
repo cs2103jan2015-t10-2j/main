@@ -87,7 +87,11 @@ public class TaskHackerPro {
     public void setContinue(boolean isContinue) {
         this.isContinue = isContinue;
     }
-
+    
+    public String getFilePath(){
+    	return PATH_TO_LOAD_AND_SAVE_DATA;
+    }
+    
     public static void main(String[] args) {
         System.out.println("Welcome to TaskHackerPro!");
 
