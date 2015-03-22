@@ -12,6 +12,7 @@ public class AddCommandHandlerTest {
     private AddCommandHandler addCommandHandler;
 
     private String commandAdd = "add Homework at 4:00 11/3/2015 @ Tembusu College desc \"Work on CS2103 project\"";
+    private String commandYes = "Y";
 
     @Before
     public void setUp() throws Exception {
@@ -20,22 +21,15 @@ public class AddCommandHandlerTest {
     }
 
     @Test
-    public void testParseCommand() {
-        assertTrue(addCommandHandler.parseCommand(commandAdd));
-
-        Event event = addCommandHandler.getEvent();
-
-        testTask(event);
-    }
-
-    @Test
     public void testExecuteCommand() {
         assertTrue(addCommandHandler.parseCommand(commandAdd));
+        assertTrue(addCommandHandler.executeCommand());
+        assertTrue(addCommandHandler.parseCommand(commandYes));
         assertTrue(addCommandHandler.executeCommand());
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
-        
+
         testTask(taskData.getEventMap().get(taskId));
     }
 
