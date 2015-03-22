@@ -59,7 +59,7 @@ public class DeleteCommandHandler implements ICommandHandler {
     public boolean executeCommand() {
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
-                taskData.getEventMap().remove(taskId);
+                taskData.getEventMap().remove(actualId);
                 logger.log(Level.INFO, String.format("No. of events=%d", taskData.getEventMap().size()));
             }
             isProceedToConfirm = false;
