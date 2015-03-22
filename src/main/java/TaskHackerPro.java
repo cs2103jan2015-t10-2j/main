@@ -87,7 +87,11 @@ public class TaskHackerPro {
     public void setContinue(boolean isContinue) {
         this.isContinue = isContinue;
     }
-
+    
+    public String getFilePath(){
+    	return PATH_TO_LOAD_AND_SAVE_DATA;
+    }
+    
     public static void main(String[] args) {
         System.out.println("Welcome to TaskHackerPro!");
 
@@ -116,6 +120,7 @@ public class TaskHackerPro {
         commandHandlerMap.put("search", new SearchCommandHandler(taskData));
         commandHandlerMap.put("view_diff_time", new CalendarViewCommandHandler(taskData));
         commandHandlerMap.put("alter", new AlterCommandHandler(taskData));
+        commandHandlerMap.put("save", new SaveCommandHandler(taskData));
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
 
         taskHackerPro.setInputSource(inputSorurce);
