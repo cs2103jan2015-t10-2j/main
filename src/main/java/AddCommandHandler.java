@@ -118,7 +118,6 @@ public class AddCommandHandler implements ICommandHandler {
             if (this.isConfirm) {
                 setEvent(name, location, description, taskDate);
                 taskData.getEventMap().put(event.getTaskID(), event);
-                taskData.updateDisplayID();
                 logger.log(Level.INFO, String.format("No. of events=%d",
                                                      taskData.getEventMap().size()));
             }
