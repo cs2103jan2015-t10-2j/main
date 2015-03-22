@@ -12,7 +12,7 @@ public class Event implements Serializable {
     private String taskDescription;
     private TaskPriority taskPriority = TaskPriority.MEDIUM;
     private boolean isDone;
-    private boolean isRecurring;
+    private boolean isRecurring; 
 
     private static final String toStringFormat = "ID=%d, Name=\"%s\", Location=\"%s\", Description=\"%s\", Date=%s, Priority=%s, Done=%b, Recurring=%b";
 
