@@ -15,7 +15,6 @@ public class SaveCommandHandler implements ICommandHandler {
 		if (!command.equalsIgnoreCase("save")) {
 			return false;
 		}
-
 		return true;
 	}
 
@@ -32,7 +31,6 @@ public class SaveCommandHandler implements ICommandHandler {
 		}
 
 		System.out.println(FILE_SAVE);
-
 		return true;
 	}
 
