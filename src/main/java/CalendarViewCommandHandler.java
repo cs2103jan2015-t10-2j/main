@@ -61,7 +61,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         } else if (chosenView == ViewOption.NOT_CHOSEN) {
             try {
                 int chosenViewId = Integer.parseInt(command);
-                if (chosenViewId > 0 && chosenViewId < ViewOption.values().length) {
+                if (chosenViewId > 0 &&
+                    chosenViewId < ViewOption.values().length) {
                     chosenView = ViewOption.values()[chosenViewId];
                     return true;
                 }
@@ -88,58 +89,51 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             dateViewing.set(year, month, day);
         }
 
-        switch (chosenView) {
-        case NOT_CHOSEN: {
+        
+        if (chosenView == ViewOption.NOT_CHOSEN) {
             System.out.println("With your date, you can, ");
             System.out.println("1. View your tasks in a week based on your day");
             System.out.println("2. View your tasks in a month based on your month");
             System.out.println("3. View your tasks in a year based on your year");
 
             isExtraInputNeeded = true;
-            return true;
-        }
+            return true;           
+        } else {
+            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, chosenView);
+            
+            switch (chosenView) {
+                case NOT_CHOSEN: {
+                    break;
+                }
 
-        case WEEK: {
-            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, ViewOption.WEEK);
+                case WEEK: {
+                    System.out.println("Week view of task IDs");
+                    break;
+                }
 
-            System.out.println("Week view of task IDs");
-            for (Integer taskId : taskIds) {
-                System.out.println(taskId);
+                case MONTH: {
+                    System.out.println("Month view of task IDs");
+                    break;
+                }
+
+                case YEAR: {
+                    System.out.println("Year view of task IDs");
+                    break;
+                }
             }
 
+
+            taskData.updateDisplayID(taskIds);
+            int i=0;
+            for (Integer taskId : taskIds) {
+                System.out.printf("%d %s\n", ++i, taskData.getEventMap().get(taskId).getTaskName());
+            }
+            
             dateViewing = null;
             chosenView = ViewOption.NOT_CHOSEN;
             return true;
         }
 
-        case MONTH: {
-            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, ViewOption.MONTH);
-
-            System.out.println("Month view of task IDs");
-            for (Integer taskId : taskIds) {
-                System.out.println(taskId);
-            }
-
-            dateViewing = null;
-            chosenView = ViewOption.NOT_CHOSEN;
-            return true;
-        }
-
-        case YEAR: {
-            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, ViewOption.YEAR);
-
-            System.out.println("Year view of task IDs");
-            for (Integer taskId : taskIds) {
-                System.out.println(taskId);
-            }
-
-            dateViewing = null;
-            chosenView = ViewOption.NOT_CHOSEN;
-            return true;
-        }
-        }
-
-        return false;
     }
 
     @Override
@@ -148,38 +142,38 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     }
 
     public Set<Integer> getMatchedTaskDisplayIDs(Calendar dateViewing,
-            ViewOption chosenView) {
+                                                 ViewOption chosenView) {
         Set<Integer> returnTaskIds = new HashSet<Integer>();
 
         for (Integer actualId : taskData.getEventMap().keySet()) {
-            Calendar taskDate = taskData.getEventMap().get(actualId).getTaskDate();
-            int displayId = taskData.getDisplayId(actualId);
+            Calendar taskDate = taskData.getEventMap()
+                                        .get(actualId)
+                                        .getTaskDate();
             boolean isMatched = false;
 
             switch (chosenView) {
-            case WEEK: {
-                isMatched = (taskDate.get(Calendar.WEEK_OF_YEAR) == dateViewing.get(Calendar.WEEK_OF_YEAR) 
-                        && taskDate.get(Calendar.YEAR) == dateViewing.get(Calendar.YEAR));
-                break;
-            }
-            case MONTH: {
-                isMatched = (taskDate.get(Calendar.MONTH) == dateViewing.get(Calendar.MONTH)
-                        && taskDate.get(Calendar.YEAR) == dateViewing.get(Calendar.YEAR));
-                break;
-            }
-            case YEAR: {
-                isMatched = (taskDate.get(Calendar.YEAR) == dateViewing.get(Calendar.YEAR));
-                break;
-            }
-            default:
-                break;
+                case WEEK: {
+                    isMatched = (taskDate.get(Calendar.WEEK_OF_YEAR) == dateViewing.get(Calendar.WEEK_OF_YEAR) && taskDate.get(Calendar.YEAR) == dateViewing.get(Calendar.YEAR));
+                    break;
+                }
+                case MONTH: {
+                    isMatched = (taskDate.get(Calendar.MONTH) == dateViewing.get(Calendar.MONTH) && taskDate.get(Calendar.YEAR) == dateViewing.get(Calendar.YEAR));
+                    break;
+                }
+                case YEAR: {
+                    isMatched = (taskDate.get(Calendar.YEAR) == dateViewing.get(Calendar.YEAR));
+                    break;
+                }
+                default:
+                    break;
             }
 
-            logger.info(String.format("actualId=%d, displayId=%d, isMatched=%b",
-                    actualId, displayId, isMatched));
-            
+            logger.info(String.format("actualId=%d, isMatched=%b",
+                                      actualId,
+                                      isMatched));
+
             if (isMatched) {
-                returnTaskIds.add(displayId);
+                returnTaskIds.add(actualId);
             }
         }
 

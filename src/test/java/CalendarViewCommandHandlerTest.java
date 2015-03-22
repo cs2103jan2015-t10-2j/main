@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +40,6 @@ public class CalendarViewCommandHandlerTest {
             events[i].setTaskDate(dates[i]);
             taskData.getEventMap().put(events[i].getTaskID(), events[i]);
         }
-        taskData.updateDisplayID();
     }
     
     @Test
@@ -58,15 +58,7 @@ public class CalendarViewCommandHandlerTest {
                 dateViewing, CalendarViewCommandHandler.ViewOption.WEEK);
 
         Integer[] actualIDs = new Integer[] {1234, 5678};
-        Set<Integer> displaySet = new HashSet<Integer>();
-        for (int actualID : actualIDs) {
-            displaySet.add(taskData.getDisplayId(actualID));
-        }
-        assertEquals(2, displaySet.size());
-        
-        for (int displayID : displaySet) {
-            assertTrue(taskIDs.contains(displayID));
-        }
+        Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
     @Test
@@ -76,16 +68,8 @@ public class CalendarViewCommandHandlerTest {
         Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.MONTH);
 
-        Integer[] actualIDs = new Integer[] {1234, 5678, 9012};
-        Set<Integer> displaySet = new HashSet<Integer>();
-        for (int actualID : actualIDs) {
-            displaySet.add(taskData.getDisplayId(actualID));
-        }
-        assertEquals(3, displaySet.size());
-
-        for (int displayID : displaySet) {
-            assertTrue(taskIDs.contains(displayID));
-        }
+        Integer[] actualIDs = new Integer[] {1234, 9012, 5678};
+        Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
     @Test
@@ -95,15 +79,8 @@ public class CalendarViewCommandHandlerTest {
         Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.YEAR);
 
-        Integer[] actualIDs = new Integer[] {1234, 5678, 9012, 5848};
-        Set<Integer> displaySet = new HashSet<Integer>();
-        for (int actualID : actualIDs) {
-            displaySet.add(taskData.getDisplayId(actualID));
-        }
-        assertEquals(4, displaySet.size());
+        Integer[] actualIDs = new Integer[] {1234, 9012, 5848, 5678};
+        Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
         
-        for (int displayID : displaySet) {
-            assertTrue(taskIDs.contains(displayID));
-        }
     }
 }

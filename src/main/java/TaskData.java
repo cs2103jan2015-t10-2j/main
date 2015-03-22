@@ -61,11 +61,12 @@ public class TaskData implements Serializable {
         }
     }
 
-    public void updateDisplayID() {
-        Set<Integer> idSet = eventMap.keySet();
-
+    public void updateDisplayID(Set<Integer> actualIDs) {
         int displayID = 1;
-        for (Integer actualID : idSet) {
+        this.displayIDToActualIDMap.clear();
+        this.actualIDToDisplayIDMap.clear();        
+        
+        for (Integer actualID : actualIDs) {
             this.displayIDToActualIDMap.put(displayID, actualID);
             this.actualIDToDisplayIDMap.put(actualID, displayID);
             displayID++;
