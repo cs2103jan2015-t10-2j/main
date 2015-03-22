@@ -3,6 +3,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Calendar;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +42,7 @@ public class CalendarViewCommandHandlerTest {
     
     @Test
     public void testExecuteCommand() {
-        assertTrue(calendarViewCommandHandler.parseCommand("view_diff_time 15/11/2015"));
+        assertTrue(calendarViewCommandHandler.parseCommand("display 15/11/2015"));
         assertTrue(calendarViewCommandHandler.executeCommand());
         assertTrue(calendarViewCommandHandler.parseCommand("1"));
         assertTrue(calendarViewCommandHandler.executeCommand());
@@ -51,35 +52,33 @@ public class CalendarViewCommandHandlerTest {
     public void testWeekTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 15);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTasks(
+        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.WEEK);
 
-        assertTrue(taskIDs.contains(1234));
-        assertTrue(taskIDs.contains(5678));
+        Integer[] actualIDs = new Integer[] {1234, 5678};
+        Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
     @Test
     public void testMonthTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 16);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTasks(
+        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.MONTH);
 
-        assertTrue(taskIDs.contains(1234));
-        assertTrue(taskIDs.contains(5678));
-        assertTrue(taskIDs.contains(9012));
+        Integer[] actualIDs = new Integer[] {1234, 9012, 5678};
+        Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
     @Test
     public void testYearTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 16);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTasks(
+        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.YEAR);
 
-        assertTrue(taskIDs.contains(1234));
-        assertTrue(taskIDs.contains(5678));
-        assertTrue(taskIDs.contains(9012));
-        assertTrue(taskIDs.contains(5848));
+        Integer[] actualIDs = new Integer[] {1234, 9012, 5848, 5678};
+        Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
+        
     }
 }
