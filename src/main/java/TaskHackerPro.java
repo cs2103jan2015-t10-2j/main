@@ -19,7 +19,7 @@ public class TaskHackerPro {
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
-    
+
     private static final String MESSAGE_DATA_FILE_NOT_FOUND = "Data file is created\n";
     private static final String MESSAGE_DATA_FILE_LOADED = "Data file loaded successfully with %d event(s)!\n";
     private static final String MESSAGE_DATA_FILE_FAIL_TO_LOAD = "Data file cannot be loaded. New data file is created\n";
@@ -40,8 +40,7 @@ public class TaskHackerPro {
                 command = inputLine;
             }
 
-            ICommandHandler handler = commandHandlerMap.get(command
-                    .toLowerCase());
+            ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
             boolean isExtraInputNeeded = false;
 
             if (handler == null) {
@@ -71,8 +70,7 @@ public class TaskHackerPro {
         return taskData;
     }
 
-    public void setCommandHandlerMap(
-            Map<String, ICommandHandler> commandHandlerMap) {
+    public void setCommandHandlerMap(Map<String, ICommandHandler> commandHandlerMap) {
         this.commandHandlerMap = commandHandlerMap;
     }
 
@@ -116,6 +114,8 @@ public class TaskHackerPro {
         commandHandlerMap.put("search", new SearchCommandHandler(taskData));
         commandHandlerMap.put("view_diff_time", new CalendarViewCommandHandler(taskData));
         commandHandlerMap.put("alter", new AlterCommandHandler(taskData));
+        commandHandlerMap.put("save", new SaveCommandHandler(taskData, dataManager,
+                PATH_TO_LOAD_AND_SAVE_DATA));
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
 
         taskHackerPro.setInputSource(inputSorurce);
