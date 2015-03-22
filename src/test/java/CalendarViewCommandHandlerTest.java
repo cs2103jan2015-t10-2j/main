@@ -1,6 +1,8 @@
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
@@ -37,6 +39,7 @@ public class CalendarViewCommandHandlerTest {
             events[i].setTaskDate(dates[i]);
             taskData.getEventMap().put(events[i].getTaskID(), events[i]);
         }
+        taskData.updateDisplayID();
     }
     
     @Test
@@ -51,35 +54,56 @@ public class CalendarViewCommandHandlerTest {
     public void testWeekTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 15);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTasks(
+        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.WEEK);
 
-        assertTrue(taskIDs.contains(1234));
-        assertTrue(taskIDs.contains(5678));
+        Integer[] actualIDs = new Integer[] {1234, 5678};
+        Set<Integer> displaySet = new HashSet<Integer>();
+        for (int actualID : actualIDs) {
+            displaySet.add(taskData.getDisplayId(actualID));
+        }
+        assertEquals(2, displaySet.size());
+        
+        for (int displayID : displaySet) {
+            assertTrue(taskIDs.contains(displayID));
+        }
     }
 
     @Test
     public void testMonthTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 16);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTasks(
+        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.MONTH);
 
-        assertTrue(taskIDs.contains(1234));
-        assertTrue(taskIDs.contains(5678));
-        assertTrue(taskIDs.contains(9012));
+        Integer[] actualIDs = new Integer[] {1234, 5678, 9012};
+        Set<Integer> displaySet = new HashSet<Integer>();
+        for (int actualID : actualIDs) {
+            displaySet.add(taskData.getDisplayId(actualID));
+        }
+        assertEquals(3, displaySet.size());
+
+        for (int displayID : displaySet) {
+            assertTrue(taskIDs.contains(displayID));
+        }
     }
 
     @Test
     public void testYearTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 16);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTasks(
+        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.YEAR);
 
-        assertTrue(taskIDs.contains(1234));
-        assertTrue(taskIDs.contains(5678));
-        assertTrue(taskIDs.contains(9012));
-        assertTrue(taskIDs.contains(5848));
+        Integer[] actualIDs = new Integer[] {1234, 5678, 9012, 5848};
+        Set<Integer> displaySet = new HashSet<Integer>();
+        for (int actualID : actualIDs) {
+            displaySet.add(taskData.getDisplayId(actualID));
+        }
+        assertEquals(4, displaySet.size());
+        
+        for (int displayID : displaySet) {
+            assertTrue(taskIDs.contains(displayID));
+        }
     }
 }
