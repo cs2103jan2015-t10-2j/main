@@ -16,7 +16,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private boolean isExtraInputNeeded;
     private ViewOption chosenView = ViewOption.NOT_CHOSEN;
 
-    private static final String viewCommandString = "view_diff_time (?<date>.+)";
+    private static final String viewCommandString = "display (?<date>.+)";
     private static final String dateFormatString = "d/M/y";
     private static final Pattern patternViewCommand;
     private static final SimpleDateFormat dateFormat;
