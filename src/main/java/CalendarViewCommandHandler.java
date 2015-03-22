@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +21,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private static final String dateFormatString = "d/M/y";
     private static final Pattern patternViewCommand;
     private static final SimpleDateFormat dateFormat;
+    private static final Logger logger = Logger.getLogger("CalendarViewCommandHandler");
 
     static {
         patternViewCommand = Pattern.compile(viewCommandString);
@@ -98,7 +100,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         }
 
         case WEEK: {
-            Set<Integer> taskIds = getMatchedTasks(dateViewing, ViewOption.WEEK);
+            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, ViewOption.WEEK);
 
             System.out.println("Week view of task IDs");
             for (Integer taskId : taskIds) {
@@ -111,7 +113,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         }
 
         case MONTH: {
-            Set<Integer> taskIds = getMatchedTasks(dateViewing, ViewOption.WEEK);
+            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, ViewOption.MONTH);
 
             System.out.println("Month view of task IDs");
             for (Integer taskId : taskIds) {
@@ -124,7 +126,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         }
 
         case YEAR: {
-            Set<Integer> taskIds = getMatchedTasks(dateViewing, ViewOption.YEAR);
+            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, ViewOption.YEAR);
 
             System.out.println("Year view of task IDs");
             for (Integer taskId : taskIds) {
@@ -145,12 +147,13 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return isExtraInputNeeded;
     }
 
-    public Set<Integer> getMatchedTasks(Calendar dateViewing,
+    public Set<Integer> getMatchedTaskDisplayIDs(Calendar dateViewing,
             ViewOption chosenView) {
         Set<Integer> returnTaskIds = new HashSet<Integer>();
 
-        for (Integer taskId : taskData.getEventMap().keySet()) {
-            Calendar taskDate = taskData.getEventMap().get(taskId).getTaskDate();
+        for (Integer actualId : taskData.getEventMap().keySet()) {
+            Calendar taskDate = taskData.getEventMap().get(actualId).getTaskDate();
+            int displayId = taskData.getDisplayId(actualId);
             boolean isMatched = false;
 
             switch (chosenView) {
@@ -172,8 +175,11 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 break;
             }
 
+            logger.info(String.format("actualId=%d, displayId=%d, isMatched=%b",
+                    actualId, displayId, isMatched));
+            
             if (isMatched) {
-                returnTaskIds.add(taskId);
+                returnTaskIds.add(displayId);
             }
         }
 
