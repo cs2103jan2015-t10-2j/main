@@ -26,8 +26,10 @@ public class AddCommandHandler implements ICommandHandler {
     }
 
     public AddCommandHandler(TaskData taskData) {
+        assertObjectNotNull(this);
         this.taskData = taskData;
     }
+    
     
     /*
      * add [name] at [time] [date] @ [location] desc "[description]"
@@ -66,12 +68,15 @@ public class AddCommandHandler implements ICommandHandler {
         }
 
         event = new Event();
+        assertObjectNotNull(event);
+  
         event.setTaskID(getUniqueId());
         event.setTaskName(name);
         event.setTaskLocation(location);
         event.setTaskDescription(description);
         event.setTaskDate(taskDate);
-
+        
+        assertObjectNotNull(event);
         logger.log(Level.INFO, "Parsed event - " + event);
 
         return true;
@@ -79,6 +84,8 @@ public class AddCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
+        assertObjectNotNull(event);
+        assertObjectNotNull(taskData);
         boolean isExist = taskData.getEventMap().containsKey(event.getTaskID());
 
         if (isExist) {
@@ -97,8 +104,9 @@ public class AddCommandHandler implements ICommandHandler {
 
     public int getUniqueId() {
         Random random = new Random();
+        assertObjectNotNull(random);
         int returnVal = 0;
-
+        assertObjectNotNull(taskData);
         do {
             returnVal = random.nextInt(Integer.MAX_VALUE);
         } while (taskData.getEventMap().containsKey(returnVal));
@@ -107,6 +115,11 @@ public class AddCommandHandler implements ICommandHandler {
     }
 
     public Event getEvent() {
+        assertObjectNotNull(event);
         return event;
     }
+    
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }
