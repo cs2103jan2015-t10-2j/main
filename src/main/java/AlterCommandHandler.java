@@ -61,19 +61,36 @@ public class AlterCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
+        eventId = taskData.getActualId(eventId);
         boolean isExist = taskData.getEventMap().containsKey(eventId);
 
         if (isExist) {
-            return false;
-        } else {
             Event event = taskData.getEventMap().get(eventId);
+            printConfirmation(event, location, description, taskDate);
             event.setTaskLocation(location);
             event.setTaskDescription(description);
             event.setTaskDate(taskDate);
             return true;
+        } else {
+            return false;
         }
     }
 
+    private void printConfirmation(Event event, String location,
+                                   String description, Calendar taskDate) {
+        SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy");
+        System.out.printf("Editing task - %s\n", event.getTaskName());
+        System.out.printf("Before modification:\n");
+        System.out.printf("Date: %s\n\n", format.format(event.getTaskDate().getTime()));
+        System.out.printf("Location: %s\n", event.getTaskLocation());
+        System.out.printf("Description: %s\n", event.getTaskDescription());
+        System.out.printf("After modification:\n");
+        System.out.printf("Date: %s\n", format.format(taskDate.getTime()));
+        System.out.printf("Location: %s\n", location);
+        System.out.printf("Description: %s\n", description);
+        //System.out.printf("Confirm? (Y/N): ");
+    }
+    
     @Override
     public boolean isExtraInputNeeded() {
         return false;
