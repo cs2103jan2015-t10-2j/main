@@ -112,7 +112,7 @@ public class TaskHackerPro {
         commandHandlerMap.put("delete", new DeleteCommandHandler(taskData));
         commandHandlerMap.put("done", new DoneCommandHandler(taskData));
         commandHandlerMap.put("search", new SearchCommandHandler(taskData));
-        commandHandlerMap.put("view_diff_time", new CalendarViewCommandHandler(taskData));
+        commandHandlerMap.put("display", new CalendarViewCommandHandler(taskData));
         commandHandlerMap.put("alter", new AlterCommandHandler(taskData));
         commandHandlerMap.put("save", new SaveCommandHandler(taskData, dataManager,
                 PATH_TO_LOAD_AND_SAVE_DATA));
