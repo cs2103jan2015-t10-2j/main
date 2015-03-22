@@ -101,14 +101,8 @@ public class AddCommandHandler implements ICommandHandler {
         event.setTaskName(name);
         event.setTaskLocation(location);
         event.setTaskDescription(description);
-        event.setTaskDate(taskDate);
-<<<<<<< HEAD
-        
+        event.setTaskDate(taskDate);       
         assertObjectNotNull(event);
-        logger.log(Level.INFO, "Parsed event - " + event);
-
-        return true;
-=======
     }
 
     private void printConfirmation(String name, String location,
@@ -120,18 +114,11 @@ public class AddCommandHandler implements ICommandHandler {
         System.out.printf("Description: %s\n", description);
         System.out.printf("Date: %s\n", format.format(taskDate.getTime()));
         System.out.printf("Confirm? (Y/N): ");
->>>>>>> 4ee3d683203cf8800c8ed6f1879131f4f0251558
     }
 
     @Override
     public boolean executeCommand() {
-<<<<<<< HEAD
         assertObjectNotNull(event);
-        assertObjectNotNull(taskData);
-        boolean isExist = taskData.getEventMap().containsKey(event.getTaskID());
-=======
->>>>>>> 4ee3d683203cf8800c8ed6f1879131f4f0251558
-
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
                 setEvent(name, location, description, taskDate);
