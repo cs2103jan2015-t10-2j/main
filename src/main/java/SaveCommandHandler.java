@@ -1,38 +1,43 @@
-//import java.util.List;
-//import java.lang.Exception;
-
-//testing jerome 4 branch
-
+import java.io.IOException;
 
 public class SaveCommandHandler implements ICommandHandler {
 
-    private TaskData taskData;
+	private TaskData taskData;
+	private static final String FILE_SAVE = "File is saved";
 
-    public SaveCommandHandler(TaskData taskData) {
-        this.taskData = taskData;
-    }
+	public SaveCommandHandler(TaskData taskData) {
+		this.taskData = taskData;
+	}
 
-    @Override
-    public boolean parseCommand(String command) {
+	@Override
+	public boolean parseCommand(String command) {
 
-        if (!command.equalsIgnoreCase("save")) {
-            return false;
-        }
-        
-        System.out.println("Suceesfully in save class");
+		if (!command.equalsIgnoreCase("save")) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public boolean executeCommand() {
+	@Override
+	public boolean executeCommand() {
+		DataManager dataManager = new DataManager();
+		TaskHackerPro taskHackerPro = new TaskHackerPro();
 
-    
-    	return true;
-    }
+		try {
+			dataManager.saveTaskDataToFile(taskHackerPro.getFilePath(),
+					taskData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-    @Override
-    public boolean isExtraInputNeeded() {
-        return false;
-    }
+		System.out.println(FILE_SAVE);
+
+		return true;
+	}
+
+	@Override
+	public boolean isExtraInputNeeded() {
+		return false;
+	}
 }
