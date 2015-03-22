@@ -40,7 +40,6 @@ public class DeleteCommandHandler implements ICommandHandler {
     public boolean executeCommand() {
         if (taskData.getEventMap().containsKey(taskId)) {
             taskData.getEventMap().remove(taskId);
-            taskData.updateDisplayID();
             logger.log(Level.INFO, String.format("No. of events=%d", taskData.getEventMap().size()));
             return true;
         }
