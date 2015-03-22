@@ -2,16 +2,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class TaskData implements Serializable {
 
     private static final long serialVersionUID = 6897919790578039077L;
 
     private Map<Integer, Event> eventMap;
+    private Map<Integer, Integer> displayIDToActualIDMap;
+    private Map<Integer, Integer> actualIDToDisplayIDMap;
     SearchCommandHandler search;
 
     public TaskData() {
         this.eventMap = new HashMap<Integer, Event>();
+        this.displayIDToActualIDMap = new HashMap<Integer, Integer>();
+        this.actualIDToDisplayIDMap = new HashMap<Integer, Integer>();
     }
 
     public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
@@ -33,6 +39,38 @@ public class TaskData implements Serializable {
         }
 
         return matchedTaskIds;
+    }
+
+    public int getActualId(int displayId) throws NoSuchElementException {
+        Integer actualId = this.displayIDToActualIDMap.get(displayId);
+
+        if (actualId == null) {
+            throw new NoSuchElementException();
+        } else {
+            return actualId;
+        }
+    }
+
+    public int getDisplayId(int actualId) throws NoSuchElementException {
+        Integer displayId = this.actualIDToDisplayIDMap.get(actualId);
+
+        if (displayId == null) {
+            throw new NoSuchElementException();
+        } else {
+            return displayId;
+        }
+    }
+
+    public void updateDisplayID(Set<Integer> actualIDs) {
+        int displayID = 1;
+        this.displayIDToActualIDMap.clear();
+        this.actualIDToDisplayIDMap.clear();        
+        
+        for (Integer actualID : actualIDs) {
+            this.displayIDToActualIDMap.put(displayID, actualID);
+            this.actualIDToDisplayIDMap.put(actualID, displayID);
+            displayID++;
+        }
     }
 
     public boolean hasKeyWord(Event event, String keyWord) {
