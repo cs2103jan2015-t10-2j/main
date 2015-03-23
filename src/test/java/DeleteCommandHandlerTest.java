@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,9 +28,9 @@ public class DeleteCommandHandlerTest {
         Set<Integer> actualIds = new HashSet<Integer>();
         actualIds.add(taskId);
         taskData.updateDisplayID(actualIds);
-        event.setTaskID(taskData.getDisplayId(taskId));
+        event.setTaskID(taskId);
         taskData.getEventMap().put(event.getTaskID(), event);
-        
+
         assertTrue(taskData.getEventMap().containsKey(taskId));
         assertTrue(deleteCommandHandler.parseCommand(commandDelete));
         assertTrue(deleteCommandHandler.executeCommand());
@@ -37,10 +38,4 @@ public class DeleteCommandHandlerTest {
         assertTrue(deleteCommandHandler.executeCommand());
         assertFalse(taskData.getEventMap().containsKey(taskId));
     }
-
-    private void assertTrue(boolean b) {
-        // TODO Auto-generated method stub
-        
-    }
-
 }

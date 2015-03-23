@@ -1,15 +1,15 @@
 import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class StringInputSource implements IInputSource {
 
-    private ArrayBlockingQueue<String> lines;
+    private LinkedBlockingDeque<String> lines;
 
     public StringInputSource() {
-        lines = new ArrayBlockingQueue<String>(Integer.MAX_VALUE);
+        lines = new LinkedBlockingDeque<String>(Integer.MAX_VALUE);
     }
 
-    public void addLine(String s) {
+    public void addCommand(String s) {
         lines.addAll(Arrays.asList(s.split("[\\r\\n]+")));
     }
 
@@ -21,12 +21,21 @@ public class StringInputSource implements IInputSource {
 
     @Override
     public boolean hasNextLine() {
-        return lines.size() > 0;
+        try {
+            lines.putFirst(lines.takeFirst());
+            return true;
+        } catch (InterruptedException e) {
+            return false;
+        }
     }
 
     @Override
     public String getNextLine() {
-        return lines.poll().trim();
+        try {
+            return lines.takeFirst().trim();
+        } catch (InterruptedException e) {
+            return null;
+        }
     }
 
     @Override

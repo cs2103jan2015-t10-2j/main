@@ -1,9 +1,9 @@
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 public class TaskHackerProRunner {
 
@@ -11,6 +11,8 @@ public class TaskHackerProRunner {
     private TaskHackerPro taskHackerPro;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
+
+    private final Semaphore outputLinesAvailableMutex;
 
     private ByteArrayOutputStream baos;
 
@@ -24,16 +26,17 @@ public class TaskHackerProRunner {
 
     public TaskHackerProRunner(IInputSource inputSorurce, TaskData taskData,
             boolean isPrintToString) {
+
         this.inputSorurce = inputSorurce;
         this.taskData = taskData;
-        this.taskHackerPro = new TaskHackerPro();
+        this.outputLinesAvailableMutex = new Semaphore(0, true);
+        this.taskHackerPro = new TaskHackerPro(outputLinesAvailableMutex);
         this.commandHandlerMap = new HashMap<String, ICommandHandler>();
 
         if (isPrintToString) {
             MultiOutputStream mos = new MultiOutputStream(System.out, true);
-            this.baos = new ByteArrayOutputStream();
-
-            mos.addOutputStream(baos, true);
+            baos = new ByteArrayOutputStream();
+            mos.addOutputStream(baos);
             System.setOut(new PrintStream(mos));
         }
     }
@@ -49,25 +52,26 @@ public class TaskHackerProRunner {
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
     }
 
-    public String[] getOutputString() {
+    public String[] getOutputLines() {
         try {
-            String[] returnString;
+            outputLinesAvailableMutex.acquire();
 
-            baos.flush();
-            returnString = baos.toString("UTF-8").split("[\\r\\n]+");
-            baos.reset();
-            return returnString;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                baos.flush();
+                String outputLines = baos.toString("UTF-8");
+                String[] returnValue = outputLines.split("[\\r\\n]+");
+                baos.reset();
+
+                return returnValue;
+            } catch (IOException e) {
+                return null;
+            }
+        } catch (InterruptedException e) {
+            return null;
         }
-        return null;
     }
 
-    public void start() {
-        System.out.println("Welcome to TaskHackerPro!");
-
+    public Thread start() {
         if (taskData == null) {
             this.taskData = new TaskData();
         }
@@ -84,5 +88,10 @@ public class TaskHackerProRunner {
             }
         });
         t.start();
+
+        // Erase welcome message
+        this.getOutputLines();
+
+        return t;
     }
 }
