@@ -38,4 +38,8 @@ public class SaveCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return false;
     }
+    
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }

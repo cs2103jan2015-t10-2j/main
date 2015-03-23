@@ -15,6 +15,7 @@ public class TaskData implements Serializable {
     SearchCommandHandler search;
 
     public TaskData() {
+    	assertObjectNotNull(this);
         this.eventMap = new HashMap<Integer, Event>();
         this.displayIDToActualIDMap = new HashMap<Integer, Integer>();
         this.actualIDToDisplayIDMap = new HashMap<Integer, Integer>();
@@ -22,7 +23,7 @@ public class TaskData implements Serializable {
 
     public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
-
+    	assertObjectNotNull(this);
         if (this.eventMap.isEmpty()) {
             throw new Exception("File is empty!");
         }
@@ -52,6 +53,7 @@ public class TaskData implements Serializable {
     }
 
     public int getDisplayId(int actualId) throws NoSuchElementException {
+    	assertObjectNotNull(this);
         Integer displayId = this.actualIDToDisplayIDMap.get(actualId);
 
         if (displayId == null) {
@@ -63,6 +65,7 @@ public class TaskData implements Serializable {
 
     public void updateDisplayID(Set<Integer> actualIDs) {
         int displayID = 1;
+    	assertObjectNotNull(this);
         this.displayIDToActualIDMap.clear();
         this.actualIDToDisplayIDMap.clear();        
         
@@ -74,6 +77,8 @@ public class TaskData implements Serializable {
     }
 
     public boolean hasKeyWord(Event event, String keyWord) {
+    	
+    	assertObjectNotNull(event);
 
         if (event == null || keyWord == null) {
             return false;
@@ -110,6 +115,8 @@ public class TaskData implements Serializable {
         if (obj == null || !(obj instanceof TaskData)) {
             return false;
         }
+        
+    	assertObjectNotNull(this);
 
         TaskData taskData = (TaskData) obj;
         if (this.eventMap == null || taskData.eventMap == null) {
@@ -120,4 +127,8 @@ public class TaskData implements Serializable {
 
         return true;
     }
+    
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }
