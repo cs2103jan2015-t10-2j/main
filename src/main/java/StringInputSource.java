@@ -10,12 +10,12 @@ public class StringInputSource implements IInputSource {
     }
 
     public void addLine(String s) {
-        lines.addAll(Arrays.asList(s.split("\\r?\\n")));
+        lines.addAll(Arrays.asList(s.split("[\\r\\n]+")));
     }
 
     public void addLine(String[] inputs) {
         for (String input : inputs) {
-            lines.addAll(Arrays.asList(input.split("\\r?\\n")));
+            lines.addAll(Arrays.asList(input.split("[\\r\\n]+")));
         }
     }
 

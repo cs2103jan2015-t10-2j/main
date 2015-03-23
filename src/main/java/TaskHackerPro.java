@@ -95,7 +95,7 @@ public class TaskHackerPro {
     public static void main(String[] args) {
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
-        new TaskHackProRunner(inputSource, taskData).start();
+        new TaskHackerProRunner(inputSource, taskData).start();
     }
     
     private void assertObjectNotNull(Object o) {
