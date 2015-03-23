@@ -34,6 +34,7 @@ public class AddCommandHandler implements ICommandHandler {
 
     public AddCommandHandler(TaskData taskData) {
         this.taskData = taskData;
+        assertObjectNotNull(this);
     }
     
     /*
@@ -69,12 +70,13 @@ public class AddCommandHandler implements ICommandHandler {
                     return false;
                 }
             }
-
+            assertObjectNotNull(this);
             this.name = patternMatcher.group("name");
             String time = patternMatcher.group("time");
             this.location = patternMatcher.group("location");
             this.description = patternMatcher.group("description");
             this.taskDate = Calendar.getInstance();
+            assertObjectNotNull(this);
 
             try {
                 Date parsedDate = timeFormat.parse(time);
@@ -98,6 +100,7 @@ public class AddCommandHandler implements ICommandHandler {
         event.setTaskLocation(location);
         event.setTaskDescription(description);
         event.setTaskDate(taskDate);
+        assertObjectNotNull(event);
     }
 
     private void printConfirmation(String name, String location,
@@ -113,7 +116,8 @@ public class AddCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-
+    	
+        assertObjectNotNull(this);
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
                 setEvent(name, location, description, taskDate);
@@ -149,4 +153,8 @@ public class AddCommandHandler implements ICommandHandler {
     public Event getEvent() {
         return event;
     }
+    
+	private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }
