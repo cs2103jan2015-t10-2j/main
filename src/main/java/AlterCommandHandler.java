@@ -92,7 +92,6 @@ public class AlterCommandHandler implements ICommandHandler {
             return true;
         } else {
             try {
-            	assertObjectNotNull(taskData);
                 actualId = taskData.getActualId(eventId);
             } catch (Exception NoSuchElementException) {
                 System.out.println("Please use \"display\" function to get the ID!");
