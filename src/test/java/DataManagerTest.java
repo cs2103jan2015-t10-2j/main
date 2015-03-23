@@ -5,18 +5,11 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class DataManagerTest {
 
     private final String testFilePath = "testDatManagerFile.dat";
-    private DataManager dataManager;
-
-    @Before
-    public void setUp() {
-        dataManager = new DataManager();
-    }
 
     @After
     public void tearDown() {
@@ -48,14 +41,14 @@ public class DataManagerTest {
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
         try {
-            dataManager.saveTaskDataToFile(testFilePath, taskDataToSave);
-            TaskData taskDataToLoad = dataManager.loadTaskDataFromFile(testFilePath);
+            DataManager.getInstance().setPathToSaveLoad(testFilePath);
+            DataManager.getInstance().saveTaskDataToFile(taskDataToSave);
+            TaskData taskDataToLoad = DataManager.getInstance().loadTaskDataFromFile();
 
             assertEquals(taskDataToSave, taskDataToLoad);
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }

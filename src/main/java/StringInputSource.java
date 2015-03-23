@@ -1,18 +1,19 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class StringInputSource implements IInputSource {
 
-    private List<String> lines;
-    private int currentLine;
+    private ArrayBlockingQueue<String> lines;
 
-    public StringInputSource(String s) {
-        lines = Arrays.asList(s.split("\\r?\\n"));
+    public StringInputSource() {
+        lines = new ArrayBlockingQueue<String>(Integer.MAX_VALUE);
     }
 
-    public StringInputSource(String[] inputs) {
-        lines = new ArrayList<String>();
+    public void addLine(String s) {
+        lines.addAll(Arrays.asList(s.split("\\r?\\n")));
+    }
+
+    public void addLine(String[] inputs) {
         for (String input : inputs) {
             lines.addAll(Arrays.asList(input.split("\\r?\\n")));
         }
@@ -20,14 +21,12 @@ public class StringInputSource implements IInputSource {
 
     @Override
     public boolean hasNextLine() {
-        return currentLine < lines.size();
+        return lines.size() > 0;
     }
 
     @Override
     public String getNextLine() {
-        String returnString = lines.get(currentLine).trim();
-        currentLine++;
-        return returnString;
+        return lines.poll().trim();
     }
 
     @Override
