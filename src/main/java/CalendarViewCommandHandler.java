@@ -29,11 +29,14 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     }
 
     public CalendarViewCommandHandler(TaskData taskData) {
+    	assertObjectNotNull(this);
+    	assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
     @Override
     public boolean parseCommand(String command) {
+    	assertObjectNotNull(this);
         this.command = command;
         isExtraInputNeeded = false;
 
@@ -122,8 +125,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 }
             }
 
-
             taskData.updateDisplayID(taskIds);
+        	assertObjectNotNull(taskData);
             int i=0;
             for (Integer taskId : taskIds) {
                 System.out.printf("%d %s\n", ++i, taskData.getEventMap().get(taskId).getTaskName());
@@ -144,7 +147,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     public Set<Integer> getMatchedTaskDisplayIDs(Calendar dateViewing,
                                                  ViewOption chosenView) {
         Set<Integer> returnTaskIds = new HashSet<Integer>();
-
+        
+    	assertObjectNotNull(taskData);
         for (Integer actualId : taskData.getEventMap().keySet()) {
             Calendar taskDate = taskData.getEventMap()
                                         .get(actualId)
@@ -183,4 +187,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     public static enum ViewOption {
         NOT_CHOSEN, WEEK, MONTH, YEAR
     }
+	
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }
