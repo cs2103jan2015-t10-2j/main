@@ -43,6 +43,7 @@ public class TaskData implements Serializable {
     }
 
     public int getActualId(int displayId) throws NoSuchElementException {
+    	assertObjectNotNull(this);
         Integer actualId = this.displayIDToActualIDMap.get(displayId);
 
         if (actualId == null) {
@@ -53,7 +54,6 @@ public class TaskData implements Serializable {
     }
 
     public int getDisplayId(int actualId) throws NoSuchElementException {
-    	assertObjectNotNull(this);
         Integer displayId = this.actualIDToDisplayIDMap.get(actualId);
 
         if (displayId == null) {
@@ -65,7 +65,6 @@ public class TaskData implements Serializable {
 
     public void updateDisplayID(Set<Integer> actualIDs) {
         int displayID = 1;
-    	assertObjectNotNull(this);
         this.displayIDToActualIDMap.clear();
         this.actualIDToDisplayIDMap.clear();        
         
@@ -78,7 +77,6 @@ public class TaskData implements Serializable {
 
     public boolean hasKeyWord(Event event, String keyWord) {
     	
-    	assertObjectNotNull(event);
 
         if (event == null || keyWord == null) {
             return false;
@@ -116,7 +114,6 @@ public class TaskData implements Serializable {
             return false;
         }
         
-    	assertObjectNotNull(this);
 
         TaskData taskData = (TaskData) obj;
         if (this.eventMap == null || taskData.eventMap == null) {
@@ -126,6 +123,10 @@ public class TaskData implements Serializable {
         }
 
         return true;
+    }
+    
+    public boolean isExtraInputNeeded() {
+        return false;
     }
     
     private void assertObjectNotNull(Object o) {

@@ -148,7 +148,6 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                                                  ViewOption chosenView) {
         Set<Integer> returnTaskIds = new HashSet<Integer>();
         
-    	assertObjectNotNull(taskData);
         for (Integer actualId : taskData.getEventMap().keySet()) {
             Calendar taskDate = taskData.getEventMap()
                                         .get(actualId)
