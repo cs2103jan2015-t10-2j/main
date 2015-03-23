@@ -119,7 +119,7 @@ public class TaskDataTest {
 			assertEquals("File is empty!", e.getMessage());
 		}
     	
-    	//testing if search results has 0 results
+    	//testing if search has 0 results
     	keyword = " testing";
     	try {
 			List<Integer> searchActualIds = taskData.searchByKeyword(keyword);
