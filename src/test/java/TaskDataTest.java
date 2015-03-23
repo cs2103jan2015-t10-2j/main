@@ -119,7 +119,20 @@ public class TaskDataTest {
 			assertEquals("File is empty!", e.getMessage());
 		}
     	
-    	//testing if search results is 0 or at least one item
+    	//testing if search results has 0 results
+    	keyword = " testing";
+    	try {
+			List<Integer> searchActualIds = taskData.searchByKeyword(keyword);
+			searchCommandTest.displaySearchResults(searchActualIds, keyword);
+			
+		} 
+    	catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println();
+			assertEquals("Your search request returned 0 results", e.getMessage());
+		}
+    	
+    	//testing if search results has at least one item
     	keyword = "in";
     	try {
 			List<Integer> searchActualIds = taskData.searchByKeyword(keyword);
@@ -136,13 +149,11 @@ public class TaskDataTest {
 			assertEquals(2, taskData.getDisplayId(event.getTaskID()));
 			eventDetails = format.format(event.getTaskDate().getTime()) + " " + "@ " + event.getTaskLocation() + " " + "\""+ event.getTaskDescription() +"\"";
 			assertEquals("13:00 19 Mar, 2015 @ IMM \"Shopping in IMM\"", eventDetails);
-			System.out.println("In test: " + event.getTaskID());
 		} 
     	catch (Exception e) {
 			System.out.println(e.getMessage());
 			assertEquals("Your search request returned 0 results", e.getMessage());
 		}
-    	
-    	System.out.println(ActualIds.remove(0));
+ 
     }
 }
