@@ -21,7 +21,7 @@ public class TaskData implements Serializable {
     }
 
     public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
-        ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
+        ArrayList<Integer> matchedTask = new ArrayList<Integer>();
 
         if (this.eventMap.isEmpty()) {
             throw new Exception("File is empty!");
@@ -33,12 +33,15 @@ public class TaskData implements Serializable {
                 Event event = this.eventMap.get(taskId);
 
                 if (this.hasKeyWord(event, keyword)) {
-                    matchedTaskIds.add(taskId);
+                    matchedTask.add(taskId);
                 }
             }
         }
+        
+        if(matchedTask.size() == 0)
+        	throw new Exception("Your search request returned 0 results");
 
-        return matchedTaskIds;
+        return matchedTask;
     }
 
     public int getActualId(int displayId) throws NoSuchElementException {
@@ -78,23 +81,25 @@ public class TaskData implements Serializable {
         if (event == null || keyWord == null) {
             return false;
         }
+        
+        keyWord = keyWord.toLowerCase();
 
         if (Integer.toString(event.getTaskID()) != null
                 && Integer.toString(event.getTaskID()).contains(keyWord)) {
             return true;
-        } else if (event.getTaskName() != null && event.getTaskName().contains(keyWord)) {
+        } else if (event.getTaskName() != null && event.getTaskName().toLowerCase().contains(keyWord)) {
             return true;
         } else if (event.getTaskLocation() != null
-                && event.getTaskLocation().contains(keyWord)) {
+                && event.getTaskLocation().toLowerCase().contains(keyWord)) {
             return true;
         } else if (event.getTaskDescription() != null
-                && event.getTaskDescription().contains(keyWord)) {
+                && event.getTaskDescription().toLowerCase().contains(keyWord)) {
             return true;
         } else if (event.getTaskDate() != null
                 && event.getTaskDate().getTime().toString().contains(keyWord)) {
             return true;
         } else if (event.getTaskPriority() != null
-                && event.getTaskPriority().toString().contains(keyWord)) {
+                && event.getTaskPriority().toString().toLowerCase().contains(keyWord)) {
             return true;
         }
 

@@ -141,14 +141,11 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return isExtraInputNeeded;
     }
 
-    public Set<Integer> getMatchedTaskDisplayIDs(Calendar dateViewing,
-                                                 ViewOption chosenView) {
+    public Set<Integer> getMatchedTaskDisplayIDs(Calendar dateViewing,ViewOption chosenView) {
         Set<Integer> returnTaskIds = new HashSet<Integer>();
 
         for (Integer actualId : taskData.getEventMap().keySet()) {
-            Calendar taskDate = taskData.getEventMap()
-                                        .get(actualId)
-                                        .getTaskDate();
+            Calendar taskDate = taskData.getEventMap().get(actualId).getTaskDate();
             boolean isMatched = false;
 
             switch (chosenView) {
