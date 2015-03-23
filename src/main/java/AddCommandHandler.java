@@ -33,10 +33,8 @@ public class AddCommandHandler implements ICommandHandler {
     }
 
     public AddCommandHandler(TaskData taskData) {
-        assertObjectNotNull(this);
         this.taskData = taskData;
     }
-    
     
     /*
      * add [name] at [time] [date] @ [location] desc "[description]"
@@ -95,14 +93,11 @@ public class AddCommandHandler implements ICommandHandler {
     public void setEvent(String name, String location, String description,
                          Calendar taskDate) {
         event = new Event();
-        assertObjectNotNull(event);
-  
         event.setTaskID(getUniqueId());
         event.setTaskName(name);
         event.setTaskLocation(location);
         event.setTaskDescription(description);
-        event.setTaskDate(taskDate);       
-        assertObjectNotNull(event);
+        event.setTaskDate(taskDate);
     }
 
     private void printConfirmation(String name, String location,
@@ -118,7 +113,7 @@ public class AddCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-        assertObjectNotNull(event);
+
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
                 setEvent(name, location, description, taskDate);
@@ -142,9 +137,8 @@ public class AddCommandHandler implements ICommandHandler {
 
     public int getUniqueId() {
         Random random = new Random();
-        assertObjectNotNull(random);
         int returnVal = 0;
-        assertObjectNotNull(taskData);
+
         do {
             returnVal = random.nextInt(Integer.MAX_VALUE);
         } while (taskData.getEventMap().containsKey(returnVal));
@@ -153,11 +147,6 @@ public class AddCommandHandler implements ICommandHandler {
     }
 
     public Event getEvent() {
-        assertObjectNotNull(event);
         return event;
     }
-    
-    private void assertObjectNotNull(Object o) {
-		assert (o != null);
-	}
 }
