@@ -14,6 +14,8 @@ public class DoneCommandHandler implements ICommandHandler {
     }
 
     public DoneCommandHandler(TaskData taskData) {
+    	assertObjectNotNull(this);
+    	assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
@@ -34,6 +36,7 @@ public class DoneCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
+    	assertObjectNotNull(taskData);
         boolean isExist = (taskData.getEventMap() != null 
                 && taskData.getEventMap().containsKey(taskId));
 
@@ -51,4 +54,8 @@ public class DoneCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return false;
     }
+    
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }

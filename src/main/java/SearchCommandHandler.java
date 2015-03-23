@@ -7,6 +7,8 @@ public class SearchCommandHandler implements ICommandHandler {
     private TaskData taskData;
 
     public SearchCommandHandler(TaskData taskData) {
+    	assertObjectNotNull(this);
+    	assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
@@ -18,6 +20,7 @@ public class SearchCommandHandler implements ICommandHandler {
             return false;
         }
 
+        assertObjectNotNull(this);
         this.keyword = command.substring(firstSpace + 1);
         return true;
     }
@@ -41,4 +44,8 @@ public class SearchCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return false;
     }
+    
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }

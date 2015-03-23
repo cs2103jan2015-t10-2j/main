@@ -41,6 +41,8 @@ public class TaskHackerPro {
             }
 
             ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
+        	assertObjectNotNull(handler);
+        	
             boolean isExtraInputNeeded = false;
 
             if (handler == null) {
@@ -67,22 +69,27 @@ public class TaskHackerPro {
     }
 
     public TaskData getTaskData() {
+    	assertObjectNotNull(taskData);
         return taskData;
     }
 
     public void setCommandHandlerMap(Map<String, ICommandHandler> commandHandlerMap) {
+    	assertObjectNotNull(this);
         this.commandHandlerMap = commandHandlerMap;
     }
 
     public void setInputSource(IInputSource inputSource) {
+    	assertObjectNotNull(this);
         this.inputSource = inputSource;
     }
 
     public void setTaskData(TaskData taskData) {
+    	assertObjectNotNull(this);
         this.taskData = taskData;
     }
 
     public void setContinue(boolean isContinue) {
+    	assertObjectNotNull(this);
         this.isContinue = isContinue;
     }
 
@@ -129,4 +136,8 @@ public class TaskHackerPro {
             e.printStackTrace();
         }
     }
+    
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }
