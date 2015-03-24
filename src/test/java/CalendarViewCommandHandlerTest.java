@@ -39,7 +39,7 @@ public class CalendarViewCommandHandlerTest {
             taskData.getEventMap().put(events[i].getTaskID(), events[i]);
         }
     }
-    
+
     @Test
     public void testExecuteCommand() {
         assertTrue(calendarViewCommandHandler.parseCommand("display 15/11/2015"));
@@ -55,7 +55,7 @@ public class CalendarViewCommandHandlerTest {
         Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.WEEK);
 
-        Integer[] actualIDs = new Integer[] {1234, 5678};
+        Integer[] actualIDs = new Integer[] { 1234, 5678 };
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
@@ -66,7 +66,7 @@ public class CalendarViewCommandHandlerTest {
         Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.MONTH);
 
-        Integer[] actualIDs = new Integer[] {1234, 9012, 5678};
+        Integer[] actualIDs = new Integer[] { 1234, 9012, 5678 };
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
@@ -77,8 +77,7 @@ public class CalendarViewCommandHandlerTest {
         Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.YEAR);
 
-        Integer[] actualIDs = new Integer[] {1234, 9012, 5848, 5678};
+        Integer[] actualIDs = new Integer[] { 1234, 9012, 5848, 5678 };
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
-        
     }
 }
