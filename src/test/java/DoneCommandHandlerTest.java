@@ -1,33 +1,42 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
-public class DoneCommandHandlerTest {
+public class DoneCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
-    private DoneCommandHandler doneCommandHandler;
 
-    private int taskId = 24356;
-    private String commandDone = "done 24356";
+    private static final String commandAdd = "add Homework at 4:00 11/3/2015 @ Tembusu College desc \"Work on CS2103 project\"";
+    private static final String commandYes = "Y";
+    private static final String commandDisplay = "display 11/3/2015";
+    private static final String commandViewOption = "3";
+    private static final String commandDone = "done 1";
 
-    @Before
-    public void setUp() throws Exception {
+    @Override
+    public TaskData createTaskData() {
         taskData = new TaskData();
-        doneCommandHandler = new DoneCommandHandler(taskData);
+        return taskData;
     }
 
     @Test
     public void testExexcuteCommand() {
-        Event event = new Event();
+        // Add an event
+        super.executeCommand(commandAdd);
+        super.executeCommand(commandYes);
+        assertEquals(1, taskData.getEventMap().size());
+        Event event = taskData.getEventMap().values().iterator().next();
 
-        event.setTaskID(taskId);
-        taskData.getEventMap().put(event.getTaskID(), event);
+        // Cannot mark done without display first
+        assertFalse(event.isDone());
+        super.executeCommand(commandDone);
+        assertFalse(event.isDone());
 
-        assertFalse(taskData.getEventMap().get(taskId).isDone());
-        assertTrue(doneCommandHandler.parseCommand(commandDone));
-        assertTrue(doneCommandHandler.executeCommand());
-        assertTrue(taskData.getEventMap().get(taskId).isDone());
+        // Display and make done
+        super.executeCommand(commandDisplay);
+        super.executeCommand(commandViewOption);
+        super.executeCommand(commandDone);
+        assertTrue(event.isDone());
     }
-
 }
