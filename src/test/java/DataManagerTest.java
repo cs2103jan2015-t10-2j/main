@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class DataManagerTest {
 
-    private final String testFilePath = "testDatManagerFile.dat";
+    private final String testFilePath = "bin/testDatManagerFile.dat";
 
     @After
     public void tearDown() {
