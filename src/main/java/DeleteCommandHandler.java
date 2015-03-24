@@ -9,7 +9,7 @@ public class DeleteCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private int taskId;
     private int actualId;
-    
+
     private Event event;
     private boolean isConfirm;
     private boolean isProceedToConfirm;
@@ -24,8 +24,8 @@ public class DeleteCommandHandler implements ICommandHandler {
     }
 
     public DeleteCommandHandler(TaskData taskData) {
-    	assertObjectNotNull(this);
-    	assertObjectNotNull(taskData);
+        assertObjectNotNull(this);
+        assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
@@ -59,11 +59,12 @@ public class DeleteCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-    	assertObjectNotNull(this);
+        assertObjectNotNull(this);
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
                 taskData.getEventMap().remove(actualId);
-                logger.log(Level.INFO, String.format("No. of events=%d", taskData.getEventMap().size()));
+                logger.log(Level.INFO,
+                        String.format("No. of events=%d", taskData.getEventMap().size()));
             }
             isProceedToConfirm = false;
             return true;
@@ -97,8 +98,8 @@ public class DeleteCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return this.isProceedToConfirm;
     }
-    
-	private void assertObjectNotNull(Object o) {
-		assert (o != null);
-	}
+
+    private void assertObjectNotNull(Object o) {
+        assert (o != null);
+    }
 }
