@@ -32,6 +32,8 @@ public class AlterCommandHandler implements ICommandHandler {
     }
 
     public AlterCommandHandler(TaskData taskData) {
+    	assertObjectNotNull(this);
+    	assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
@@ -79,6 +81,7 @@ public class AlterCommandHandler implements ICommandHandler {
     @Override
     public boolean executeCommand() {
         
+    	assertObjectNotNull(this);
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
                 event.setTaskLocation(location);
@@ -126,4 +129,8 @@ public class AlterCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return this.isProceedToConfirm;
     }
+    
+	private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }

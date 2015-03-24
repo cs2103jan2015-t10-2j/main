@@ -3,15 +3,11 @@ import java.io.IOException;
 public class SaveCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
-    private DataManager dataManager;
     private String fileSavePath;
     private static final String FILE_SAVE = "File is saved";
 
-    public SaveCommandHandler(TaskData taskData, DataManager dataManager,
-            String fileSavePath) {
+    public SaveCommandHandler(TaskData taskData) {
         this.taskData = taskData;
-        this.dataManager = dataManager;
-        this.fileSavePath = fileSavePath;
     }
 
     @Override
@@ -25,7 +21,8 @@ public class SaveCommandHandler implements ICommandHandler {
     @Override
     public boolean executeCommand() {
         try {
-            dataManager.saveTaskDataToFile(fileSavePath, taskData);
+            DataManager.getInstance().setPathToSaveLoad(fileSavePath);
+            DataManager.getInstance().saveTaskDataToFile(taskData);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,5 +34,9 @@ public class SaveCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return false;
+    }
+
+    public void setFileSavePath(String fileSavePath) {
+        this.fileSavePath = fileSavePath;
     }
 }

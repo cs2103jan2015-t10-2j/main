@@ -1,10 +1,11 @@
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DoneCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
-    private int taskId;
+    private int displayId;
 
     private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
     private static final Pattern patternDoneCommand;
@@ -14,6 +15,8 @@ public class DoneCommandHandler implements ICommandHandler {
     }
 
     public DoneCommandHandler(TaskData taskData) {
+        assertObjectNotNull(this);
+        assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
@@ -22,7 +25,7 @@ public class DoneCommandHandler implements ICommandHandler {
         try {
             Matcher matcher = patternDoneCommand.matcher(command);
             if (matcher.matches()) {
-                taskId = Integer.parseInt(matcher.group("taskId"));
+                displayId = Integer.parseInt(matcher.group("taskId"));
                 return true;
             } else {
                 return false;
@@ -34,15 +37,14 @@ public class DoneCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-        boolean isExist = (taskData.getEventMap() != null 
-                && taskData.getEventMap().containsKey(taskId));
+        assertObjectNotNull(taskData);
 
-        if (isExist) {
-            Event eventDone = taskData.getEventMap().get(taskId);
+        try {
+            int actualId = taskData.getActualId(displayId);
+            Event eventDone = taskData.getEventMap().get(actualId);
             eventDone.setDone(true);
-
             return true;
-        } else {
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
@@ -50,5 +52,9 @@ public class DoneCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return false;
+    }
+
+    private void assertObjectNotNull(Object o) {
+        assert (o != null);
     }
 }

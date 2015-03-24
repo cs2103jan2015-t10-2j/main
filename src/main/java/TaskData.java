@@ -15,6 +15,7 @@ public class TaskData implements Serializable {
     SearchCommandHandler search;
 
     public TaskData() {
+    	assertObjectNotNull(this);
         this.eventMap = new HashMap<Integer, Event>();
         this.displayIDToActualIDMap = new HashMap<Integer, Integer>();
         this.actualIDToDisplayIDMap = new HashMap<Integer, Integer>();
@@ -22,7 +23,7 @@ public class TaskData implements Serializable {
 
     public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
-
+    	assertObjectNotNull(this);
         if (this.eventMap.isEmpty()) {
             throw new Exception("File is empty!");
         }
@@ -42,6 +43,7 @@ public class TaskData implements Serializable {
     }
 
     public int getActualId(int displayId) throws NoSuchElementException {
+    	assertObjectNotNull(this);
         Integer actualId = this.displayIDToActualIDMap.get(displayId);
 
         if (actualId == null) {
@@ -74,6 +76,7 @@ public class TaskData implements Serializable {
     }
 
     public boolean hasKeyWord(Event event, String keyWord) {
+    	
 
         if (event == null || keyWord == null) {
             return false;
@@ -110,6 +113,7 @@ public class TaskData implements Serializable {
         if (obj == null || !(obj instanceof TaskData)) {
             return false;
         }
+        
 
         TaskData taskData = (TaskData) obj;
         if (this.eventMap == null || taskData.eventMap == null) {
@@ -120,4 +124,12 @@ public class TaskData implements Serializable {
 
         return true;
     }
+    
+    public boolean isExtraInputNeeded() {
+        return false;
+    }
+    
+    private void assertObjectNotNull(Object o) {
+		assert (o != null);
+	}
 }

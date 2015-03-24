@@ -1,33 +1,41 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class StringInputSource implements IInputSource {
 
-    private List<String> lines;
-    private int currentLine;
+    private LinkedBlockingDeque<String> lines;
 
-    public StringInputSource(String s) {
-        lines = Arrays.asList(s.split("\\r?\\n"));
+    public StringInputSource() {
+        lines = new LinkedBlockingDeque<String>(Integer.MAX_VALUE);
     }
 
-    public StringInputSource(String[] inputs) {
-        lines = new ArrayList<String>();
+    public void addCommand(String s) {
+        lines.addAll(Arrays.asList(s.split("[\\r\\n]+")));
+    }
+
+    public void addLine(String[] inputs) {
         for (String input : inputs) {
-            lines.addAll(Arrays.asList(input.split("\\r?\\n")));
+            lines.addAll(Arrays.asList(input.split("[\\r\\n]+")));
         }
     }
 
     @Override
     public boolean hasNextLine() {
-        return currentLine < lines.size();
+        try {
+            lines.putFirst(lines.takeFirst());
+            return true;
+        } catch (InterruptedException e) {
+            return false;
+        }
     }
 
     @Override
     public String getNextLine() {
-        String returnString = lines.get(currentLine).trim();
-        currentLine++;
-        return returnString;
+        try {
+            return lines.takeFirst().trim();
+        } catch (InterruptedException e) {
+            return null;
+        }
     }
 
     @Override
