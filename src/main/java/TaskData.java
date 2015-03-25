@@ -15,7 +15,7 @@ public class TaskData implements Serializable {
     SearchCommandHandler search;
 
     public TaskData() {
-    	assertObjectNotNull(this);
+        assertObjectNotNull(this);
         this.eventMap = new HashMap<Integer, Event>();
         this.displayIDToActualIDMap = new HashMap<Integer, Integer>();
         this.actualIDToDisplayIDMap = new HashMap<Integer, Integer>();
@@ -23,7 +23,7 @@ public class TaskData implements Serializable {
 
     public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
-    	assertObjectNotNull(this);
+        assertObjectNotNull(this);
         if (this.eventMap.isEmpty()) {
             throw new Exception("File is empty!");
         }
@@ -39,11 +39,15 @@ public class TaskData implements Serializable {
             }
         }
 
+        if (matchedTaskIds.size() == 0) {
+            throw new Exception("Your search request returned 0 results");
+        }
+
         return matchedTaskIds;
     }
 
     public int getActualId(int displayId) throws NoSuchElementException {
-    	assertObjectNotNull(this);
+        assertObjectNotNull(this);
         Integer actualId = this.displayIDToActualIDMap.get(displayId);
 
         if (actualId == null) {
@@ -66,8 +70,8 @@ public class TaskData implements Serializable {
     public void updateDisplayID(Set<Integer> actualIDs) {
         int displayID = 1;
         this.displayIDToActualIDMap.clear();
-        this.actualIDToDisplayIDMap.clear();        
-        
+        this.actualIDToDisplayIDMap.clear();
+
         for (Integer actualID : actualIDs) {
             this.displayIDToActualIDMap.put(displayID, actualID);
             this.actualIDToDisplayIDMap.put(actualID, displayID);
@@ -76,28 +80,30 @@ public class TaskData implements Serializable {
     }
 
     public boolean hasKeyWord(Event event, String keyWord) {
-    	
 
         if (event == null || keyWord == null) {
             return false;
         }
 
+        keyWord = keyWord.toLowerCase();
+
         if (Integer.toString(event.getTaskID()) != null
                 && Integer.toString(event.getTaskID()).contains(keyWord)) {
             return true;
-        } else if (event.getTaskName() != null && event.getTaskName().contains(keyWord)) {
+        } else if (event.getTaskName() != null
+                && event.getTaskName().toLowerCase().contains(keyWord)) {
             return true;
         } else if (event.getTaskLocation() != null
-                && event.getTaskLocation().contains(keyWord)) {
+                && event.getTaskLocation().toLowerCase().contains(keyWord)) {
             return true;
         } else if (event.getTaskDescription() != null
-                && event.getTaskDescription().contains(keyWord)) {
+                && event.getTaskDescription().toLowerCase().contains(keyWord)) {
             return true;
         } else if (event.getTaskDate() != null
                 && event.getTaskDate().getTime().toString().contains(keyWord)) {
             return true;
         } else if (event.getTaskPriority() != null
-                && event.getTaskPriority().toString().contains(keyWord)) {
+                && event.getTaskPriority().toString().toLowerCase().contains(keyWord)) {
             return true;
         }
 
@@ -113,7 +119,6 @@ public class TaskData implements Serializable {
         if (obj == null || !(obj instanceof TaskData)) {
             return false;
         }
-        
 
         TaskData taskData = (TaskData) obj;
         if (this.eventMap == null || taskData.eventMap == null) {
@@ -124,12 +129,8 @@ public class TaskData implements Serializable {
 
         return true;
     }
-    
-    public boolean isExtraInputNeeded() {
-        return false;
-    }
-    
+
     private void assertObjectNotNull(Object o) {
-		assert (o != null);
-	}
+        assert (o != null);
+    }
 }
