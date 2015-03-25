@@ -19,6 +19,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
 
     @Test
     public void testExecuteCommand() {
+
         super.executeCommand(commandAdd);
         super.executeCommand(commandYes);
 

@@ -46,8 +46,7 @@ public class Event implements Serializable {
     }
 
     public void setTaskDate(Calendar taskDate) {
-        assertObjectNotNull(this);
-        this.taskDate = taskDate;
+        assertObjectNotNull(this);        this.taskDate = taskDate;
     }
 
     public String getTaskLocation() {

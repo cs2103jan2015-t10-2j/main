@@ -1,3 +1,4 @@
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -20,6 +21,7 @@ public class DeleteCommandHandlerTest extends StringBasedTest {
 
     @Test
     public void testExecute() {
+
         // Add an event
         super.executeCommand(commandAdd);
         super.executeCommand(commandYes);
@@ -37,4 +39,5 @@ public class DeleteCommandHandlerTest extends StringBasedTest {
         super.executeCommand(commandYes);
         assertEquals(0, taskData.getEventMap().size());
     }
+
 }

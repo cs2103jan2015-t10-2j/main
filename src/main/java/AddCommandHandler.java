@@ -36,7 +36,6 @@ public class AddCommandHandler implements ICommandHandler {
         this.taskData = taskData;
         assertObjectNotNull(this);
     }
-
     /*
      * add [name] at [time] [date] @ [location] desc "[description]"
      * 
@@ -152,6 +151,7 @@ public class AddCommandHandler implements ICommandHandler {
     public Event getEvent() {
         return event;
     }
+
 
     private void assertObjectNotNull(Object o) {
         assert (o != null);

@@ -41,6 +41,7 @@ public class DataManagerTest {
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
         try {
+
             DataManager.getInstance().setPathToSaveLoad(testFilePath);
             DataManager.getInstance().saveTaskDataToFile(taskDataToSave);
             TaskData taskDataToLoad = DataManager.getInstance().loadTaskDataFromFile();
@@ -49,6 +50,7 @@ public class DataManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 }
