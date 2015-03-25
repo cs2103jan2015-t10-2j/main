@@ -19,8 +19,9 @@ public class AddCommandHandler implements ICommandHandler {
     private String location;
     private String description;
     private Calendar taskDate;
+    private int duration;
 
-    private static final String addCommandFormat = "add (?<name>.+) at (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
+    private static final String addCommandFormat = "add (?<name>.+) at (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\"";
     private static final String timeFormatString = "h:m d/M/y";
     private static final Pattern patternAddCommand;
     private static final SimpleDateFormat timeFormat;
@@ -37,7 +38,7 @@ public class AddCommandHandler implements ICommandHandler {
         assertObjectNotNull(this);
     }
     /*
-     * add [name] at [time] [date] @ [location] desc "[description]"
+     * add [name] at [time] [date] for [duration] mins @ [location] desc "[description]"
      * 
      * (non-Javadoc)
      * 
@@ -72,6 +73,7 @@ public class AddCommandHandler implements ICommandHandler {
             assertObjectNotNull(this);
             this.name = patternMatcher.group("name");
             String time = patternMatcher.group("time");
+            this.duration = Integer.parseInt(patternMatcher.group("duration"));
             this.location = patternMatcher.group("location");
             this.description = patternMatcher.group("description");
             this.taskDate = Calendar.getInstance();
@@ -92,22 +94,24 @@ public class AddCommandHandler implements ICommandHandler {
     }
 
     public void setEvent(String name, String location, String description,
-            Calendar taskDate) {
+            Calendar taskDate, int duration) {
         event = new Event();
         event.setTaskID(getUniqueId());
         event.setTaskName(name);
         event.setTaskLocation(location);
         event.setTaskDescription(description);
         event.setTaskDate(taskDate);
+        event.setTaskDuration(duration);
         assertObjectNotNull(event);
     }
 
     private void printConfirmation(String name, String location, String description,
-            Calendar taskDate) {
+            Calendar taskDate, int duration) {
         SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy");
         System.out.printf("Add this event:\n");
         System.out.printf("%s\n", name);
         System.out.printf("Location: %s\n", location);
+        System.out.printf("Duration: %d minutes\n", duration);
         System.out.printf("Description: %s\n", description);
         System.out.printf("Date: %s\n", format.format(taskDate.getTime()));
         System.out.printf("Confirm? (Y/N): ");
@@ -118,7 +122,7 @@ public class AddCommandHandler implements ICommandHandler {
         assertObjectNotNull(this);
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
-                setEvent(name, location, description, taskDate);
+                setEvent(name, location, description, taskDate, duration);
                 taskData.getEventMap().put(event.getTaskID(), event);
             }
             isProceedToConfirm = false;
@@ -126,7 +130,7 @@ public class AddCommandHandler implements ICommandHandler {
                     String.format("No. of events=%d", taskData.getEventMap().size()));
             return true;
         } else {
-            printConfirmation(name, location, description, taskDate);
+            printConfirmation(name, location, description, taskDate, duration);
             this.isProceedToConfirm = true;
             return true;
         }
@@ -151,7 +155,6 @@ public class AddCommandHandler implements ICommandHandler {
     public Event getEvent() {
         return event;
     }
-
 
     private void assertObjectNotNull(Object o) {
         assert (o != null);

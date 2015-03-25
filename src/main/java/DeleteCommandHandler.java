@@ -88,6 +88,7 @@ public class DeleteCommandHandler implements ICommandHandler {
         SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy");
         System.out.printf("Delete task - %s\n", event.getTaskName());
         System.out.printf("Date: %s\n", format.format(event.getTaskDate().getTime()));
+        System.out.printf("Duration: %d minutes\n", event.getTaskDuration());
         System.out.printf("Location: %s\n", event.getTaskLocation());
         System.out.printf("Description: %s\n", event.getTaskDescription());
         System.out.printf("Confirm? (Y/N): ");
