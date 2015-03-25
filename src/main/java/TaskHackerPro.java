@@ -1,6 +1,11 @@
 import java.io.IOException;
+<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.Map;
+=======
+import java.util.Map;
+import java.util.concurrent.Semaphore;
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 
 /**
  * 
@@ -15,20 +20,37 @@ public class TaskHackerPro {
     private TaskData taskData;
     private boolean isContinue = true;
 
+<<<<<<< HEAD
     private static final String PATH_TO_LOAD_AND_SAVE_DATA = "bin/TaskHackerPro.dat";
+=======
+    private final Semaphore outputLinesAvailableMutex;
+
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
 
+<<<<<<< HEAD
     private static final String MESSAGE_DATA_FILE_NOT_FOUND = "Data file is created\n";
     private static final String MESSAGE_DATA_FILE_LOADED = "Data file loaded successfully with %d event(s)!\n";
     private static final String MESSAGE_DATA_FILE_FAIL_TO_LOAD = "Data file cannot be loaded. New data file is created\n";
+=======
+    public TaskHackerPro(Semaphore outputLinesAvailableMutex) {
+        this.outputLinesAvailableMutex = outputLinesAvailableMutex;
+    }
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 
     public void printErrorMsg(String command, String message) {
         System.out.printf("%s: %s\n", command, message);
     }
 
     public void parseCommand() {
+<<<<<<< HEAD
+=======
+        System.out.println("Welcome to TaskHackerPro!");
+
+        outputLinesAvailableMutex.release();
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         while (isContinue && inputSource.hasNextLine()) {
             String inputLine = inputSource.getNextLine();
             int commandEndPosition = inputLine.indexOf(' ');
@@ -41,8 +63,13 @@ public class TaskHackerPro {
             }
 
             ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
+<<<<<<< HEAD
         	assertObjectNotNull(handler);
         	
+=======
+            assertObjectNotNull(handler);
+
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
             boolean isExtraInputNeeded = false;
 
             if (handler == null) {
@@ -58,42 +85,76 @@ public class TaskHackerPro {
                     }
 
                     isExtraInputNeeded = handler.isExtraInputNeeded();
+<<<<<<< HEAD
                     if (isExtraInputNeeded) {
+=======
+                    outputLinesAvailableMutex.release();
+                    if (isExtraInputNeeded && inputSource.hasNextLine()) {
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
                         inputLine = inputSource.getNextLine();
                     }
                 } while (isExtraInputNeeded);
             }
         }
 
+<<<<<<< HEAD
+=======
+        try {
+            DataManager.getInstance().saveTaskDataToFile(taskData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         inputSource.closeSource();
     }
 
     public TaskData getTaskData() {
+<<<<<<< HEAD
     	assertObjectNotNull(taskData);
+=======
+        assertObjectNotNull(taskData);
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         return taskData;
     }
 
     public void setCommandHandlerMap(Map<String, ICommandHandler> commandHandlerMap) {
+<<<<<<< HEAD
     	assertObjectNotNull(this);
+=======
+        assertObjectNotNull(this);
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         this.commandHandlerMap = commandHandlerMap;
     }
 
     public void setInputSource(IInputSource inputSource) {
+<<<<<<< HEAD
     	assertObjectNotNull(this);
+=======
+        assertObjectNotNull(this);
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         this.inputSource = inputSource;
     }
 
     public void setTaskData(TaskData taskData) {
+<<<<<<< HEAD
     	assertObjectNotNull(this);
+=======
+        assertObjectNotNull(this);
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         this.taskData = taskData;
     }
 
     public void setContinue(boolean isContinue) {
+<<<<<<< HEAD
     	assertObjectNotNull(this);
+=======
+        assertObjectNotNull(this);
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         this.isContinue = isContinue;
     }
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         System.out.println("Welcome to TaskHackerPro!");
 
         TaskHackerPro taskHackerPro = new TaskHackerPro();
@@ -140,4 +201,14 @@ public class TaskHackerPro {
     private void assertObjectNotNull(Object o) {
 		assert (o != null);
 	}
+=======
+        IInputSource inputSource = new ConsoleInputSource(System.in);
+        TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
+        new TaskHackerProRunner(inputSource, taskData).start();
+    }
+
+    private void assertObjectNotNull(Object o) {
+        assert (o != null);
+    }
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 }

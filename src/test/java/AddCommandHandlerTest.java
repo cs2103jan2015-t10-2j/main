@@ -1,31 +1,27 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 
-import org.junit.Before;
 import org.junit.Test;
 
-public class AddCommandHandlerTest {
+public class AddCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
-    private AddCommandHandler addCommandHandler;
 
-    private String commandAdd = "add Homework at 4:00 11/3/2015 @ Tembusu College desc \"Work on CS2103 project\"";
-    private String commandYes = "Y";
+    private static final String commandAdd = "add Homework at 4:00 11/3/2015 @ Tembusu College desc \"Work on CS2103 project\"";
+    private static final String commandYes = "Y";
 
-    @Before
-    public void setUp() throws Exception {
+    @Override
+    public TaskData createTaskData() {
         taskData = new TaskData();
-        addCommandHandler = new AddCommandHandler(taskData);
+        return taskData;
     }
 
     @Test
     public void testExecuteCommand() {
-        assertTrue(addCommandHandler.parseCommand(commandAdd));
-        assertTrue(addCommandHandler.executeCommand());
-        assertTrue(addCommandHandler.parseCommand(commandYes));
-        assertTrue(addCommandHandler.executeCommand());
+
+        super.executeCommand(commandAdd);
+        super.executeCommand(commandYes);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();

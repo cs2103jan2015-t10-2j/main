@@ -7,7 +7,11 @@ import org.junit.Before;
 /**
  * This class helps virtually enter command line by line. Console output and
  * data behind can be checked between commands. It helps debugging by directly
+<<<<<<< HEAD
  * entering command to check if the system matches the expectation..
+=======
+ * entering command to check if the system matches the expectation.
+>>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
  *
  * @author Lily Yung
  */
