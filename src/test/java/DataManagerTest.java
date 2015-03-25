@@ -5,25 +5,11 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import org.junit.After;
-<<<<<<< HEAD
-import org.junit.Before;
-=======
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 import org.junit.Test;
 
 public class DataManagerTest {
 
-<<<<<<< HEAD
-    private final String testFilePath = "testDatManagerFile.dat";
-    private DataManager dataManager;
-
-    @Before
-    public void setUp() {
-        dataManager = new DataManager();
-    }
-=======
     private final String testFilePath = "bin/testDatManagerFile.dat";
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 
     @After
     public void tearDown() {
@@ -55,16 +41,7 @@ public class DataManagerTest {
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
         try {
-<<<<<<< HEAD
-            dataManager.saveTaskDataToFile(testFilePath, taskDataToSave);
-            TaskData taskDataToLoad = dataManager.loadTaskDataFromFile(testFilePath);
 
-            assertEquals(taskDataToSave, taskDataToLoad);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-=======
             DataManager.getInstance().setPathToSaveLoad(testFilePath);
             DataManager.getInstance().saveTaskDataToFile(taskDataToSave);
             TaskData taskDataToLoad = DataManager.getInstance().loadTaskDataFromFile();
@@ -73,7 +50,7 @@ public class DataManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
+
     }
 
 }

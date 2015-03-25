@@ -9,11 +9,6 @@ public class DeleteCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private int taskId;
     private int actualId;
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
     private Event event;
     private boolean isConfirm;
     private boolean isProceedToConfirm;
@@ -28,13 +23,8 @@ public class DeleteCommandHandler implements ICommandHandler {
     }
 
     public DeleteCommandHandler(TaskData taskData) {
-<<<<<<< HEAD
-    	assertObjectNotNull(this);
-    	assertObjectNotNull(taskData);
-=======
         assertObjectNotNull(this);
         assertObjectNotNull(taskData);
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         this.taskData = taskData;
     }
 
@@ -68,20 +58,12 @@ public class DeleteCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-<<<<<<< HEAD
-    	assertObjectNotNull(this);
-        if (this.isProceedToConfirm) {
-            if (this.isConfirm) {
-                taskData.getEventMap().remove(actualId);
-                logger.log(Level.INFO, String.format("No. of events=%d", taskData.getEventMap().size()));
-=======
         assertObjectNotNull(this);
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
                 taskData.getEventMap().remove(actualId);
                 logger.log(Level.INFO,
                         String.format("No. of events=%d", taskData.getEventMap().size()));
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
             }
             isProceedToConfirm = false;
             return true;
@@ -115,15 +97,8 @@ public class DeleteCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return this.isProceedToConfirm;
     }
-<<<<<<< HEAD
-    
-	private void assertObjectNotNull(Object o) {
-		assert (o != null);
-	}
-=======
 
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 }

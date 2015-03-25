@@ -36,11 +36,6 @@ public class AddCommandHandler implements ICommandHandler {
         this.taskData = taskData;
         assertObjectNotNull(this);
     }
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
     /*
      * add [name] at [time] [date] @ [location] desc "[description]"
      * 
@@ -97,11 +92,7 @@ public class AddCommandHandler implements ICommandHandler {
     }
 
     public void setEvent(String name, String location, String description,
-<<<<<<< HEAD
-                         Calendar taskDate) {
-=======
             Calendar taskDate) {
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         event = new Event();
         event.setTaskID(getUniqueId());
         event.setTaskName(name);
@@ -111,13 +102,8 @@ public class AddCommandHandler implements ICommandHandler {
         assertObjectNotNull(event);
     }
 
-<<<<<<< HEAD
-    private void printConfirmation(String name, String location,
-                                   String description, Calendar taskDate) {
-=======
     private void printConfirmation(String name, String location, String description,
             Calendar taskDate) {
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy");
         System.out.printf("Add this event:\n");
         System.out.printf("%s\n", name);
@@ -129,26 +115,15 @@ public class AddCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-<<<<<<< HEAD
-    	
-=======
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
         assertObjectNotNull(this);
         if (this.isProceedToConfirm) {
             if (this.isConfirm) {
                 setEvent(name, location, description, taskDate);
                 taskData.getEventMap().put(event.getTaskID(), event);
-<<<<<<< HEAD
-                logger.log(Level.INFO, String.format("No. of events=%d",
-                                                     taskData.getEventMap().size()));
-            }
-            isProceedToConfirm = false;
-=======
             }
             isProceedToConfirm = false;
             logger.log(Level.INFO,
                     String.format("No. of events=%d", taskData.getEventMap().size()));
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
             return true;
         } else {
             printConfirmation(name, location, description, taskDate);
@@ -176,15 +151,9 @@ public class AddCommandHandler implements ICommandHandler {
     public Event getEvent() {
         return event;
     }
-<<<<<<< HEAD
-    
-	private void assertObjectNotNull(Object o) {
-		assert (o != null);
-	}
-=======
+
 
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 }
