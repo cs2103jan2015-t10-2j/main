@@ -9,7 +9,6 @@ public class DeleteCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private int taskId;
     private int actualId;
-
     private Event event;
     private boolean isConfirm;
     private boolean isProceedToConfirm;

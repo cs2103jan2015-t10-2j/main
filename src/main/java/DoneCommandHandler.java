@@ -6,7 +6,6 @@ public class DoneCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
     private int displayId;
-
     private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
     private static final Pattern patternDoneCommand;
 

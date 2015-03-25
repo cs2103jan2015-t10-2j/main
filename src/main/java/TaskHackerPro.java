@@ -14,13 +14,10 @@ public class TaskHackerPro {
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;
-
     private final Semaphore outputLinesAvailableMutex;
-
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
-
     public TaskHackerPro(Semaphore outputLinesAvailableMutex) {
         this.outputLinesAvailableMutex = outputLinesAvailableMutex;
     }
@@ -46,7 +43,6 @@ public class TaskHackerPro {
 
             ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
             assertObjectNotNull(handler);
-
             boolean isExtraInputNeeded = false;
 
             if (handler == null) {
@@ -69,7 +65,7 @@ public class TaskHackerPro {
                 } while (isExtraInputNeeded);
             }
         }
-
+        
         try {
             DataManager.getInstance().saveTaskDataToFile(taskData);
         } catch (IOException e) {
