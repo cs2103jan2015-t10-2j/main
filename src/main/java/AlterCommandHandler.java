@@ -14,14 +14,14 @@ public class AlterCommandHandler implements ICommandHandler {
     private String location;
     private String description;
     private Calendar taskDate;
+    private int duration;
     
     private Event event;
 
     private boolean isConfirm;
     private boolean isProceedToConfirm;
 
-    // for V0.2, we shall require that users pass us all the fields again.
-    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+) as (?<time>.+) @ (?<location>.+) desc \"(?<description>.+)\"";
+    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+) as (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\"";
     private static final String timeFormatString = "h:m d/M/y";
     private static final Pattern patternUpdateCommand;
     private static final SimpleDateFormat timeFormat;
@@ -61,7 +61,8 @@ public class AlterCommandHandler implements ICommandHandler {
                 }
             }
             eventId = Integer.parseInt(patternMatcher.group("eventID"));
-            time = patternMatcher.group("time");
+            time = patternMatcher.group("time");          
+            duration = Integer.parseInt(patternMatcher.group("duration"));
             location = patternMatcher.group("location");
             description = patternMatcher.group("description");
             taskDate = Calendar.getInstance();
@@ -87,6 +88,7 @@ public class AlterCommandHandler implements ICommandHandler {
                 event.setTaskLocation(location);
                 event.setTaskDescription(description);
                 event.setTaskDate(taskDate);
+                event.setTaskDuration(duration);
             }
             isProceedToConfirm = false;
             return true;
@@ -100,7 +102,7 @@ public class AlterCommandHandler implements ICommandHandler {
             boolean isExist = taskData.getEventMap().containsKey(actualId);
             if (isExist) {
                 event = taskData.getEventMap().get(actualId);
-                printConfirmation(event, location, description, taskDate);
+                printConfirmation(event, location, description, taskDate, duration);
                 this.isProceedToConfirm = true;
                 return true;
             } else {
@@ -110,19 +112,21 @@ public class AlterCommandHandler implements ICommandHandler {
     }
 
     private void printConfirmation(Event event, String location,
-                                   String description, Calendar taskDate) {
+                                   String description, Calendar taskDate, int duration) {
         SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy");
         System.out.printf("Editing task - %s\n", event.getTaskName());
         System.out.printf("Before modification:\n");
         System.out.printf("Date: %s\n",
                           format.format(event.getTaskDate().getTime()));
+        System.out.printf("Duration: %d minutes\n", event.getTaskDuration());
         System.out.printf("Location: %s\n", event.getTaskLocation());
         System.out.printf("Description: %s\n", event.getTaskDescription());
         System.out.printf("\nAfter modification:\n");
         System.out.printf("Date: %s\n", format.format(taskDate.getTime()));
+        System.out.printf("Duration: %d minutes\n", duration);
         System.out.printf("Location: %s\n", location);
         System.out.printf("Description: %s\n", description);
-        System.out.printf("Confirm? (Y/N): ");
+        System.out.printf("\tConfirm? (Y/N): ");
     }
 
     @Override
