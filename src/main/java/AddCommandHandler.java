@@ -73,9 +73,9 @@ public class AddCommandHandler implements ICommandHandler {
             assertObjectNotNull(this);
             this.name = patternMatcher.group("name");
             String time = patternMatcher.group("time");
+            this.duration = Integer.parseInt(patternMatcher.group("duration"));
             this.location = patternMatcher.group("location");
             this.description = patternMatcher.group("description");
-            this.duration = Integer.parseInt(patternMatcher.group("duration"));
             this.taskDate = Calendar.getInstance();
             assertObjectNotNull(this);
 
@@ -111,7 +111,7 @@ public class AddCommandHandler implements ICommandHandler {
         System.out.printf("Add this event:\n");
         System.out.printf("%s\n", name);
         System.out.printf("Location: %s\n", location);
-        System.out.printf("Duration: %d minutes \n", duration);
+        System.out.printf("Duration: %d minutes\n", duration);
         System.out.printf("Description: %s\n", description);
         System.out.printf("Date: %s\n", format.format(taskDate.getTime()));
         System.out.printf("Confirm? (Y/N): ");
