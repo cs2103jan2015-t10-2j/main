@@ -56,19 +56,22 @@ public class TaskHackerProRunner {
         try {
             outputLinesAvailableMutex.acquire();
 
-            try {
-                baos.flush();
-                String outputLines = baos.toString("UTF-8");
-                String[] returnValue = outputLines.split("[\\r\\n]+");
-                baos.reset();
+            if (baos != null) {
+                try {
+                    baos.flush();
+                    String outputLines = baos.toString("UTF-8");
+                    String[] returnValue = outputLines.split("[\\r\\n]+");
+                    baos.reset();
 
-                return returnValue;
-            } catch (IOException e) {
-                return null;
+                    return returnValue;
+                } catch (IOException e) {
+
+                }
             }
         } catch (InterruptedException e) {
-            return null;
+
         }
+        return null;
     }
 
     public Thread start() {
