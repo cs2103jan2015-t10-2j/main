@@ -8,6 +8,7 @@ public class Event implements Serializable {
     private int taskID;
     private String taskName;
     private Calendar taskDate;
+    private int taskDuration;
     private String taskLocation;
     private String taskDescription;
     private TaskPriority taskPriority = TaskPriority.MEDIUM;
@@ -46,7 +47,18 @@ public class Event implements Serializable {
     }
 
     public void setTaskDate(Calendar taskDate) {
-        assertObjectNotNull(this);        this.taskDate = taskDate;
+        assertObjectNotNull(this);        
+        this.taskDate = taskDate;
+    }
+    
+    public int getTaskDuration () {
+    	assertObjectNotNull(this);
+        return taskDuration;
+    }
+    
+    public void setTaskDuration (int taskDuration) {
+    	assertObjectNotNull(this);
+        this.taskDuration = taskDuration;
     }
 
     public String getTaskLocation() {
