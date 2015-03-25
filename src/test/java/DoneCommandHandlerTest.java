@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
-public class DoneCommandHandlerTest {
-
-    private TaskData taskData;
-    private DoneCommandHandler doneCommandHandler;
-
-    private int taskId = 24356;
-    private String commandDone = "done 24356";
-
-    @Before
-    public void setUp() throws Exception {
-        taskData = new TaskData();
-        doneCommandHandler = new DoneCommandHandler(taskData);
-=======
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,24 +18,10 @@ public class DoneCommandHandlerTest extends StringBasedTest {
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
     }
 
     @Test
     public void testExexcuteCommand() {
-<<<<<<< HEAD
-        Event event = new Event();
-
-        event.setTaskID(taskId);
-        taskData.getEventMap().put(event.getTaskID(), event);
-
-        assertFalse(taskData.getEventMap().get(taskId).isDone());
-        assertTrue(doneCommandHandler.parseCommand(commandDone));
-        assertTrue(doneCommandHandler.executeCommand());
-        assertTrue(taskData.getEventMap().get(taskId).isDone());
-    }
-
-=======
         // Add an event
         super.executeCommand(commandAdd);
         super.executeCommand(commandYes);
@@ -72,5 +39,4 @@ public class DoneCommandHandlerTest extends StringBasedTest {
         super.executeCommand(commandDone);
         assertTrue(event.isDone());
     }
->>>>>>> 62921b25f52b056ebc85bf70b983ffab11e44fb7
 }
