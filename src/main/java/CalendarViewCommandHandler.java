@@ -10,7 +10,12 @@ import java.util.regex.Pattern;
 
 public class CalendarViewCommandHandler implements ICommandHandler {
 
-    private TaskData taskData;
+    private static final String blankSpace = " ";
+	private static final String messageInvalidOption = "Invalid option";
+	private static final String messageReenterDate = "Please enter date again in dd/MM/YYYY format";
+	private static final String messageIncorrectFormat = "Incorrect format";
+	private static final String dateDelimiter = "date";
+	private TaskData taskData;
     private String command;
     private Calendar dateViewing;
 
@@ -45,18 +50,18 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
             if (matcher.matches()) {
                 try {
-                    Date parsedDate = dateFormat.parse(matcher.group("date"));
+                    Date parsedDate = dateFormat.parse(matcher.group(dateDelimiter));
                     dateViewing = Calendar.getInstance();
                     dateViewing.setTime(parsedDate);
                 } catch (ParseException e) {
-                    System.out.println("Incorrect format");
-                    System.out.println("Please enter date again in dd/MM/YYYY format");
+                    System.out.println(messageIncorrectFormat);
+                    System.out.println(messageReenterDate);
                     return false;
                 }
                 return true;
             } else {
-                System.out.println("Incorrect format");
-                System.out.println("Please enter date again in dd/MM/YYYY format");
+                System.out.println(messageIncorrectFormat);
+                System.out.println(messageReenterDate);
 
                 isExtraInputNeeded = true;
                 return false;
@@ -70,7 +75,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                     return true;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid option");
+                System.out.println(messageInvalidOption);
                 return false;
             }
         }
@@ -83,7 +88,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         isExtraInputNeeded = false;
 
         if (dateViewing == null) {
-            String[] dateParts = command.split(" ");
+            String[] dateParts = command.split(blankSpace);
             int day = Integer.parseInt(dateParts[0]);
             int month = Integer.parseInt(dateParts[1]);
             int year = Integer.parseInt(dateParts[2]);
