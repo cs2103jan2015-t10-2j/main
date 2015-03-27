@@ -10,7 +10,8 @@ import java.util.concurrent.Semaphore;
 
 public class TaskHackerPro {
 
-    private IInputSource inputSource;
+    private static final String messageWelcome = "Welcome to TaskHackerPro!";
+	private IInputSource inputSource;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;
@@ -30,7 +31,7 @@ public class TaskHackerPro {
     }
 
     public void parseCommand() {
-        System.out.println("Welcome to TaskHackerPro!");
+        System.out.println(messageWelcome);
 
         outputLinesAvailableMutex.release();
         while (isContinue && inputSource.hasNextLine()) {
