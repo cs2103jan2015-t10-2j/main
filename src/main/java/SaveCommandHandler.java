@@ -2,8 +2,10 @@ import java.io.IOException;
 
 public class SaveCommandHandler implements ICommandHandler {
 
-    private TaskData taskData;
+	private TaskData taskData;
     private String fileSavePath;
+    
+    private static final String saveDelimiter = "save";
     private static final String FILE_SAVE = "File is saved";
 
     public SaveCommandHandler(TaskData taskData) {
@@ -12,7 +14,7 @@ public class SaveCommandHandler implements ICommandHandler {
 
     @Override
     public boolean parseCommand(String command) {
-        if (!command.equalsIgnoreCase("save")) {
+        if (!command.equalsIgnoreCase(saveDelimiter)) {
             return false;
         }
         return true;

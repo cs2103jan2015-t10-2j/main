@@ -7,7 +7,22 @@ import java.util.logging.Logger;
 
 public class SearchCommandHandler implements ICommandHandler {
 
-    private String keyword;
+	private static final String messageDispResultsFormat = "%-15s %s %s %s \"%s\"\n";
+	private static final String messageTitleFormat = "%-15s %s\n";
+	private static final String simpleDateFormat = "HH:mm dd MMM, yyyy";
+	
+	private static final String loggerExecuteException = "execute exception";
+	private static final String loggerParsedWord = "Parsed keyword - ";
+	private static final String loggerInputCommand = "Input command - %s";
+
+	private static final String messageTotalResults = "Total results: %d\n\n";
+	private static final String messageSearchResults = "--------------Search results based on keyWord \"%s\"-------------\n";
+	private static final String messageTaskDetailsHeader = "Task Details";
+	private static final String messageTaskIdHeader = "Task ID";
+    private static final String atDelimiter = "@";
+	private static final String searchDelimiter = "search (.+)";
+	
+	private String keyword;
 
     private TaskData taskData;
     private static final Logger logger = Logger.getLogger("SearchCommandHandler");
@@ -20,16 +35,16 @@ public class SearchCommandHandler implements ICommandHandler {
 
     @Override
     public boolean parseCommand(String command) {
-        logger.log(Level.INFO, String.format("Input command - %s", command));
+        logger.log(Level.INFO, String.format(loggerInputCommand, command));
         int firstSpace = command.indexOf(' ');
 
-        if (firstSpace < 0 || !command.matches("search (.+)")) {
+        if (firstSpace < 0 || !command.matches(searchDelimiter)) {
             return false;
         }
 
         assertObjectNotNull(this);
         this.keyword = command.substring(firstSpace + 1);
-        logger.log(Level.INFO, "Parsed keyword - " + keyword);
+        logger.log(Level.INFO, loggerParsedWord + keyword);
         return true;
     }
 
@@ -40,7 +55,7 @@ public class SearchCommandHandler implements ICommandHandler {
             displaySearchResults(searchActualIds, keyword);
             return true;
         } catch (Exception e) {
-            logger.log(Level.INFO, "execute exception", e);
+            logger.log(Level.INFO, loggerExecuteException, e);
             System.out.println(e.getMessage());
         }
         return true;
@@ -49,7 +64,7 @@ public class SearchCommandHandler implements ICommandHandler {
     public void displaySearchResults(List<Integer> searchActualIds,
             String keyword) {
         Set<Integer> ActualIds = new HashSet<Integer>();
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm dd MMM, yyyy");
+        SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
         Event event;
 
         for (Integer Ids : searchActualIds)
@@ -57,15 +72,15 @@ public class SearchCommandHandler implements ICommandHandler {
 
         taskData.updateDisplayID(ActualIds);
 
-        System.out.printf("--------------Search results based on keyWord \"%s\"-------------\n",keyword);
-        System.out.printf("Total results: %d\n\n", searchActualIds.size());
-        System.out.printf("%-15s %s\n", "Task ID", "Task Details");
+        System.out.printf(messageSearchResults, keyword);
+        System.out.printf(messageTotalResults, searchActualIds.size());
+        System.out.printf(messageTitleFormat, messageTaskIdHeader, messageTaskDetailsHeader);
 
         for (Integer searchId : searchActualIds) {
             event = taskData.getEventMap().get(searchId);
-            System.out.printf("%-15s %s %s %s \"%s\"\n",
+            System.out.printf(messageDispResultsFormat,
                     taskData.getDisplayId(searchId),
-                    format.format(event.getTaskDate().getTime()), "@",
+                    format.format(event.getTaskDate().getTime()), atDelimiter,
                     event.getTaskLocation(), event.getTaskDescription());
         }
     }

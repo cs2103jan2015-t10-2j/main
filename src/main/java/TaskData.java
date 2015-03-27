@@ -7,7 +7,10 @@ import java.util.Set;
 
 public class TaskData implements Serializable {
 
-    private static final long serialVersionUID = 6897919790578039077L;
+    private static final String messageNoResults = "Your search request returned 0 results";
+	private static final String messageEmptyFile = "File is empty!";
+
+	private static final long serialVersionUID = 6897919790578039077L;
 
     private Map<Integer, Event> eventMap;
     private Map<Integer, Integer> displayIDToActualIDMap;
@@ -25,26 +28,26 @@ public class TaskData implements Serializable {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
         assertObjectNotNull(this);
         if (this.eventMap.isEmpty()) {
-            throw new Exception("File is empty!");
+            throw new Exception(messageEmptyFile);
+        } else {
+        	matchedTaskIds = findMatchedIds(keyword, matchedTaskIds);
         }
-
-        else {
-
-            for (Integer taskId : this.eventMap.keySet()) {
-                Event event = this.eventMap.get(taskId);
-
-                if (this.hasKeyWord(event, keyword)) {
-                    matchedTaskIds.add(taskId);
-                }
-            }
-        }
-
         if (matchedTaskIds.size() == 0) {
-            throw new Exception("Your search request returned 0 results");
+            throw new Exception(messageNoResults);
         }
-
         return matchedTaskIds;
     }
+
+	private ArrayList<Integer> findMatchedIds(String keyword, ArrayList<Integer> matchedTaskIds) {
+		for (Integer taskId : this.eventMap.keySet()) {
+		    Event event = this.eventMap.get(taskId);
+
+		    if (this.hasKeyWord(event, keyword)) {
+		        matchedTaskIds.add(taskId);
+		    }
+		}
+		return matchedTaskIds;
+	}
 
     public int getActualId(int displayId) throws NoSuchElementException {
         assertObjectNotNull(this);
