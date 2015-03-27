@@ -72,12 +72,7 @@ public class AlterCommandHandler implements ICommandHandler {
                     return false;
                 }
             }
-            eventId = Integer.parseInt(patternMatcher.group(eventIDDelimiter));
-            time = patternMatcher.group(timeDelimiter);          
-            duration = Integer.parseInt(patternMatcher.group(durationDelimiter));
-            location = patternMatcher.group(locationDelimiter);
-            description = patternMatcher.group(descriptionDelimiter);
-            taskDate = Calendar.getInstance();
+            setTaskDetails(patternMatcher);
 
             try {
                 Date parsedDate = timeFormat.parse(time);
@@ -90,6 +85,15 @@ public class AlterCommandHandler implements ICommandHandler {
 
         return true;
     }
+
+	private void setTaskDetails(Matcher patternMatcher) {
+		eventId = Integer.parseInt(patternMatcher.group(eventIDDelimiter));
+		time = patternMatcher.group(timeDelimiter);          
+		duration = Integer.parseInt(patternMatcher.group(durationDelimiter));
+		location = patternMatcher.group(locationDelimiter);
+		description = patternMatcher.group(descriptionDelimiter);
+		taskDate = Calendar.getInstance();
+	}
 
 	private boolean parseProceedToConfirm(String command) {
 		boolean isYes = yes.equalsIgnoreCase(command);
