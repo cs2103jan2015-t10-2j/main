@@ -1,7 +1,5 @@
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,14 +61,10 @@ public class SearchCommandHandler implements ICommandHandler {
 
     public void displaySearchResults(List<Integer> searchActualIds,
             String keyword) {
-        Set<Integer> ActualIds = new HashSet<Integer>();
         SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
         Event event;
 
-        for (Integer Ids : searchActualIds)
-            ActualIds.add(Ids);
-
-        taskData.updateDisplayID(ActualIds);
+        taskData.updateDisplayID(searchActualIds);
 
         System.out.printf(messageSearchResults, keyword);
         System.out.printf(messageTotalResults, searchActualIds.size());
