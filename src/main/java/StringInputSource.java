@@ -4,9 +4,9 @@ import java.util.concurrent.Semaphore;
 
 public class StringInputSource implements IInputSource {
 
-	private LinkedBlockingDeque<String> lines;
+    private LinkedBlockingDeque<String> lines;
     private final Semaphore outputLinesAvailableMutex;
-	
+
     private static final String stringSplitFormat = "[\\r\\n]+";
 
     public StringInputSource(Semaphore outputLinesAvailableMutex) {

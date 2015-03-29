@@ -6,34 +6,33 @@ import java.util.regex.Pattern;
 
 public class DeleteCommandHandler implements ICommandHandler {
 
-	private static final String messageNumberEvents = "No. of events=%d";
-	private TaskData taskData;
+    private static final String messageNumberEvents = "No. of events=%d";
+    private TaskData taskData;
     private int taskId;
     private int actualId;
-    
+
     private static final Pattern patternDelteCommand;
     private static final Logger logger;
 
     private Event event;
     private boolean isConfirm;
     private boolean isProceedToConfirm;
-    
 
     private static final String taskIdDelimiter = "taskId";
-	private static final String loggerDeleteTitle = "DeleteCommandHandler";
+    private static final String loggerDeleteTitle = "DeleteCommandHandler";
     private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
-	private static final String simpleDateFormat = "dd MMM, yyyy";
-    
-	private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
-	private static final String messageConfirmation = "Confirm? (Y/N): ";
-	private static final String messageDateFormat = "Date: %s\n";
-	private static final String messageDescriptionFormat = "Description: %s\n";
-	private static final String messageDurationFormat = "Duration: %d minutes\n";
-	private static final String messageLocationFormat = "Location: %s\n";
-	private static final String messageDeleteTask = "Delete task - %s\n";
-	private static final String no = "N";
-	private static final String yes = "Y";
-    
+    private static final String simpleDateFormat = "dd MMM, yyyy";
+
+    private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
+    private static final String messageConfirmation = "Confirm? (Y/N): ";
+    private static final String messageDateFormat = "Date: %s\n";
+    private static final String messageDescriptionFormat = "Description: %s\n";
+    private static final String messageDurationFormat = "Duration: %d minutes\n";
+    private static final String messageLocationFormat = "Location: %s\n";
+    private static final String messageDeleteTask = "Delete task - %s\n";
+    private static final String no = "N";
+    private static final String yes = "Y";
+
     static {
         patternDelteCommand = Pattern.compile(deleteCommandFormat);
         logger = Logger.getLogger(loggerDeleteTitle);
@@ -58,28 +57,28 @@ public class DeleteCommandHandler implements ICommandHandler {
         }
     }
 
-	private boolean setTaskID(String command) {
-		Matcher patternMatcher = patternDelteCommand.matcher(command);
-		if (patternMatcher.matches()) {
-		    taskId = Integer.parseInt(patternMatcher.group(taskIdDelimiter));
-		    return true;
-		} else {
-		    return false;
-		}
-	}
+    private boolean setTaskID(String command) {
+        Matcher patternMatcher = patternDelteCommand.matcher(command);
+        if (patternMatcher.matches()) {
+            taskId = Integer.parseInt(patternMatcher.group(taskIdDelimiter));
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	private boolean parseProceedToConfirm(String command) {
-		boolean isYes = yes.equalsIgnoreCase(command);
-		boolean isNo = no.equalsIgnoreCase(command);
-		boolean isValid = (isYes ^ isNo);
+    private boolean parseProceedToConfirm(String command) {
+        boolean isYes = yes.equalsIgnoreCase(command);
+        boolean isNo = no.equalsIgnoreCase(command);
+        boolean isValid = (isYes ^ isNo);
 
-		if (isValid) {
-		    isConfirm = isYes;
-		    return true;
-		} else {
-		    return false;
-		}
-	}
+        if (isValid) {
+            isConfirm = isYes;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public boolean executeCommand() {
