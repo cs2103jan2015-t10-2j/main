@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
 /**
  * 
@@ -16,15 +15,9 @@ public class TaskHackerPro {
     private TaskData taskData;
     private boolean isContinue = true;
 
-    private final Semaphore outputLinesAvailableMutex;
-
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
-
-    public TaskHackerPro(Semaphore outputLinesAvailableMutex) {
-        this.outputLinesAvailableMutex = outputLinesAvailableMutex;
-    }
 
     public void printErrorMsg(String command, String message) {
         System.out.printf("%s: %s\n", command, message);
@@ -33,7 +26,6 @@ public class TaskHackerPro {
     public void parseCommand() {
         System.out.println(messageWelcome);
 
-        outputLinesAvailableMutex.release();
         while (isContinue && inputSource.hasNextLine()) {
             String inputLine = inputSource.getNextLine();
             int commandEndPosition = inputLine.indexOf(' ');
@@ -63,7 +55,6 @@ public class TaskHackerPro {
                     }
 
                     isExtraInputNeeded = handler.isExtraInputNeeded();
-                    outputLinesAvailableMutex.release();
                     if (isExtraInputNeeded && inputSource.hasNextLine()) {
                         inputLine = inputSource.getNextLine();
                     }
