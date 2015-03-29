@@ -10,7 +10,7 @@ import java.util.Map;
 public class TaskHackerPro {
 
     private static final String messageWelcome = "Welcome to TaskHackerPro!";
-	private IInputSource inputSource;
+    private IInputSource inputSource;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;

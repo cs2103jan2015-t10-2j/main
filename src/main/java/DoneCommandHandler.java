@@ -12,7 +12,6 @@ public class DoneCommandHandler implements ICommandHandler {
     private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
     private static final String taskIdDelimiter = "taskId";
 
-
     static {
         patternDoneCommand = Pattern.compile(doneCommandFormat);
     }
