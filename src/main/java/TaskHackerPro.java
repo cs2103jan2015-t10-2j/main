@@ -23,7 +23,7 @@ public class TaskHackerPro {
         System.out.printf("%s: %s\n", command, message);
     }
 
-    public void parseCommand() {
+    public void parseCommand() throws IOException {
         System.out.println(messageWelcome);
 
         while (isContinue && inputSource.hasNextLine()) {
@@ -62,11 +62,7 @@ public class TaskHackerPro {
             }
         }
 
-        try {
-            DataManager.getInstance().saveTaskDataToFile(taskData);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DataManager.getInstance().saveTaskDataToFile(taskData);
         inputSource.closeSource();
     }
 

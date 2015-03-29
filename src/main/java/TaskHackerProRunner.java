@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +9,7 @@ public class TaskHackerProRunner {
     private TaskHackerPro taskHackerPro;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
+    private Throwable uncaughtException;
 
     public TaskHackerProRunner(IInputSource inputSorurce) {
         this(inputSorurce, null);
@@ -44,11 +47,25 @@ public class TaskHackerProRunner {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                taskHackerPro.parseCommand();
+                try {
+                    taskHackerPro.parseCommand();
+                } catch (IOException e) {
+                    TaskHackerProRunner.this.uncaughtException = e;
+                }
+            }
+        });
+        t.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                TaskHackerProRunner.this.uncaughtException = e;
             }
         });
         t.start();
 
         return t;
+    }
+
+    public Throwable getUncaughtException() {
+        return uncaughtException;
     }
 }

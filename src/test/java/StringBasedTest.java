@@ -80,6 +80,9 @@ public abstract class StringBasedTest {
      */
     public String[] executeCommand(String command) {
         inputSorurce.addCommand(command);
+        if (taskHackerProRunner.getUncaughtException() != null) {
+            throw new RuntimeException(taskHackerProRunner.getUncaughtException());
+        }
         return this.getOutputLines();
     }
 
