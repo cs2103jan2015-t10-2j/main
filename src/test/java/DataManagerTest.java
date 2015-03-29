@@ -18,7 +18,7 @@ public class DataManagerTest {
     }
 
     @Test
-    public void testSaveAndLoad() {
+    public void testSaveAndLoad() throws IOException {
         TaskData taskDataToSave = new TaskData();
         Event eventToSave = new Event();
         Calendar c1 = Calendar.getInstance();
@@ -40,15 +40,11 @@ public class DataManagerTest {
         eventToSave.setTaskDescription("Shopping in IMM");
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
-        try {
-            DataManager.getInstance().setPathToSaveLoad(testFilePath);
-            DataManager.getInstance().saveTaskDataToFile(taskDataToSave);
-            TaskData taskDataToLoad = DataManager.getInstance().loadTaskDataFromFile();
+        DataManager.getInstance().setPathToSaveLoad(testFilePath);
+        DataManager.getInstance().saveTaskDataToFile(taskDataToSave);
+        TaskData taskDataToLoad = DataManager.getInstance().loadTaskDataFromFile();
 
-            assertEquals(taskDataToSave, taskDataToLoad);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals(taskDataToSave, taskDataToLoad);
     }
 
 }

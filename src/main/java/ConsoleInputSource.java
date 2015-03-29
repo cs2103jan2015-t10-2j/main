@@ -22,5 +22,5 @@ public class ConsoleInputSource implements IInputSource {
     @Override
     public void closeSource() {
         scanner.close();
-    }    
+    }
 }
