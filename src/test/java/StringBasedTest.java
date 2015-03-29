@@ -1,5 +1,9 @@
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,8 +17,10 @@ import org.junit.Before;
  */
 public abstract class StringBasedTest {
 
+    private Semaphore outputLinesAvailableMutex;
     private StringInputSource inputSorurce;
     private TaskHackerProRunner taskHackerProRunner;
+    private ByteArrayOutputStream baos;
 
     /**
      * Create a {@code TaskData} object that is used by {@code StringBasedTest}
@@ -38,9 +44,20 @@ public abstract class StringBasedTest {
     @Before
     public void setUpTaskHackerRunner() {
         TaskData taskData = createTaskData();
-        inputSorurce = new StringInputSource();
-        taskHackerProRunner = new TaskHackerProRunner(inputSorurce, taskData, true);
+
+        outputLinesAvailableMutex = new Semaphore(0, true);
+        inputSorurce = new StringInputSource(outputLinesAvailableMutex);
+        taskHackerProRunner = new TaskHackerProRunner(inputSorurce, taskData);
+
+        MultiOutputStream mos = new MultiOutputStream(System.out, true);
+        baos = new ByteArrayOutputStream();
+        mos.addOutputStream(baos);
+        System.setOut(new PrintStream(mos));
+
         taskHackerProRunner.start();
+
+        // Erase welcome message
+        this.getOutputLines();
     }
 
     /**
@@ -48,6 +65,7 @@ public abstract class StringBasedTest {
      */
     @After
     public void exitProgram() {
+        outputLinesAvailableMutex.release();
         executeCommand("exit");
     }
 
@@ -62,7 +80,7 @@ public abstract class StringBasedTest {
      */
     public String[] executeCommand(String command) {
         inputSorurce.addCommand(command);
-        return taskHackerProRunner.getOutputLines();
+        return this.getOutputLines();
     }
 
     /**
@@ -83,5 +101,27 @@ public abstract class StringBasedTest {
         }
 
         return allOutput;
+    }
+
+    private String[] getOutputLines() {
+        try {
+            outputLinesAvailableMutex.acquire();
+
+            if (baos != null) {
+                try {
+                    baos.flush();
+                    String outputLines = baos.toString("UTF-8");
+                    String[] returnValue = outputLines.split("[\\r\\n]+");
+                    baos.reset();
+
+                    return returnValue;
+                } catch (IOException e) {
+
+                }
+            }
+        } catch (InterruptedException e) {
+
+        }
+        return null;
     }
 }
