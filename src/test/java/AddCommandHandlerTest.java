@@ -9,7 +9,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
     private TaskData taskData;
 
     private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
-    private static final String commandYes = "Y";
 
     @Override
     public TaskData createTaskData() {
@@ -20,7 +19,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
     @Test
     public void testExecuteCommand() {
         super.executeCommand(commandAdd);
-        super.executeCommand(commandYes);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();

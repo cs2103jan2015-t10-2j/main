@@ -22,7 +22,6 @@ public class DeleteCommandHandlerTest extends StringBasedTest {
     public void testExecute() {
         // Add an event
         super.executeCommand(commandAdd);
-        super.executeCommand(commandYes);
         assertEquals(1, taskData.getEventMap().size());
 
         // Cannot delete without display first
