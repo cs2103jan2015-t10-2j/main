@@ -42,7 +42,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
         // Add an event successfully
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
         
         // There should be one item in the map
         assertEquals(1, taskData.getEventMap().size());
@@ -69,16 +68,15 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     
     
     @Test
-    // Boundary case: valid abort during creation
+    // Boundary case: valid during creation
     public void testExecuteCase2() {
 
         // Add a valid event, but then abort.
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmNo);
         
-        // There should be zero items in the map
-        assertEquals(0, taskData.getEventMap().size());   
-    }    
+        // There should be one item in the map
+        assertEquals(1, taskData.getEventMap().size());   
+    }
     
     @Test
     // BC: Failure during creation of event
@@ -86,18 +84,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
         // Add a poorly-formed event
         super.executeCommand(invalidCommandAdd);
-        
-        // There should be zero items in the map
-        assertEquals(0, taskData.getEventMap().size());   
-    } 
-    
-    @Test
-    // BC: Adding event not confirmed correctly.
-    public void testExecuteCase4() {
-
-        // Add an event, but fail to confirm properly
-        super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmInvalid);
         
         // There should be zero items in the map
         assertEquals(0, taskData.getEventMap().size());   
@@ -109,7 +95,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
         // Add an event successfully
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         
@@ -133,7 +118,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
         // Add an event successfully
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
@@ -154,7 +138,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     public void testExecuteCase7() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         
@@ -176,7 +159,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     public void testExecuteCase8() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         
@@ -198,7 +180,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     public void testExecuteCase9() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         
@@ -221,7 +202,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     public void testExecuteCase10() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         
@@ -243,7 +223,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     public void testExecuteCase11() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         
@@ -266,7 +245,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     public void testExecuteCase12() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
          
         assertEquals(1, taskData.getEventMap().size());
         
