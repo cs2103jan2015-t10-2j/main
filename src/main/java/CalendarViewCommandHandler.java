@@ -1,9 +1,9 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -105,7 +105,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             return true;           
             
         } else {
-            Set<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, chosenView);
+            List<Integer> taskIds = getMatchedTaskDisplayIDs(dateViewing, chosenView);
             
             displayChosenView();
 
@@ -160,8 +160,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return isExtraInputNeeded;
     }
 
-    public Set<Integer> getMatchedTaskDisplayIDs(Calendar dateViewing,ViewOption chosenView) {
-        Set<Integer> returnTaskIds = new HashSet<Integer>();
+    public List<Integer> getMatchedTaskDisplayIDs(Calendar dateViewing,ViewOption chosenView) {
+        List<Integer> returnTaskIds = new ArrayList<Integer>();
         
         for (Integer actualId : taskData.getEventMap().keySet()) {
             Calendar taskDate = taskData.getEventMap().get(actualId).getTaskDate();
