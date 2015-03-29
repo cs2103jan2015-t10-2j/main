@@ -14,13 +14,12 @@ public class AddCommandHandler implements ICommandHandler {
     private static final String timeFormatString = "h:m d/M/y";
 	private static final String dateFormat = "dd MMM, yyyy";
 
-	private static final String messageConfirmation = "Confirm? (Y/N): ";
 	private static final String messageDateFormat = "Date: %s\n";
 	private static final String messageDescriptionFormat = "Description: %s\n";
 	private static final String messageDurationFormat = "Duration: %d minutes\n";
 	private static final String messageLocationFormat = "Location: %s\n";
 	private static final String messageNameFormat = "%s\n";
-	private static final String messageAddEventFormat = "Add this event:\n";
+	private static final String messageAddEventFormat = "Added this event:\n";
 
 	private static final String loggerNumberOfEvents = "No. of events=%d";
 	private static final String loggerParsedEvent = "Parsed event - ";
@@ -33,13 +32,8 @@ public class AddCommandHandler implements ICommandHandler {
 	private static final String timeDelimiter = "time";
 	private static final String nameDelimiter = "name";
 	
-	private static final String no = "N";
-	private static final String yes = "Y";
-    
 	private TaskData taskData;
     private Event event;
-    private boolean isConfirm;
-    private boolean isProceedToConfirm;
 
     private String name;
     private String location;
@@ -75,9 +69,7 @@ public class AddCommandHandler implements ICommandHandler {
 
         logger.log(Level.INFO, String.format(loggerInputCommand, command));
 
-        if (isProceedToConfirm) {
-            return parseProceedToConfirm(command);
-        } else {
+        
             if (command.isEmpty()) {
                 return false;
             } else {
@@ -104,23 +96,10 @@ public class AddCommandHandler implements ICommandHandler {
             }
 
             logger.log(Level.INFO, loggerParsedEvent + event);
-        }
+        
 
         return true;
     }
-
-	private boolean parseProceedToConfirm(String command) {
-		boolean isYes = yes.equalsIgnoreCase(command);
-		boolean isNo = no.equalsIgnoreCase(command);
-		boolean isValid = (isYes ^ isNo);
-
-		if (isValid) {
-		    isConfirm = isYes;
-		    return true;
-		} else {
-		    return false;
-		}
-	}
 
     public void setEvent(String name, String location, String description,
             Calendar taskDate, int duration) {
@@ -143,31 +122,23 @@ public class AddCommandHandler implements ICommandHandler {
         System.out.printf(messageDurationFormat, duration);
         System.out.printf(messageDescriptionFormat, description);
         System.out.printf(messageDateFormat, format.format(taskDate.getTime()));
-        System.out.printf(messageConfirmation);
     }
 
     @Override
     public boolean executeCommand() {
         assertObjectNotNull(this);
-        if (this.isProceedToConfirm) {
-            if (this.isConfirm) {
-                setEvent(name, location, description, taskDate, duration);
-                taskData.getEventMap().put(event.getTaskID(), event);
-            }
-            isProceedToConfirm = false;
+        	setEvent(name, location, description, taskDate, duration);
+            taskData.getEventMap().put(event.getTaskID(), event);
+            printConfirmation(name, location, description, taskDate, duration);
             logger.log(Level.INFO,
                     String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
             return true;
-        } else {
-            printConfirmation(name, location, description, taskDate, duration);
-            this.isProceedToConfirm = true;
-            return true;
         }
-    }
+    
 
     @Override
     public boolean isExtraInputNeeded() {
-        return this.isProceedToConfirm;
+    	return false;
     }
 
     public int getUniqueId() {
