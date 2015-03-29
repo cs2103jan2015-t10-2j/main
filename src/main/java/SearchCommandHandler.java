@@ -5,22 +5,22 @@ import java.util.logging.Logger;
 
 public class SearchCommandHandler implements ICommandHandler {
 
-	private static final String messageDispResultsFormat = "%-15s %s %s %s \"%s\"\n";
-	private static final String messageTitleFormat = "%-15s %s\n";
-	private static final String simpleDateFormat = "HH:mm dd MMM, yyyy";
-	
-	private static final String loggerExecuteException = "execute exception";
-	private static final String loggerParsedWord = "Parsed keyword - ";
-	private static final String loggerInputCommand = "Input command - %s";
+    private static final String messageDispResultsFormat = "%-15s %s %s %s \"%s\"\n";
+    private static final String messageTitleFormat = "%-15s %s\n";
+    private static final String simpleDateFormat = "HH:mm dd MMM, yyyy";
 
-	private static final String messageTotalResults = "Total results: %d\n\n";
-	private static final String messageSearchResults = "--------------Search results based on keyWord \"%s\"-------------\n";
-	private static final String messageTaskDetailsHeader = "Task Details";
-	private static final String messageTaskIdHeader = "Task ID";
+    private static final String loggerExecuteException = "execute exception";
+    private static final String loggerParsedWord = "Parsed keyword - ";
+    private static final String loggerInputCommand = "Input command - %s";
+
+    private static final String messageTotalResults = "Total results: %d\n\n";
+    private static final String messageSearchResults = "--------------Search results based on keyWord \"%s\"-------------\n";
+    private static final String messageTaskDetailsHeader = "Task Details";
+    private static final String messageTaskIdHeader = "Task ID";
     private static final String atDelimiter = "@";
-	private static final String searchDelimiter = "search (.+)";
-	
-	private String keyword;
+    private static final String searchDelimiter = "search (.+)";
+
+    private String keyword;
 
     private TaskData taskData;
     private static final Logger logger = Logger.getLogger("SearchCommandHandler");
@@ -59,8 +59,7 @@ public class SearchCommandHandler implements ICommandHandler {
         return true;
     }
 
-    public void displaySearchResults(List<Integer> searchActualIds,
-            String keyword) {
+    public void displaySearchResults(List<Integer> searchActualIds, String keyword) {
         SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
         Event event;
 
@@ -72,8 +71,7 @@ public class SearchCommandHandler implements ICommandHandler {
 
         for (Integer searchId : searchActualIds) {
             event = taskData.getEventMap().get(searchId);
-            System.out.printf(messageDispResultsFormat,
-                    taskData.getDisplayId(searchId),
+            System.out.printf(messageDispResultsFormat, taskData.getDisplayId(searchId),
                     format.format(event.getTaskDate().getTime()), atDelimiter,
                     event.getTaskLocation(), event.getTaskDescription());
         }
@@ -83,7 +81,7 @@ public class SearchCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return false;
     }
-    
+
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
