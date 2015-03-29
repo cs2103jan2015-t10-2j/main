@@ -24,16 +24,16 @@ public class TaskData implements Serializable {
         this.actualIDToDisplayIDMap = new LinkedHashMap<Integer, Integer>();
     }
 
-    public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
+    public ArrayList<Integer> searchByKeyword(String keyword) throws NoSuchElementException {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
         assertObjectNotNull(this);
         if (this.eventMap.isEmpty()) {
-            throw new Exception(messageEmptyFile);
+            throw new NoSuchElementException(messageEmptyFile);
         } else {
             matchedTaskIds = findMatchedIds(keyword, matchedTaskIds);
         }
         if (matchedTaskIds.size() == 0) {
-            throw new Exception(messageNoResults);
+            throw new NoSuchElementException(messageNoResults);
         }
         return matchedTaskIds;
     }
