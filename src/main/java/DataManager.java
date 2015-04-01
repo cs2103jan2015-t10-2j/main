@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,13 +22,17 @@ public class DataManager {
 
     public void saveTaskDataToFile(TaskData taskData) throws IOException {
         FileOutputStream fos = null;
-
+        File file;
         if (pathToSaveLoad == null) {
-            fos = new FileOutputStream(DEFAULT_PATH_TO_LOAD_SAVE);
+            file = new File(DEFAULT_PATH_TO_LOAD_SAVE);
         } else {
-            fos = new FileOutputStream(pathToSaveLoad);
+            file = new File(pathToSaveLoad);
         }
 
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+        fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(taskData);
         oos.close();

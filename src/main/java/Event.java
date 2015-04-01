@@ -50,14 +50,14 @@ public class Event implements Serializable {
         assertObjectNotNull(this);
         this.taskDate = taskDate;
     }
-    
-    public int getTaskDuration () {
-    	assertObjectNotNull(this);
+
+    public int getTaskDuration() {
+        assertObjectNotNull(this);
         return taskDuration;
     }
-    
-    public void setTaskDuration (int taskDuration) {
-    	assertObjectNotNull(this);
+
+    public void setTaskDuration(int taskDuration) {
+        assertObjectNotNull(this);
         this.taskDuration = taskDuration;
     }
 

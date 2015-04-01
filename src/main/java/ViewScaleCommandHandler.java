@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,7 +78,7 @@ public class ViewScaleCommandHandler implements ICommandHandler {
             isExtraInputNeeded = true;
             return true;
         } else {
-            Set<Integer> taskIds = getMatchingTaskDisplayIDs(dateViewing, choseView);
+            List<Integer> taskIds = getMatchingTaskDisplayIDs(dateViewing, choseView);
             switch (choseView) {
             case NOT_CHOSEN: {
                 break;
@@ -141,9 +141,9 @@ public class ViewScaleCommandHandler implements ICommandHandler {
         }
     }
 
-    public Set<Integer> getMatchingTaskDisplayIDs(Calendar dateViewing,
+    public List<Integer> getMatchingTaskDisplayIDs(Calendar dateViewing,
             ViewOption choseView) {
-        Set<Integer> returnTaskIds = new HashSet<Integer>();
+        List<Integer> returnTaskIds = new ArrayList<Integer>();
 
         for (Integer actualId : taskData.getEventMap().keySet()) {
             Calendar taskDate = taskData.getEventMap().get(actualId).getTaskDate();

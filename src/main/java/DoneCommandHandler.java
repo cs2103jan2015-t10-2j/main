@@ -7,8 +7,10 @@ public class DoneCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private int displayId;
 
-    private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
     private static final Pattern patternDoneCommand;
+
+    private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
+    private static final String taskIdDelimiter = "taskId";
 
     static {
         patternDoneCommand = Pattern.compile(doneCommandFormat);
@@ -25,7 +27,7 @@ public class DoneCommandHandler implements ICommandHandler {
         try {
             Matcher matcher = patternDoneCommand.matcher(command);
             if (matcher.matches()) {
-                displayId = Integer.parseInt(matcher.group("taskId"));
+                displayId = Integer.parseInt(matcher.group(taskIdDelimiter));
                 return true;
             } else {
                 return false;
