@@ -48,7 +48,7 @@ public class AddCommandHandler implements ICommandHandler {
     static {
         patternAddCommand = Pattern.compile(addCommandFormat);
         timeFormat = new SimpleDateFormat(timeFormatString);
-        logger = Logger.getLogger("AddCommandHandler");
+        logger = Logger.getGlobal();
     }
 
     public AddCommandHandler(TaskData taskData) {
