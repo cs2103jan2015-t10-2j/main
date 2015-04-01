@@ -20,7 +20,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private static final Pattern patternViewCommand;
     private static final SimpleDateFormat dateFormat;
 
-    private static final Logger logger = Logger.getLogger("CalendarViewCommandHandler");
+    private static final Logger logger = Logger.getGlobal();
     private static final String loggerIDMatchingFormat = "actualId=%d, isMatched=%b";
 
     private static final String viewCommandString = "display (?<date>.+)";

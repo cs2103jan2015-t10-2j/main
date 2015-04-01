@@ -19,7 +19,6 @@ public class DeleteCommandHandler implements ICommandHandler {
     private boolean isProceedToConfirm;
 
     private static final String taskIdDelimiter = "taskId";
-    private static final String loggerDeleteTitle = "DeleteCommandHandler";
     private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
     private static final String simpleDateFormat = "dd MMM, yyyy";
 
@@ -35,7 +34,7 @@ public class DeleteCommandHandler implements ICommandHandler {
 
     static {
         patternDelteCommand = Pattern.compile(deleteCommandFormat);
-        logger = Logger.getLogger(loggerDeleteTitle);
+        logger = Logger.getGlobal();
     }
 
     public DeleteCommandHandler(TaskData taskData) {
