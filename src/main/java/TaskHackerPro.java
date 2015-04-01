@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * 
@@ -94,7 +95,7 @@ public class TaskHackerPro {
     public static void main(String[] args) {
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
-        new TaskHackerProRunner(inputSource, taskData).start();
+        new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
     private void assertObjectNotNull(Object o) {
