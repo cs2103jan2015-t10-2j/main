@@ -15,10 +15,11 @@ public class AlterCommandHandler implements ICommandHandler {
     private String description;
     private Calendar taskDate;
     private int duration;
+    private TaskPriority priority; 
 
     private Event event;
 
-    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+) as (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\"";
+    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+) as (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\" setPrior (?<priority>.+)";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
 
@@ -33,12 +34,15 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String messageAfterMod = "\nAfter modification:\n";
     private static final String messageBeforeMod = "Before modification:\n";
     private static final String messageEditingFormat = "Editing task - %s\n";
+    private static final String messagePriorityFormat = "Priority level: %s\n";
 
     private static final String eventIDDelimiter = "eventID";
     private static final String descriptionDelimiter = "description";
     private static final String locationDelimiter = "location";
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
+    private static final String priorityDelimiter = "priority";
+
 
     static {
         patternUpdateCommand = Pattern.compile(updateCommandFormat);
@@ -81,6 +85,8 @@ public class AlterCommandHandler implements ICommandHandler {
         location = patternMatcher.group(locationDelimiter);
         description = patternMatcher.group(descriptionDelimiter);
         taskDate = Calendar.getInstance();
+        priority = TaskPriority.valueOf(patternMatcher.group(priorityDelimiter));
+
     }
 
     @Override
@@ -96,14 +102,13 @@ public class AlterCommandHandler implements ICommandHandler {
         }
         if (eventAlreadyExists()) {
             event = extractMethod(actualId);
-            printConfirmation(event, location, description, taskDate, duration);
+            printConfirmation(event, location, description, taskDate, duration, priority);
             setEventDetails();
             return true;
         } else {
             return false;
         }
     }
-
 
     private Event extractMethod(int actualId) {
         return taskData.getEventMap().get(actualId);
@@ -118,10 +123,11 @@ public class AlterCommandHandler implements ICommandHandler {
         event.setTaskDescription(description);
         event.setTaskDate(taskDate);
         event.setTaskDuration(duration);
+        event.setTaskPriority(priority);
     }
 
     private void printConfirmation(Event event, String location, String description,
-            Calendar taskDate, int duration) {
+            Calendar taskDate, int duration, TaskPriority priority) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         System.out.printf(messageEditingFormat, event.getTaskName());
         System.out.printf(messageBeforeMod);
@@ -134,6 +140,7 @@ public class AlterCommandHandler implements ICommandHandler {
         System.out.printf(messageDurationFormat, duration);
         System.out.printf(messageLocationFormat, location);
         System.out.printf(messageDescriptionFormat, description);
+        System.out.printf(messagePriorityFormat, priority.toString().toLowerCase());
     }
 
     @Override
