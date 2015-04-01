@@ -1,7 +1,7 @@
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
-import java.util.Set;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,7 +52,7 @@ public class CalendarViewCommandHandlerTest {
     public void testWeekTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 15);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
+        List<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.WEEK);
 
         Integer[] actualIDs = new Integer[] { 1234, 5678 };
@@ -63,10 +63,10 @@ public class CalendarViewCommandHandlerTest {
     public void testMonthTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 16);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
+        List<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.MONTH);
 
-        Integer[] actualIDs = new Integer[] { 1234, 9012, 5678 };
+        Integer[] actualIDs = new Integer[] { 1234, 5678, 9012 };
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
@@ -74,10 +74,10 @@ public class CalendarViewCommandHandlerTest {
     public void testYearTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 16);
-        Set<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
+        List<Integer> taskIDs = calendarViewCommandHandler.getMatchedTaskDisplayIDs(
                 dateViewing, CalendarViewCommandHandler.ViewOption.YEAR);
 
-        Integer[] actualIDs = new Integer[] { 1234, 9012, 5848, 5678 };
+        Integer[] actualIDs = new Integer[] { 1234, 5678, 9012, 5848 };
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 }
