@@ -18,6 +18,7 @@ public class AddCommandHandler implements ICommandHandler {
     private static final String dateFormat = "dd MMM, yyyy";
 
     private static final String messageDateFormat = "Date: %s\n";
+    private static final String messageDateFormatFloating = "Date: To be scheduled\n";
     private static final String messageDescriptionFormat = "Description: %s\n";
     private static final String messageDurationFormat = "Duration: %d minutes\n";
     private static final String messageLocationFormat = "Location: %s\n";
@@ -106,6 +107,8 @@ public class AddCommandHandler implements ICommandHandler {
             if (time != null) {
                 Date parsedDate = timeFormat.parse(time);
                 taskDate.setTime(parsedDate);   
+            } else {
+                taskDate = null;
             }
         } catch (ParseException e) {
             logger.log(Level.INFO, loggerParseException, e);
@@ -138,7 +141,11 @@ public class AddCommandHandler implements ICommandHandler {
         System.out.printf(messageLocationFormat, location);
         System.out.printf(messageDurationFormat, duration);
         System.out.printf(messageDescriptionFormat, description);
-        System.out.printf(messageDateFormat, format.format(taskDate.getTime()));
+        try {
+            System.out.printf(messageDateFormat, format.format(taskDate.getTime()));
+        } catch (NullPointerException e) {
+            System.out.printf(messageDateFormatFloating);
+        }
         System.out.printf(messagePriorityFormat, priority.toString().toLowerCase());
     }
 
