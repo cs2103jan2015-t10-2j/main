@@ -8,7 +8,7 @@ public class DoneCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
 
-    private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
+    private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String commandDisplay = "display 11/3/2015";
     private static final String commandViewOption = "3";
     private static final String commandDone = "done 1";
