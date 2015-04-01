@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -121,7 +122,7 @@ public class TaskDataTest {
             List<Integer> searchActualIds = taskData.searchByKeyword(keyword);
             searchCommandTest.displaySearchResults(searchActualIds, keyword);
 
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             System.out.println(e.getMessage());
             System.out.println();
             assertEquals("Your search request returned 0 results", e.getMessage());
@@ -149,7 +150,7 @@ public class TaskDataTest {
                     + event.getTaskLocation() + " " + "\"" + event.getTaskDescription()
                     + "\"";
             assertEquals("13:00 19 Mar, 2015 @ IMM \"Shopping in IMM\"", eventDetails);
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             System.out.println(e.getMessage());
             assertEquals("Your search request returned 0 results", e.getMessage());
         }

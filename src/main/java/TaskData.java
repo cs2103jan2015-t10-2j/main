@@ -73,11 +73,11 @@ public class TaskData implements Serializable {
 		}	
     }
 
-    public ArrayList<Integer> searchByKeyword(String keyword) throws Exception {
+    public ArrayList<Integer> searchByKeyword(String keyword) throws NoSuchElementException {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
         assertObjectNotNull(this);
         if (this.eventMap.isEmpty()) {
-            throw new Exception(messageEmptyFile);
+            throw new NoSuchElementException(messageEmptyFile);
         } else {
             matchedTaskIds = findMatchedIds(keyword, matchedTaskIds);
         }
@@ -91,6 +91,9 @@ public class TaskData implements Serializable {
 
             if (this.hasKeyWord(event, keyword)) {
                 matchedTaskIds.add(taskId);
+            }
+            if (matchedTaskIds.size() == 0) {		
+                   throw new NoSuchElementException(messageNoResults);		     
             }
         }
         return matchedTaskIds;
