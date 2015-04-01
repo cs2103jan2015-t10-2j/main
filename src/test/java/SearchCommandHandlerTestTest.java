@@ -11,7 +11,6 @@ import org.junit.Test;
 
 public class SearchCommandHandlerTestTest extends StringBasedTest {
 
-    
     private TaskData taskData;
     private ArrayList<Integer> searchKeywordIds;
     private ArrayList<Integer> searchDateIds;
@@ -20,15 +19,15 @@ public class SearchCommandHandlerTestTest extends StringBasedTest {
     private static final SimpleDateFormat formatDayMthYr;
     private static final String simpleDateFormatDayMthYr = "d/M/y";
 
-    private static final String validCommandAdd1 = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
-    private static final String validCommandAdd2 = "add Dinner at 16:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
-    private static final String validCommandAdd3 = "add Homework at 13:00 12/3/2015 for 120 mins @ NUS desc \"Work on EE2024 Project\"";
-    private static final String validCommandAdd4 = "add Sports at 4:00 20/3/2015 for 120 mins @ NUS desc \"Soccer with mates\"";
-    private static final String validCommandAdd5 = "add Homework at 23:00 11/3/2015 for 240 mins @ Home desc \"Work on sleeping project\"";
-    private static final String validCommandAdd6 = "add CommunityService at 10:00 13/3/2015 for 120 mins @ Home desc \"Help the needy\"";
-    private static final String validCommandAdd7 = "add Shopping at 14:00 13/3/2015 for 180 mins @ IMM desc \"Spend my hard earn money!!\"";
-    private static final String validCommandAdd8 = "add Sports at 23:00 13/3/2015 for 90 mins @ Home desc \"Watch Arsenal vs Manchester united\"";
-    private static final String validCommandAdd9 = "add Dating at 17:00 12/3/2015 for 140 mins @ CausewayPoint desc \"Watch movie with ?????\"";
+    private static final String validCommandAdd1 = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
+    private static final String validCommandAdd2 = "add Dinner at 16:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
+    private static final String validCommandAdd3 = "add Homework at 13:00 12/3/2015 for 120 mins @ NUS desc \"Work on EE2024 Project\" setPrior HIGH";
+    private static final String validCommandAdd4 = "add Sports at 4:00 20/3/2015 for 120 mins @ NUS desc \"Soccer with mates\" setPrior LOW";
+    private static final String validCommandAdd5 = "add Homework at 23:00 11/3/2015 for 240 mins @ Home desc \"Work on sleeping project\" setPrior HIGH";
+    private static final String validCommandAdd6 = "add CommunityService at 10:00 13/3/2015 for 120 mins @ Home desc \"Help the needy\" setPrior LOW";
+    private static final String validCommandAdd7 = "add Shopping at 14:00 13/3/2015 for 180 mins @ IMM desc \"Spend my hard earn money!!\" setPrior HIGH";
+    private static final String validCommandAdd8 = "add Sports at 23:00 13/3/2015 for 90 mins @ Home desc \"Watch Arsenal vs Manchester united\" setPrior HIGH";
+    private static final String validCommandAdd9 = "add Dating at 17:00 12/3/2015 for 140 mins @ CausewayPoint desc \"Watch movie with ?????\" setPrior HIGH";
     private static final String validCommandAdd10 = "search 9/3/2015 to 15/3/2015";
     private static final String invalidCommandAdd = "add at 4:00 11/3/2015 for 60 @ Tembusu College desc \"Work\"";
     private static final String validCommandDisplay = "display 11/3/2015";
