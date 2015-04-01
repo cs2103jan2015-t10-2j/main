@@ -10,4 +10,8 @@ notifications:
       - anshumanmohan@live.com
       - jerome_derrick@hotmail.com
 
-script: gradle clean check cobertura coveralls -i
+before_script: gradle clean
+
+script: gradle check -i
+
+after_script: gradle cobertura coveralls
