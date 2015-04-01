@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 public class DeleteCommandHandler implements ICommandHandler {
 
-    private static final String messageNumberEvents = "No. of events=%d";
     private TaskData taskData;
     private int taskId;
     private int actualId;
@@ -19,12 +18,14 @@ public class DeleteCommandHandler implements ICommandHandler {
     private static final String taskIdDelimiter = "taskId";
     private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
     private static final String simpleDateFormat = "dd MMM, yyyy";
-
+    
+    private static final String messageNumberEvents = "No. of events=%d";
     private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
     private static final String messageDateFormat = "Date: %s\n";
     private static final String messageDescriptionFormat = "Description: %s\n";
     private static final String messageDurationFormat = "Duration: %d minutes\n";
     private static final String messageLocationFormat = "Location: %s\n";
+    private static final String messagePriorityFormat = "Priority level: %s\n";
     private static final String messageDeleteTask = "Delete task - %s\n";
 
     static {
@@ -84,6 +85,7 @@ public class DeleteCommandHandler implements ICommandHandler {
         System.out.printf(messageDurationFormat, event.getTaskDuration());
         System.out.printf(messageLocationFormat, event.getTaskLocation());
         System.out.printf(messageDescriptionFormat, event.getTaskDescription());
+        System.out.printf(messagePriorityFormat, event.getTaskPriority().toString().toLowerCase());
     }
 
     @Override
