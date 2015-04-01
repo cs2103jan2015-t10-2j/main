@@ -8,7 +8,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
 
-    private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
+    private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
 
     @Override
     public TaskData createTaskData() {
@@ -32,6 +32,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         String actualTaskDescription = event.getTaskDescription();
         Calendar actualTaskDate = event.getTaskDate();
         int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
         assertEquals("Homework", actualTaskName);
         assertEquals("Tembusu College", actualTaskLocation);
@@ -43,5 +44,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(Calendar.MARCH, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals(60, actualTaskDuration);
+        assertEquals("high", actualPriority);
     }
 }
