@@ -40,9 +40,6 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
 
-    //private static final String no = "N";
-    //private static final String yes = "Y";
-
     static {
         patternUpdateCommand = Pattern.compile(updateCommandFormat);
         timeFormat = new SimpleDateFormat(timeFormatString);
