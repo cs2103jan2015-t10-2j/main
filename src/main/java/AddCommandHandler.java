@@ -10,7 +10,10 @@ import java.util.regex.Pattern;
 
 public class AddCommandHandler implements ICommandHandler {
 
-    private static final String addCommandFormat = "add (?<name>.+) at (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\" setPrior (?<priority>.+)";
+    private static final TaskPriority DEFAULT_PRIORITY = TaskPriority.MEDIUM;
+    private static final int DEFAULT_DURATION = 60;
+    
+    private static final String addCommandFormat = "add (?<name>.+?)( at (?<time>.+?)?)?( for (?<duration>.+) mins)?( @ (?<location>.+?))?( desc \"(?<description>.+)\")?( setPrior (?<priority>.+))?$";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
 
@@ -84,16 +87,26 @@ public class AddCommandHandler implements ICommandHandler {
         assertObjectNotNull(this);
         this.name = patternMatcher.group(nameDelimiter);
         String time = patternMatcher.group(timeDelimiter);
-        this.duration = Integer.parseInt(patternMatcher.group(durationDelimiter));
+        try {
+            this.duration = Integer.parseInt(patternMatcher.group(durationDelimiter));
+        } catch (NumberFormatException e) {
+            this.duration = DEFAULT_DURATION;
+        }
         this.location = patternMatcher.group(locationDelimiter);
         this.description = patternMatcher.group(descriptionDelimiter);
-        this.priority = TaskPriority.valueOf(patternMatcher.group(priorityDelimiter));
+        try {
+            this.priority = TaskPriority.valueOf(patternMatcher.group(priorityDelimiter));
+        } catch (NullPointerException e) {
+            this.priority = DEFAULT_PRIORITY;
+        }
         this.taskDate = Calendar.getInstance();
         assertObjectNotNull(this);
 
         try {
-            Date parsedDate = timeFormat.parse(time);
-            taskDate.setTime(parsedDate);
+            if (time != null) {
+                Date parsedDate = timeFormat.parse(time);
+                taskDate.setTime(parsedDate);   
+            }
         } catch (ParseException e) {
             logger.log(Level.INFO, loggerParseException, e);
             return false;
