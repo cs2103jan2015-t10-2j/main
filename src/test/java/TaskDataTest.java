@@ -56,20 +56,6 @@ public class TaskDataTest {
     }
 
     @Test
-    public void testSearchDescription() {
-        try {
-            List<Integer> searchedEvents = this.taskData.searchByKeyword("Shopping");
-
-            assertEquals(1, searchedEvents.size());
-            assertEquals(98765, (int) searchedEvents.get(0));
-        }
-
-        catch (Exception e) {
-            System.out.println("Invalid input" + e.getMessage());
-        }
-    }
-
-    @Test
     public void testSearch() throws Exception {
 
         List<Integer> searchedEvents = this.taskData.searchByKeyword("in");
@@ -91,11 +77,16 @@ public class TaskDataTest {
         assertFalse(this.taskData.hasKeyWord(eventTest, keyWordTestNull));
         assertFalse(this.taskData.hasKeyWord(eventTextNull, null));
 
-        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(23456), "Woodland"));
-        assertFalse(this.taskData.hasKeyWord(this.taskData.getEventMap().get(23456), "Clementi"));
-        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765), "shopping"));
-        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765), "Task Name2"));
-        assertFalse(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765), "Name3"));
+        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(23456),
+                "Woodland"));
+        assertFalse(this.taskData.hasKeyWord(this.taskData.getEventMap().get(23456),
+                "Clementi"));
+        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765),
+                "shopping"));
+        assertTrue(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765),
+                "Task Name2"));
+        assertFalse(this.taskData.hasKeyWord(this.taskData.getEventMap().get(98765),
+                "Name3"));
     }
 
     @Test

@@ -42,7 +42,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(1, taskData.getEventMap().size());
 
         int taskId = taskData.getEventMap().keySet().iterator().next();
-
         // Check that the task has be inputed correctly.
         testTaskBefore(taskData.getEventMap().get(taskId));
 
