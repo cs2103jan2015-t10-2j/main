@@ -18,9 +18,6 @@ public class AlterCommandHandler implements ICommandHandler {
 
     private Event event;
 
-    private boolean isConfirm;
-    private boolean isProceedToConfirm;
-
     private static final String updateCommandFormat = "alter (?<eventID>[0-9]+) as (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\"";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
@@ -28,7 +25,6 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final Pattern patternUpdateCommand;
     private static final SimpleDateFormat timeFormat;
 
-    private static final String messageConfirmation = "Confirm? (Y/N): ";
     private static final String messageDateFormat = "Date: %s\n";
     private static final String messageDescriptionFormat = "Description: %s\n";
     private static final String messageDurationFormat = "Duration: %d minutes\n";
@@ -44,8 +40,8 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
 
-    private static final String no = "N";
-    private static final String yes = "Y";
+    //private static final String no = "N";
+    //private static final String yes = "Y";
 
     static {
         patternUpdateCommand = Pattern.compile(updateCommandFormat);
@@ -61,28 +57,23 @@ public class AlterCommandHandler implements ICommandHandler {
     @Override
     public boolean parseCommand(String command) {
         Matcher patternMatcher;
-        if (isProceedToConfirm) {
-            return parseProceedToConfirm(command);
-        } else {
-            if (command.isEmpty()) {
-                return false;
-            } else {
-                patternMatcher = patternUpdateCommand.matcher(command);
-                if (!patternMatcher.matches()) {
-                    return false;
-                }
-            }
-            setTaskDetails(patternMatcher);
 
-            try {
-                Date parsedDate = timeFormat.parse(time);
-                taskDate.setTime(parsedDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
+        if (command.isEmpty()) {
+            return false;
+        } else {
+            patternMatcher = patternUpdateCommand.matcher(command);
+            if (!patternMatcher.matches()) {
                 return false;
             }
         }
-
+        setTaskDetails(patternMatcher);
+        try {
+            Date parsedDate = timeFormat.parse(time);
+            taskDate.setTime(parsedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 
@@ -95,46 +86,27 @@ public class AlterCommandHandler implements ICommandHandler {
         taskDate = Calendar.getInstance();
     }
 
-    private boolean parseProceedToConfirm(String command) {
-        boolean isYes = yes.equalsIgnoreCase(command);
-        boolean isNo = no.equalsIgnoreCase(command);
-        boolean isValid = (isYes ^ isNo);
+    @Override
+    public boolean executeCommand() {
 
-        if (isValid) {
-            isConfirm = isYes;
+        assertObjectNotNull(this);
+
+        try {
+            actualId = taskData.getActualId(eventId);
+        } catch (Exception NoSuchElementException) {
+            System.out.println(messageUseDisplayFunction);
+            return false;
+        }
+        if (eventAlreadyExists()) {
+            event = extractMethod(actualId);
+            printConfirmation(event, location, description, taskDate, duration);
+            setEventDetails();
             return true;
         } else {
             return false;
         }
     }
 
-    @Override
-    public boolean executeCommand() {
-
-        assertObjectNotNull(this);
-        if (this.isProceedToConfirm) {
-            if (this.isConfirm) {
-                setEventDetails();
-            }
-            isProceedToConfirm = false;
-            return true;
-        } else {
-            try {
-                actualId = taskData.getActualId(eventId);
-            } catch (Exception NoSuchElementException) {
-                System.out.println(messageUseDisplayFunction);
-                return false;
-            }
-            if (eventAlreadyExists()) {
-                event = extractMethod(actualId);
-                printConfirmation(event, location, description, taskDate, duration);
-                this.isProceedToConfirm = true;
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 
     private Event extractMethod(int actualId) {
         return taskData.getEventMap().get(actualId);
@@ -165,12 +137,11 @@ public class AlterCommandHandler implements ICommandHandler {
         System.out.printf(messageDurationFormat, duration);
         System.out.printf(messageLocationFormat, location);
         System.out.printf(messageDescriptionFormat, description);
-        System.out.printf(messageConfirmation);
     }
 
     @Override
     public boolean isExtraInputNeeded() {
-        return this.isProceedToConfirm;
+        return false;
     }
 
     private void assertObjectNotNull(Object o) {

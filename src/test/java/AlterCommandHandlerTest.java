@@ -11,8 +11,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
     private static final String invalidCommandAdd = "add at 4:00 11/3/2015 for 60 @ Tembusu College desc \"Work\"";
 
-    private static final String confirmYes = "Y";
-
     private static final String validCommandDisplay = "display 11/3/2015";
     private static final String unusedCommandDisplay = "display 11/3/2017";
     private static final String invalidCommandDisplay = "display 11/30/2015";
@@ -57,7 +55,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionThree);
         super.executeCommand(validCommandAlter);
-        super.executeCommand(confirmYes);
 
         // We check that the event has been changed as needed.
         testTaskAfter(taskData.getEventMap().get(taskId));
@@ -191,7 +188,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionOne);
         super.executeCommand(validCommandAlter);
-        super.executeCommand(confirmYes);
 
         // Success. We check that the event has been changed as needed.
         testTaskAfter(taskData.getEventMap().get(taskId));
