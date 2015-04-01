@@ -1,4 +1,3 @@
-
 import static org.junit.Assert.assertEquals;
 
 import java.util.Calendar;
@@ -11,25 +10,23 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
     private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
     private static final String invalidCommandAdd = "add at 4:00 11/3/2015 for 60 @ Tembusu College desc \"Work\"";
-    
+
     private static final String confirmYes = "Y";
-    private static final String confirmNo = "N";
-    private static final String confirmInvalid = "G";
-    
+
     private static final String validCommandDisplay = "display 11/3/2015";
     private static final String unusedCommandDisplay = "display 11/3/2017";
     private static final String invalidCommandDisplay = "display 11/30/2015";
-    
+
     private static final String commandViewOptionNegOne = "-1";
     private static final String commandViewOptionZero = "0";
     private static final String commandViewOptionOne = "1";
     private static final String commandViewOptionThree = "3";
     private static final String commandViewOptionFour = "4";
-    
+
     private static final String validCommandAlter = "alter 1 as 2:00 15/3/2015 for 120 mins @ Tembusu College desc \"This homework is very tough!\"";
     private static final String unusedCommandAlter = "alter 7 as 2:00 15/3/2015 for 120 mins @ Tembusu College desc \"This homework is very tough!\"";
     private static final String invalidCommandAlter = "alter 1 as 2:00 15/3/2015 for 120 in Tembusu College desc \"This\"";
-    
+
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
@@ -37,16 +34,15 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     }
 
     @Test
-    //Boundary case for all valid inputs
+    // Boundary case for all valid inputs
     public void testExecuteCase1() {
 
         // Add an event successfully
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-        
+
         // There should be one item in the map
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         // Check that the task has be inputed correctly.
@@ -56,237 +52,222 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(1, taskData.getEventMap().size());
         super.executeCommand(validCommandAlter);
         assertEquals(1, taskData.getEventMap().size());
-        
+
         // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionThree);
         super.executeCommand(validCommandAlter);
         super.executeCommand(confirmYes);
-        
+
         // We check that the event has been changed as needed.
         testTaskAfter(taskData.getEventMap().get(taskId));
     }
-    
-    
+
     @Test
-    // Boundary case: valid abort during creation
+    // Boundary case: valid during creation
     public void testExecuteCase2() {
 
         // Add a valid event, but then abort.
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmNo);
-        
-        // There should be zero items in the map
-        assertEquals(0, taskData.getEventMap().size());   
-    }    
-    
+
+        // There should be one item in the map
+        assertEquals(1, taskData.getEventMap().size());
+    }
+
     @Test
     // BC: Failure during creation of event
     public void testExecuteCase3() {
 
         // Add a poorly-formed event
         super.executeCommand(invalidCommandAdd);
-        
-        // There should be zero items in the map
-        assertEquals(0, taskData.getEventMap().size());   
-    } 
-    
-    @Test
-    // BC: Adding event not confirmed correctly.
-    public void testExecuteCase4() {
 
-        // Add an event, but fail to confirm properly
-        super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmInvalid);
-        
         // There should be zero items in the map
-        assertEquals(0, taskData.getEventMap().size());   
+        assertEquals(0, taskData.getEventMap().size());
     }
-    
+
     @Test
     // BC: The date is unpopulated
     public void testExecuteCase5() {
 
         // Add an event successfully
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         // Check that the task has be inputed correctly.
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
-        // Display the event list using an UNUSED date and try to alter the event in year view...
+
+        // Display the event list using an UNUSED date and try to alter the
+        // event in year view...
         super.executeCommand(unusedCommandDisplay);
         super.executeCommand(commandViewOptionThree);
         // No events will come up! We can alter nothing!
-        
+
         // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));   
+        testTaskBefore(taskData.getEventMap().get(taskId));
     }
-    
+
     @Test
     // BC: The date is invalid
     public void testExecuteCase6() {
 
         // Add an event successfully
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         // Check that the task has be inputed correctly.
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
+
         // Display the event list using an invalid date
         super.executeCommand(invalidCommandDisplay);
         // No events will come up! We can alter nothing.
-        
+
         // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));   
+        testTaskBefore(taskData.getEventMap().get(taskId));
     }
-    
+
     @Test
     // BC to test for view choice for negative value partition
     public void testExecuteCase7() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
-        // Display the event list using a valid date, but invoke an invalid "view"
+
+        // Display the event list using a valid date, but invoke an invalid
+        // "view"
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionNegOne);
         // No events will come up! We can alter nothing
-        
+
         // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));   
+        testTaskBefore(taskData.getEventMap().get(taskId));
     }
-    
+
     @Test
-    // Boundary case to test for view choice for zero 
+    // Boundary case to test for view choice for zero
     public void testExecuteCase8() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
-        // Display the event list using a valid date, but invoke an invalid "view"
+
+        // Display the event list using a valid date, but invoke an invalid
+        // "view"
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionZero);
         // No events will come up! We can alter nothing!
-        
+
         // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));   
+        testTaskBefore(taskData.getEventMap().get(taskId));
     }
-    
+
     @Test
     // BC: Valid use.
     public void testExecuteCase9() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
-        // Display the event list using an valid date and alter the event using a valid view
+
+        // Display the event list using an valid date and alter the event using
+        // a valid view
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionOne);
         super.executeCommand(validCommandAlter);
         super.executeCommand(confirmYes);
-        
+
         // Success. We check that the event has been changed as needed.
         testTaskAfter(taskData.getEventMap().get(taskId));
     }
-    
+
     @Test
-    // Boundary case to test for view choice of >3 partition 
+    // Boundary case to test for view choice of >3 partition
     public void testExecuteCase10() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
-        // Display the event list using a valid date, but invoke an invalid "view"
+
+        // Display the event list using a valid date, but invoke an invalid
+        // "view"
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionFour);
         // No events will come up! We can alter nothing.
-        
+
         // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));   
+        testTaskBefore(taskData.getEventMap().get(taskId));
     }
-    
+
     @Test
     // Unused event ID
     public void testExecuteCase11() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
-        // Display the event list using a valid date and view, but try to alter a nonexistent event...
+
+        // Display the event list using a valid date and view, but try to alter
+        // a nonexistent event...
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionThree);
         super.executeCommand(unusedCommandAlter);
         // An error will be thrown. The event doesn't exist.
-        
+
         // We check that the event has NOT been changed.
         testTaskBefore(taskData.getEventMap().get(taskId));
     }
-    
+
     @Test
     // Invalid event ID
     public void testExecuteCase12() {
 
         super.executeCommand(validCommandAdd);
-        super.executeCommand(confirmYes);
-         
+
         assertEquals(1, taskData.getEventMap().size());
-        
+
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
         testTaskBefore(taskData.getEventMap().get(taskId));
-        
-        // Display the event list using a valid date and view, but use a poorly formed alter command
+
+        // Display the event list using a valid date and view, but use a poorly
+        // formed alter command
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionThree);
         super.executeCommand(invalidCommandAlter);
         // An error will be thrown. The alter command is messed up.
-        
+
         // We check that the event has NOT been changed.
         testTaskBefore(taskData.getEventMap().get(taskId));
     }
 
-    //This method compares the passed event to the ORIGINAL event.
+    // This method compares the passed event to the ORIGINAL event.
     private void testTaskBefore(Event event) {
-    	String actualTaskName = event.getTaskName();
+        String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
         String actualTaskDescription = event.getTaskDescription();
         Calendar actualTaskDate = event.getTaskDate();
@@ -303,8 +284,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals(60, actualTaskDuration);
     }
-    
-    //This method compares the passed event to the ALTERED event.
+
+    // This method compares the passed event to the ALTERED event.
     private void testTaskAfter(Event event) {
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();

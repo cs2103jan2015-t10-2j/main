@@ -10,10 +10,30 @@ import java.util.regex.Pattern;
 
 public class AddCommandHandler implements ICommandHandler {
 
+    private static final String addCommandFormat = "add (?<name>.+) at (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\"";
+    private static final String timeFormatString = "h:m d/M/y";
+    private static final String dateFormat = "dd MMM, yyyy";
+
+    private static final String messageDateFormat = "Date: %s\n";
+    private static final String messageDescriptionFormat = "Description: %s\n";
+    private static final String messageDurationFormat = "Duration: %d minutes\n";
+    private static final String messageLocationFormat = "Location: %s\n";
+    private static final String messageNameFormat = "%s\n";
+    private static final String messageAddEventFormat = "Added this event:\n";
+
+    private static final String loggerNumberOfEvents = "No. of events=%d";
+    private static final String loggerParsedEvent = "Parsed event - ";
+    private static final String loggerParseException = "Parse exception";
+    private static final String loggerInputCommand = "Input command - %s";
+
+    private static final String descriptionDelimiter = "description";
+    private static final String locationDelimiter = "location";
+    private static final String durationDelimiter = "duration";
+    private static final String timeDelimiter = "time";
+    private static final String nameDelimiter = "name";
+
     private TaskData taskData;
     private Event event;
-    private boolean isConfirm;
-    private boolean isProceedToConfirm;
 
     private String name;
     private String location;
@@ -21,8 +41,6 @@ public class AddCommandHandler implements ICommandHandler {
     private Calendar taskDate;
     private int duration;
 
-    private static final String addCommandFormat = "add (?<name>.+) at (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\"";
-    private static final String timeFormatString = "h:m d/M/y";
     private static final Pattern patternAddCommand;
     private static final SimpleDateFormat timeFormat;
     private static final Logger logger;
@@ -49,47 +67,34 @@ public class AddCommandHandler implements ICommandHandler {
     public boolean parseCommand(String command) {
         Matcher patternMatcher;
 
-        logger.log(Level.INFO, String.format("Input command - %s", command));
+        logger.log(Level.INFO, String.format(loggerInputCommand, command));
 
-        if (isProceedToConfirm) {
-            boolean isYes = "Y".equalsIgnoreCase(command);
-            boolean isNo = "N".equalsIgnoreCase(command);
-            boolean isValid = (isYes ^ isNo);
-
-            if (isValid) {
-                isConfirm = isYes;
-                return true;
-            } else {
-                return false;
-            }
+        if (command.isEmpty()) {
+            return false;
         } else {
-            if (command.isEmpty()) {
-                return false;
-            } else {
-                patternMatcher = patternAddCommand.matcher(command);
-                if (!patternMatcher.matches()) {
-                    return false;
-                }
-            }
-            assertObjectNotNull(this);
-            this.name = patternMatcher.group("name");
-            String time = patternMatcher.group("time");
-            this.duration = Integer.parseInt(patternMatcher.group("duration"));
-            this.location = patternMatcher.group("location");
-            this.description = patternMatcher.group("description");
-            this.taskDate = Calendar.getInstance();
-            assertObjectNotNull(this);
-
-            try {
-                Date parsedDate = timeFormat.parse(time);
-                taskDate.setTime(parsedDate);
-            } catch (ParseException e) {
-                logger.log(Level.INFO, "Parse exception", e);
+            patternMatcher = patternAddCommand.matcher(command);
+            if (!patternMatcher.matches()) {
                 return false;
             }
-
-            logger.log(Level.INFO, "Parsed event - " + event);
         }
+        assertObjectNotNull(this);
+        this.name = patternMatcher.group(nameDelimiter);
+        String time = patternMatcher.group(timeDelimiter);
+        this.duration = Integer.parseInt(patternMatcher.group(durationDelimiter));
+        this.location = patternMatcher.group(locationDelimiter);
+        this.description = patternMatcher.group(descriptionDelimiter);
+        this.taskDate = Calendar.getInstance();
+        assertObjectNotNull(this);
+
+        try {
+            Date parsedDate = timeFormat.parse(time);
+            taskDate.setTime(parsedDate);
+        } catch (ParseException e) {
+            logger.log(Level.INFO, loggerParseException, e);
+            return false;
+        }
+
+        logger.log(Level.INFO, loggerParsedEvent + event);
 
         return true;
     }
@@ -108,44 +113,34 @@ public class AddCommandHandler implements ICommandHandler {
 
     private void printConfirmation(String name, String location, String description,
             Calendar taskDate, int duration) {
-        SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy");
-        System.out.printf("Add this event:\n");
-        System.out.printf("%s\n", name);
-        System.out.printf("Location: %s\n", location);
-        System.out.printf("Duration: %d minutes\n", duration);
-        System.out.printf("Description: %s\n", description);
-        System.out.printf("Date: %s\n", format.format(taskDate.getTime()));
-        System.out.printf("Confirm? (Y/N): ");
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+        System.out.printf(messageAddEventFormat);
+        System.out.printf(messageNameFormat, name);
+        System.out.printf(messageLocationFormat, location);
+        System.out.printf(messageDurationFormat, duration);
+        System.out.printf(messageDescriptionFormat, description);
+        System.out.printf(messageDateFormat, format.format(taskDate.getTime()));
     }
 
     @Override
     public boolean executeCommand() {
         assertObjectNotNull(this);
-        if (this.isProceedToConfirm) {
-            if (this.isConfirm) {
-                setEvent(name, location, description, taskDate, duration);
-                taskData.getEventMap().put(event.getTaskID(), event);
-            }
-            isProceedToConfirm = false;
-            logger.log(Level.INFO,
-                    String.format("No. of events=%d", taskData.getEventMap().size()));
-            return true;
-        } else {
-            printConfirmation(name, location, description, taskDate, duration);
-            this.isProceedToConfirm = true;
-            return true;
-        }
+        setEvent(name, location, description, taskDate, duration);
+        taskData.getEventMap().put(event.getTaskID(), event);
+        printConfirmation(name, location, description, taskDate, duration);
+        logger.log(Level.INFO,
+                String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
+        return true;
     }
 
     @Override
     public boolean isExtraInputNeeded() {
-        return this.isProceedToConfirm;
+        return false;
     }
 
     public int getUniqueId() {
         Random random = new Random();
-        int returnVal = 0;
-
+        int returnVal;
         do {
             returnVal = random.nextInt(Integer.MAX_VALUE);
         } while (taskData.getEventMap().containsKey(returnVal));

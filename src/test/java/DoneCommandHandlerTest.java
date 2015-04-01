@@ -9,7 +9,6 @@ public class DoneCommandHandlerTest extends StringBasedTest {
     private TaskData taskData;
 
     private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
-    private static final String commandYes = "Y";
     private static final String commandDisplay = "display 11/3/2015";
     private static final String commandViewOption = "3";
     private static final String commandDone = "done 1";
@@ -24,7 +23,6 @@ public class DoneCommandHandlerTest extends StringBasedTest {
     public void testExexcuteCommand() {
         // Add an event
         super.executeCommand(commandAdd);
-        super.executeCommand(commandYes);
         assertEquals(1, taskData.getEventMap().size());
         Event event = taskData.getEventMap().values().iterator().next();
 

@@ -2,14 +2,17 @@ public class ExitCommandHandler implements ICommandHandler {
 
     private TaskHackerPro taskHackerPro;
 
+    private static final String messageExiting = "Thank you for using TaskHackerPro!";
+    private static final String exitDelimiter = "exit";
+
     public ExitCommandHandler(TaskHackerPro taskHackerPro) {
-    	assertObjectNotNull(this);
+        assertObjectNotNull(this);
         this.taskHackerPro = taskHackerPro;
     }
 
     @Override
     public boolean parseCommand(String command) {
-        if ("exit".equals(command)) {
+        if (exitDelimiter.equals(command)) {
             return true;
         }
         return false;
@@ -17,9 +20,9 @@ public class ExitCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-    	assertObjectNotNull(taskHackerPro);
+        assertObjectNotNull(taskHackerPro);
         taskHackerPro.setContinue(false);
-        System.out.println("Bye!");
+        System.out.println(messageExiting);
         return true;
     }
 
@@ -27,8 +30,8 @@ public class ExitCommandHandler implements ICommandHandler {
     public boolean isExtraInputNeeded() {
         return false;
     }
-    
+
     private void assertObjectNotNull(Object o) {
-		assert (o != null);
-	}
+        assert (o != null);
+    }
 }
