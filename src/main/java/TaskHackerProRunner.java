@@ -2,24 +2,32 @@ import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TaskHackerProRunner {
 
-    private IInputSource inputSorurce;
+    private IInputSource inputSource;
     private TaskHackerPro taskHackerPro;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private Throwable uncaughtException;
 
-    public TaskHackerProRunner(IInputSource inputSorurce) {
-        this(inputSorurce, null);
+    public TaskHackerProRunner(IInputSource inputSource) {
+        this(inputSource, null);
     }
 
-    public TaskHackerProRunner(IInputSource inputSorurce, TaskData taskData) {
-        this.inputSorurce = inputSorurce;
+    public TaskHackerProRunner(IInputSource inputSource, TaskData taskData) {
+        this(inputSource, taskData, Logger.getGlobal().getLevel());
+    }
+
+    public TaskHackerProRunner(IInputSource inputSource, TaskData taskData, Level logLevel) {
+        this.inputSource = inputSource;
         this.taskData = taskData;
         this.taskHackerPro = new TaskHackerPro();
         this.commandHandlerMap = new HashMap<String, ICommandHandler>();
+
+        Logger.getGlobal().setLevel(logLevel);
     }
 
     public void setupCommandMap(TaskData taskData) {
@@ -40,7 +48,7 @@ public class TaskHackerProRunner {
         }
         setupCommandMap(taskData);
 
-        taskHackerPro.setInputSource(inputSorurce);
+        taskHackerPro.setInputSource(inputSource);
         taskHackerPro.setTaskData(taskData);
         taskHackerPro.setCommandHandlerMap(commandHandlerMap);
 

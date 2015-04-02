@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class AddCommandHandler implements ICommandHandler {
 
-    private static final String addCommandFormat = "add (?<name>.+) at (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\"";
+    private static final String addCommandFormat = "add (?<name>.+) at (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\" setPrior (?<priority>.+)";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
 
@@ -20,6 +20,8 @@ public class AddCommandHandler implements ICommandHandler {
     private static final String messageLocationFormat = "Location: %s\n";
     private static final String messageNameFormat = "%s\n";
     private static final String messageAddEventFormat = "Added this event:\n";
+    private static final String messagePriorityFormat = "Priority level: %s\n";
+    
 
     private static final String loggerNumberOfEvents = "No. of events=%d";
     private static final String loggerParsedEvent = "Parsed event - ";
@@ -31,6 +33,7 @@ public class AddCommandHandler implements ICommandHandler {
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
     private static final String nameDelimiter = "name";
+    private static final String priorityDelimiter = "priority";
 
     private TaskData taskData;
     private Event event;
@@ -40,6 +43,7 @@ public class AddCommandHandler implements ICommandHandler {
     private String description;
     private Calendar taskDate;
     private int duration;
+    private TaskPriority priority; 
 
     private static final Pattern patternAddCommand;
     private static final SimpleDateFormat timeFormat;
@@ -48,7 +52,7 @@ public class AddCommandHandler implements ICommandHandler {
     static {
         patternAddCommand = Pattern.compile(addCommandFormat);
         timeFormat = new SimpleDateFormat(timeFormatString);
-        logger = Logger.getLogger("AddCommandHandler");
+        logger = Logger.getGlobal();
     }
 
     public AddCommandHandler(TaskData taskData) {
@@ -83,6 +87,7 @@ public class AddCommandHandler implements ICommandHandler {
         this.duration = Integer.parseInt(patternMatcher.group(durationDelimiter));
         this.location = patternMatcher.group(locationDelimiter);
         this.description = patternMatcher.group(descriptionDelimiter);
+        this.priority = TaskPriority.valueOf(patternMatcher.group(priorityDelimiter));
         this.taskDate = Calendar.getInstance();
         assertObjectNotNull(this);
 
@@ -100,7 +105,7 @@ public class AddCommandHandler implements ICommandHandler {
     }
 
     public void setEvent(String name, String location, String description,
-            Calendar taskDate, int duration) {
+            Calendar taskDate, int duration, TaskPriority priority) {
         event = new Event();
         event.setTaskID(getUniqueId());
         event.setTaskName(name);
@@ -108,11 +113,12 @@ public class AddCommandHandler implements ICommandHandler {
         event.setTaskDescription(description);
         event.setTaskDate(taskDate);
         event.setTaskDuration(duration);
+        event.setTaskPriority(priority);
         assertObjectNotNull(event);
     }
 
     private void printConfirmation(String name, String location, String description,
-            Calendar taskDate, int duration) {
+            Calendar taskDate, int duration, TaskPriority priority) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         System.out.printf(messageAddEventFormat);
         System.out.printf(messageNameFormat, name);
@@ -120,14 +126,15 @@ public class AddCommandHandler implements ICommandHandler {
         System.out.printf(messageDurationFormat, duration);
         System.out.printf(messageDescriptionFormat, description);
         System.out.printf(messageDateFormat, format.format(taskDate.getTime()));
+        System.out.printf(messagePriorityFormat, priority.toString().toLowerCase());
     }
 
     @Override
     public boolean executeCommand() {
         assertObjectNotNull(this);
-        setEvent(name, location, description, taskDate, duration);
+        setEvent(name, location, description, taskDate, duration, priority);
         taskData.getEventMap().put(event.getTaskID(), event);
-        printConfirmation(name, location, description, taskDate, duration);
+        printConfirmation(name, location, description, taskDate, duration, priority);
         logger.log(Level.INFO,
                 String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
         return true;
