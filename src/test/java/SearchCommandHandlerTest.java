@@ -111,8 +111,8 @@ public class SearchCommandHandlerTest extends StringBasedTest {
             assertEquals("Your search request returned 0 results", e.getMessage());
         }
     }
-    
- // This method compares the passed event to the ORIGINAL event.
+
+    // This method compares the passed event to the ORIGINAL event.
     private void testSearchKeyWordTaskBefore(Event event, int i) {
         if (i == 0) {
 
@@ -121,7 +121,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
             String actualTaskDescription = event.getTaskDescription();
             Calendar actualTaskDate = event.getTaskDate();
             int actualTaskDuration = event.getTaskDuration();
-            
+
             assertEquals("Homework", actualTaskName);
             assertEquals("Tembusu College", actualTaskLocation);
             assertEquals("Work on CS2103 project", actualTaskDescription);
@@ -132,7 +132,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
             assertEquals(Calendar.MARCH, actualTaskDate.get(Calendar.MONTH));
             assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
             assertEquals(60, actualTaskDuration);
-          
+
         }
 
         else if (i == 1) {
@@ -142,7 +142,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
             String actualTaskDescription = event.getTaskDescription();
             Calendar actualTaskDate = event.getTaskDate();
             int actualTaskDuration = event.getTaskDuration();
-            
+
             assertEquals("Dinner", actualTaskName);
             assertEquals("Tembusu College", actualTaskLocation);
             assertEquals("Work on CS2103 project", actualTaskDescription);
@@ -157,7 +157,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
 
     }
 
-    //Boundary case for 2 task that has keywords
+    // Boundary case for 2 task that has keywords
     private void testSearchKeyWordTaskAfter(ArrayList<Integer> searchKeywordIds) {
         assertEquals(2, searchKeywordIds.size());
         assertEquals(HasSearchKeyword, taskData.getEventMap()
@@ -194,9 +194,10 @@ public class SearchCommandHandlerTest extends StringBasedTest {
             e.printStackTrace();
         }
 
-        // There should be a total 7 items displayed for empty slots instead of 8 because one is out of date range
+        // There should be a total 7 items displayed for empty slots instead of
+        // 8 because one is out of date range
         assertEquals(8, searchDateIds.size());
-        //Display empty slot results
+        // Display empty slot results
         super.executeCommand(validCommandAdd10);
     }
 }

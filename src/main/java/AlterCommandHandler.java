@@ -15,7 +15,7 @@ public class AlterCommandHandler implements ICommandHandler {
     private String description;
     private Calendar taskDate;
     private int duration;
-    private TaskPriority priority; 
+    private TaskPriority priority;
 
     private Event event;
 
@@ -42,7 +42,6 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
     private static final String priorityDelimiter = "priority";
-
 
     static {
         patternUpdateCommand = Pattern.compile(updateCommandFormat);
