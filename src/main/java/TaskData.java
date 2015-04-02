@@ -92,10 +92,10 @@ public class TaskData implements Serializable {
             if (this.hasKeyWord(event, keyword)) {
                 matchedTaskIds.add(taskId);
             }
+        }
             if (matchedTaskIds.size() == 0) {		
                    throw new NoSuchElementException(messageNoResults);		     
             }
-        }
         return matchedTaskIds;
     }
 
