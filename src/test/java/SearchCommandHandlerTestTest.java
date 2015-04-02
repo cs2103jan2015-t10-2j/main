@@ -11,6 +11,7 @@ import org.junit.Test;
 
 public class SearchCommandHandlerTestTest extends StringBasedTest {
 
+    
     private TaskData taskData;
     private ArrayList<Integer> searchKeywordIds;
     private ArrayList<Integer> searchDateIds;
