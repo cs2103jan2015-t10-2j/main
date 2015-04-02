@@ -9,7 +9,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     private TaskData taskData;
 
     private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
-    private static final String invalidCommandAdd = "add at 4:00 11/3/2015 for 60 @ Tembusu College desc \"Work\"";
+    private static final String validCommandAddFloating = "add Lunch with Mabel @ UTown";
 
     private static final String validCommandDisplay = "display 11/3/2015";
     private static final String unusedCommandDisplay = "display 11/3/2017";
@@ -42,7 +42,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(1, taskData.getEventMap().size());
 
         int taskId = taskData.getEventMap().keySet().iterator().next();
-
         // Check that the task has be inputed correctly.
         testTaskBefore(taskData.getEventMap().get(taskId));
 
@@ -70,16 +69,16 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // There should be one item in the map
         assertEquals(1, taskData.getEventMap().size());
     }
-
+    
     @Test
-    // BC: Failure during creation of event
+    // BC: valid input for floating task
     public void testExecuteCase3() {
 
-        // Add a poorly-formed event
-        super.executeCommand(invalidCommandAdd);
+        // Add a valid event, but then abort.
+        super.executeCommand(validCommandAddFloating);
 
-        // There should be zero items in the map
-        assertEquals(0, taskData.getEventMap().size());
+        // There should be one item in the map
+        assertEquals(1, taskData.getEventMap().size());
     }
 
     @Test
@@ -305,5 +304,5 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
 
     }
-
 }
+
