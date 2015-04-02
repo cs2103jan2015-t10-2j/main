@@ -26,12 +26,12 @@ public class TaskData implements Serializable {
         this.actualIDToDisplayIDMap = new LinkedHashMap<Integer, Integer>();
     }
     
-    public ArrayList<Integer> searchEmptySlots(Date parsedDateStart, Date parsedDateEnd) throws Exception{
+    public ArrayList<Integer> searchEmptySlots(Date parsedDateStart, Date parsedDateEnd) throws NoSuchElementException{
     	ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
     	Calendar cal = Calendar.getInstance();
     	
     	if (this.eventMap.isEmpty()) {
-            throw new Exception(messageEmptyFile);
+            throw new NoSuchElementException(messageEmptyFile);
         }
     	
     	for (Integer taskId : this.eventMap.keySet()){
@@ -44,7 +44,7 @@ public class TaskData implements Serializable {
     	 }
     	
     	if (rangeTaskIds.size() == 0) {
-            throw new Exception(messageNoResults);
+            throw new NoSuchElementException(messageNoResults);
         }
     	
     	sortDatesIncreasingOrder(rangeTaskIds);
