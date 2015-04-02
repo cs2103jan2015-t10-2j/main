@@ -17,10 +17,8 @@ public class TaskData implements Serializable {
     private Map<Integer, Event> eventMap;
     private Map<Integer, Integer> displayIDToActualIDMap;
     private Map<Integer, Integer> actualIDToDisplayIDMap;
-    SearchCommandHandler search;
 
     public TaskData() {
-        assertObjectNotNull(this);
         this.eventMap = new LinkedHashMap<Integer, Event>();
         this.displayIDToActualIDMap = new LinkedHashMap<Integer, Integer>();
         this.actualIDToDisplayIDMap = new LinkedHashMap<Integer, Integer>();
@@ -77,7 +75,6 @@ public class TaskData implements Serializable {
     public ArrayList<Integer> searchByKeyword(String keyword)
             throws NoSuchElementException {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
-        assertObjectNotNull(this);
         if (this.eventMap.isEmpty()) {
             throw new NoSuchElementException(messageEmptyFile);
         } else {
@@ -94,15 +91,15 @@ public class TaskData implements Serializable {
             if (this.hasKeyWord(event, keyword)) {
                 matchedTaskIds.add(taskId);
             }
-            if (matchedTaskIds.size() == 0) {
-                throw new NoSuchElementException(messageNoResults);
-            }
+        }
+
+        if (matchedTaskIds.size() == 0) {
+            throw new NoSuchElementException(messageNoResults);
         }
         return matchedTaskIds;
     }
 
     public int getActualId(int displayId) throws NoSuchElementException {
-        assertObjectNotNull(this);
         Integer actualId = this.displayIDToActualIDMap.get(displayId);
 
         if (actualId == null) {
@@ -183,9 +180,5 @@ public class TaskData implements Serializable {
         }
 
         return true;
-    }
-
-    private void assertObjectNotNull(Object o) {
-        assert (o != null);
     }
 }
