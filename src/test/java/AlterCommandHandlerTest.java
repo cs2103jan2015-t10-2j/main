@@ -8,10 +8,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
 
-    private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\"";
+    private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String invalidCommandAdd = "add at 4:00 11/3/2015 for 60 @ Tembusu College desc \"Work\"";
-
-    private static final String confirmYes = "Y";
 
     private static final String validCommandDisplay = "display 11/3/2015";
     private static final String unusedCommandDisplay = "display 11/3/2017";
@@ -23,8 +21,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     private static final String commandViewOptionThree = "3";
     private static final String commandViewOptionFour = "4";
 
-    private static final String validCommandAlter = "alter 1 as 2:00 15/3/2015 for 120 mins @ Tembusu College desc \"This homework is very tough!\"";
-    private static final String unusedCommandAlter = "alter 7 as 2:00 15/3/2015 for 120 mins @ Tembusu College desc \"This homework is very tough!\"";
+    private static final String validCommandAlter = "alter 1 as 2:00 15/3/2015 for 120 mins @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
+    private static final String unusedCommandAlter = "alter 7 as 2:00 15/3/2015 for 120 mins @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
     private static final String invalidCommandAlter = "alter 1 as 2:00 15/3/2015 for 120 in Tembusu College desc \"This\"";
 
     @Override
@@ -56,7 +54,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionThree);
         super.executeCommand(validCommandAlter);
-        super.executeCommand(confirmYes);
 
         // We check that the event has been changed as needed.
         testTaskAfter(taskData.getEventMap().get(taskId));
@@ -190,7 +187,6 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandViewOptionOne);
         super.executeCommand(validCommandAlter);
-        super.executeCommand(confirmYes);
 
         // Success. We check that the event has been changed as needed.
         testTaskAfter(taskData.getEventMap().get(taskId));
@@ -271,6 +267,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         String actualTaskDescription = event.getTaskDescription();
         Calendar actualTaskDate = event.getTaskDate();
         int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
         assertEquals("Homework", actualTaskName);
         assertEquals("Tembusu College", actualTaskLocation);
@@ -282,6 +279,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(Calendar.MARCH, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals(60, actualTaskDuration);
+        assertEquals("high", actualPriority);
     }
 
     // This method compares the passed event to the ALTERED event.
@@ -291,6 +289,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         String actualTaskDescription = event.getTaskDescription();
         Calendar actualTaskDate = event.getTaskDate();
         int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
         assertEquals("Homework", actualTaskName);
         assertEquals("Tembusu College", actualTaskLocation);
@@ -302,6 +301,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(Calendar.MARCH, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals(120, actualTaskDuration);
+        assertEquals("high", actualPriority);
+
     }
 
 }
