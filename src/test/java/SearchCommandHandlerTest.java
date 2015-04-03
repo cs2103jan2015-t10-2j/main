@@ -72,17 +72,6 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         testSearchKeyWordTaskAfter(searchKeywordIds);
     }
 
-    @Test
-    // Boundary case: valid during creation
-    public void testExecuteCase2() {
-
-        // Add a valid event, but then abort.
-        super.executeCommand(validCommandAdd1);
-
-        // There should be one item in the map
-        assertEquals(1, taskData.getEventMap().size());
-    }
-
     // BC: The file is empty
     @Test
     public void testExecuteCase4() {
