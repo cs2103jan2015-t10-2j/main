@@ -19,7 +19,7 @@ public class AlterCommandHandler implements ICommandHandler {
 
     private Event event;
 
-    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+) as (?<time>.+) for (?<duration>.+) mins @ (?<location>.+) desc \"(?<description>.+)\" setPrior (?<priority>.+)";
+    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?)?)?(len (?<duration>.+) mins)?( @ (?<location>.+?))?( desc \"(?<description>.+)\")?( setPrior (?<priority>.+))?$";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
 
@@ -30,11 +30,11 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String messageDescriptionFormat = "Description: %s\n";
     private static final String messageDurationFormat = "Duration: %d minutes\n";
     private static final String messageLocationFormat = "Location: %s\n";
+    private static final String messagePriorityFormat = "Priority level: %s\n";
     private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
     private static final String messageAfterMod = "\nAfter modification:\n";
     private static final String messageBeforeMod = "Before modification:\n";
     private static final String messageEditingFormat = "Editing task - %s\n";
-    private static final String messagePriorityFormat = "Priority level: %s\n";
 
     private static final String eventIDDelimiter = "eventID";
     private static final String descriptionDelimiter = "description";
