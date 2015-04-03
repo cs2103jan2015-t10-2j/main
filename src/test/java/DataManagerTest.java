@@ -41,6 +41,11 @@ public class DataManagerTest {
         taskDataToSave.getEventMap().put(eventToSave.getTaskID(), eventToSave);
 
         DataManager.getInstance().setPathToSaveLoad(testFilePath);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+
+        }
         DataManager.getInstance().saveTaskDataToFile(taskDataToSave);
         TaskData taskDataToLoad = DataManager.getInstance().loadTaskDataFromFile();
 
