@@ -29,7 +29,7 @@ public class AlterCommandHandler implements ICommandHandler {
     private boolean isPriorityChanged;
     private boolean isSnoozeRequested;
     
-    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?))?(len (?<duration>[0-9]+?\\.??[0-9]??[0-9]??) hrs)?( @ (?<location>.+?))?( desc \"(?<description>.+)\")?( setPrior (?<priority>.+))?( snooze (?<snooze>[0-9]+?) hrs)?$";
+    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?))??(len (?<duration>[0-9]+?\\.??[0-9]??[0-9]??) hrs)?( @ (?<location>.+?))??( desc \"(?<description>.+)\")??( setPrior (?<priority>.+?))??( snooze (((?<snooze1>[0-9]+?) hrs)|((?<snooze2>[0-9]+?) days)))??$";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
 
@@ -57,7 +57,8 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
     private static final String priorityDelimiter = "priority";
-    private static final String snoozeDelimiter = "snooze";
+    private static final String snoozeHrsDelimiter = "snooze1";
+    private static final String snoozeDaysDelimiter = "snooze2";
     
     private static final float minsInHour = 60;
 
@@ -107,8 +108,7 @@ public class AlterCommandHandler implements ICommandHandler {
         newTime = patternMatcher.group(timeDelimiter);
         newTaskDate = Calendar.getInstance();
         try {
-            float lenInHrs = Float.parseFloat(patternMatcher.group(durationDelimiter));
-            newDuration = hrsToMins(lenInHrs);
+            newDuration = hrsToMins(Float.parseFloat(patternMatcher.group(durationDelimiter)));
             isDurationChanged = true;
         } catch (Exception e) {
             isDurationChanged = false;
@@ -131,12 +131,17 @@ public class AlterCommandHandler implements ICommandHandler {
         } catch (NullPointerException e) {
             isPriorityChanged = false;
         }
+        isSnoozeRequested = false;
         try {
-            snoozeLen = Integer.parseInt(patternMatcher.group(snoozeDelimiter));
+            snoozeLen = Integer.parseInt(patternMatcher.group(snoozeHrsDelimiter));
             isSnoozeRequested = true;
         } catch (NumberFormatException e) {
-            isSnoozeRequested = false;
         }
+        try {
+            snoozeLen = 24*(Integer.parseInt(patternMatcher.group(snoozeDaysDelimiter)));
+            isSnoozeRequested = true;
+        } catch (NumberFormatException e) {
+        } 
     }
 
     @Override
