@@ -19,7 +19,7 @@ public class AlterCommandHandler implements ICommandHandler {
 
     private Event event;
 
-    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?)?)?(len (?<duration>.+) mins)?( @ (?<location>.+?))?( desc \"(?<description>.+)\")?( setPrior (?<priority>.+))?$";
+    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?)?)?(len (?<duration>.+) hrs)?( @ (?<location>.+?))?( desc \"(?<description>.+)\")?( setPrior (?<priority>.+))?$";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
 
@@ -28,7 +28,7 @@ public class AlterCommandHandler implements ICommandHandler {
 
     private static final String messageDateFormat = "Date: %s\n";
     private static final String messageDescriptionFormat = "Description: %s\n";
-    private static final String messageDurationFormat = "Duration: %d minutes\n";
+    private static final String messageDurationFormat = "Duration: %d hours\n";
     private static final String messageLocationFormat = "Location: %s\n";
     private static final String messagePriorityFormat = "Priority level: %s\n";
     private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
@@ -42,6 +42,7 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
     private static final String priorityDelimiter = "priority";
+    private static final float minsInHour = 60;
 
     static {
         patternUpdateCommand = Pattern.compile(updateCommandFormat);
@@ -80,7 +81,7 @@ public class AlterCommandHandler implements ICommandHandler {
     private void setTaskDetails(Matcher patternMatcher) {
         eventId = Integer.parseInt(patternMatcher.group(eventIDDelimiter));
         time = patternMatcher.group(timeDelimiter);
-        duration = Integer.parseInt(patternMatcher.group(durationDelimiter));
+        duration = hrsToMins(Float.parseFloat(patternMatcher.group(durationDelimiter)));
         location = patternMatcher.group(locationDelimiter);
         description = patternMatcher.group(descriptionDelimiter);
         taskDate = Calendar.getInstance();
@@ -131,15 +132,23 @@ public class AlterCommandHandler implements ICommandHandler {
         System.out.printf(messageEditingFormat, event.getTaskName());
         System.out.printf(messageBeforeMod);
         System.out.printf(messageDateFormat, format.format(event.getTaskDate().getTime()));
-        System.out.printf(messageDurationFormat, event.getTaskDuration());
+        System.out.printf(messageDurationFormat, minsToHrs(event.getTaskDuration()));
         System.out.printf(messageLocationFormat, event.getTaskLocation());
         System.out.printf(messageDescriptionFormat, event.getTaskDescription());
         System.out.printf(messageAfterMod);
         System.out.printf(messageDateFormat, format.format(taskDate.getTime()));
-        System.out.printf(messageDurationFormat, duration);
+        System.out.printf(messageDurationFormat, minsToHrs(duration));
         System.out.printf(messageLocationFormat, location);
         System.out.printf(messageDescriptionFormat, description);
         System.out.printf(messagePriorityFormat, priority.toString().toLowerCase());
+    }
+    
+    private int hrsToMins(float hours) {
+        return (int) (minsInHour*hours);
+    }
+    
+    private float minsToHrs(int mins) {
+        return (float) (mins/minsInHour);
     }
 
     @Override

@@ -8,7 +8,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
 
-    private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
+    private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 1 hrs @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String validCommandAddFloating = "add Lunch with Mabel @ UTown";
 
     private static final String validCommandDisplay = "display 11/3/2015";
@@ -21,9 +21,9 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     private static final String commandViewOptionThree = "3";
     private static final String commandViewOptionFour = "4";
 
-    private static final String validCommandAlter = "alter 1 as time 2:00 15/3/2015 len 120 mins @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
-    private static final String unusedCommandAlter = "alter 7 as time 2:00 15/3/2015 len 120 mins @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
-    private static final String invalidCommandAlter = "alter 1 as 2:00 15/3/2015 for 120 in Tembusu College desc \"This\"";
+    private static final String validCommandAlter = "alter 1 as time 2:00 15/3/2015 len 2 hrs @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
+    private static final String unusedCommandAlter = "alter 7 as time 2:00 15/3/2015 len 2 hrs @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
+    private static final String invalidCommandAlter = "alter 1 as 2:00 15/3/2015 for 2 in Tembusu College desc \"This\"";
 
     @Override
     public TaskData createTaskData() {
