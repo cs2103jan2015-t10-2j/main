@@ -20,14 +20,16 @@ public class AlterCommandHandler implements ICommandHandler {
     private Calendar newTaskDate;
     private int newDuration;
     private TaskPriority newPriority;
-    
+    private int snoozeLen;
+
     private boolean isLocationChanged;
     private boolean isDescChanged;
     private boolean isTaskDateChanged;
     private boolean isDurationChanged;
     private boolean isPriorityChanged;
+    private boolean isSnoozeRequested;
     
-    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?)?)?(len (?<duration>.+) hrs)?( @ (?<location>.+?))?( desc \"(?<description>.+)\")?( setPrior (?<priority>.+))?$";
+    private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?))?(len (?<duration>[0-9]+?\\.??[0-9]??[0-9]??) hrs)?( @ (?<location>.+?))?( desc \"(?<description>.+)\")?( setPrior (?<priority>.+))?( snooze (?<snooze>[0-9]+?) hrs)?$";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
 
@@ -46,7 +48,6 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String messageEditingFormat = "Editing task - %s\n";
 
     private static final String loggerNumberOfEvents = "No. of events=%d";
-    private static final String loggerParsedEvent = "Parsed event - ";
     private static final String loggerParseException = "Parse exception";
     private static final String loggerInputCommand = "Input command - %s";
 
@@ -56,6 +57,7 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String durationDelimiter = "duration";
     private static final String timeDelimiter = "time";
     private static final String priorityDelimiter = "priority";
+    private static final String snoozeDelimiter = "snooze";
     
     private static final float minsInHour = 60;
 
@@ -84,9 +86,7 @@ public class AlterCommandHandler implements ICommandHandler {
                 return false;
             }
         }
-        
         setTaskDetails(patternMatcher);
-        
         try {
             if (newTime != null) {
                 Date parsedDate = timeFormat.parse(newTime);
@@ -107,21 +107,22 @@ public class AlterCommandHandler implements ICommandHandler {
         newTime = patternMatcher.group(timeDelimiter);
         newTaskDate = Calendar.getInstance();
         try {
-            newDuration = hrsToMins(Float.parseFloat(patternMatcher.group(durationDelimiter)));
+            float lenInHrs = Float.parseFloat(patternMatcher.group(durationDelimiter));
+            newDuration = hrsToMins(lenInHrs);
             isDurationChanged = true;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             isDurationChanged = false;
         }
-        try {
+        if (patternMatcher.group(locationDelimiter) != null) {
             newLocation = patternMatcher.group(locationDelimiter);
             isLocationChanged = true;
-        } catch (NullPointerException e) {
+        } else {
             isLocationChanged = false;
         }
-        try {
+        if (patternMatcher.group(descriptionDelimiter) != null) {
             newDescription = patternMatcher.group(descriptionDelimiter);
             isDescChanged = true;
-        } catch (NullPointerException e) {
+        } else {
             isDescChanged = false;
         }
         try {
@@ -129,6 +130,12 @@ public class AlterCommandHandler implements ICommandHandler {
             isPriorityChanged = true;
         } catch (NullPointerException e) {
             isPriorityChanged = false;
+        }
+        try {
+            snoozeLen = Integer.parseInt(patternMatcher.group(snoozeDelimiter));
+            isSnoozeRequested = true;
+        } catch (NumberFormatException e) {
+            isSnoozeRequested = false;
         }
     }
 
@@ -144,16 +151,26 @@ public class AlterCommandHandler implements ICommandHandler {
             return false;
         }
         if (eventAlreadyExists()) {
-            oldEvent = extractMethod(actualId);
-            updateNewValues();
-            printConfirmation(oldEvent);
-            setEventDetails();
+            displaySuccess();
+            logger.log(Level.INFO,
+                    String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
             return true;
         } else {
             return false;
         }
     }
-
+    
+    public void displaySuccess() {
+        oldEvent = extractMethod();
+        System.out.printf(messageEditingFormat, oldEvent.getTaskName());
+        System.out.printf(messageBeforeMod);
+        printEventDetails();
+        updateNewValues();
+        setEventDetails();
+        System.out.printf(messageAfterMod);
+        printEventDetails();
+    }
+    
     private void updateNewValues() {
         if (!(isLocationChanged)) {
             newLocation = oldEvent.getTaskLocation();
@@ -175,12 +192,15 @@ public class AlterCommandHandler implements ICommandHandler {
     private void setEventDetails() {
         oldEvent.setTaskLocation(newLocation);
         oldEvent.setTaskDescription(newDescription);
-        oldEvent.setTaskDate(newTaskDate);
         oldEvent.setTaskDuration(newDuration);
         oldEvent.setTaskPriority(newPriority);
+        if (isSnoozeRequested) {
+            newTaskDate.add(Calendar.HOUR_OF_DAY, snoozeLen);
+        }
+        oldEvent.setTaskDate(newTaskDate);
     }
     
-    private Event extractMethod(int actualId) {
+    private Event extractMethod() {
         return taskData.getEventMap().get(actualId);
     }
 
@@ -188,25 +208,17 @@ public class AlterCommandHandler implements ICommandHandler {
         return taskData.getEventMap().containsKey(actualId);
     }
 
-    private void printConfirmation(Event oldEvent) {
+    private void printEventDetails() {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
-        System.out.printf(messageEditingFormat, oldEvent.getTaskName());
-        System.out.printf(messageBeforeMod);
         System.out.printf(messageDateFormat, format.format(oldEvent.getTaskDate().getTime()));
         System.out.printf(messageDurationFormat, minsToHrs(oldEvent.getTaskDuration()));
         System.out.printf(messageLocationFormat, oldEvent.getTaskLocation());
         System.out.printf(messageDescriptionFormat, oldEvent.getTaskDescription());
         System.out.printf(messagePriorityFormat, oldEvent.getTaskPriority());
-        System.out.printf(messageAfterMod);
-        System.out.printf(messageDateFormat, format.format(newTaskDate.getTime()));
-        System.out.printf(messageDurationFormat, minsToHrs(newDuration));
-        System.out.printf(messageLocationFormat, newLocation);
-        System.out.printf(messageDescriptionFormat, newDescription);
-        System.out.printf(messagePriorityFormat, newPriority.toString().toLowerCase());
     }
     
     private int hrsToMins(float hours) {
-        return (int) (minsInHour*hours);
+        return (int) (minsInHour * hours);
     }
 
     private float minsToHrs(int mins) {
