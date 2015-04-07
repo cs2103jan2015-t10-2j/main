@@ -1,6 +1,9 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,7 +32,7 @@ public class CommandParser {
 
     private static final String priorityPattern = " ?setPrior (?<priority>.+)";
     private static final String descPattern = " ?desc \"(?<description>.+)\"";
-    private static final String durationPattern = " ?for (?<duration>[0-9]+(.[0-9]+)*) (?<unit>mins*|h[ou]*rs*)";
+    private static final String durationPattern = " ?for (?<duration>[0-9]+(.[0-9]+)*) ?(?<unit>mins?|h((ou)?rs*)?)";
     private static final String timePattern = " ?((at|@) )*((?<hour>[0-1]?[0-9])(:(?<minute>[0-5]?[0-9]))? ?(?<ampm>(am|pm)))|((?<hour24>[0-2]?[0-9])(:(?<minute24>[0-5]?[0-9])))";
     private static final String datePattern = "(^|[\\W]+)((?<days>((((?<prefix>this|next) )(?<unit>week|month|mon(day)?)))|(on) (?<weekday>mon(day)?))"
             + "|((?<today>today|yesterday|tomorrow)"
@@ -38,6 +41,7 @@ public class CommandParser {
     private static final String namePattern = "(?<name>.+)";
 
     private static final String VALUE_HOUR = "h";
+    private static final String VALUE_AM = "AM";
     private static final String VALUE_PM = "PM";
 
     private static final String KEY_PRIORITY = "priority";
@@ -183,7 +187,7 @@ public class CommandParser {
 
     public static Calendar getDateTime(Map<String, String> taskDetailMap) {
         Calendar taskTime = Calendar.getInstance();
-        int hour, min;
+        int min;
 
         String hourString = taskDetailMap.remove(KEY_HOUR);
         String hour24String = taskDetailMap.remove(KEY_HOUR24);
@@ -192,13 +196,20 @@ public class CommandParser {
         if (hasTime) {
             if (hourString != null) {
                 String ampm = taskDetailMap.remove(KEY_AMPM);
-                hour = Integer.parseInt(hourString);
+                int hour = Integer.parseInt(hourString) % 12;
 
-                if (ampm != null && ampm.contains(VALUE_PM)) {
-                    hour = hour + 12;
+                if (ampm != null) {
+                    if (VALUE_AM.equalsIgnoreCase(ampm)) {
+                        taskTime.set(Calendar.AM_PM, Calendar.AM);
+                    } else if (VALUE_PM.equalsIgnoreCase(ampm)) {
+                        taskTime.set(Calendar.AM_PM, Calendar.PM);
+                    }
+
+                    taskTime.set(Calendar.HOUR, hour);
                 }
             } else {
-                hour = Integer.parseInt(hour24String);
+                int hour = Integer.parseInt(hour24String);
+                taskTime.set(Calendar.HOUR_OF_DAY, hour);
             }
 
             String minuteString = taskDetailMap.remove(KEY_MINUTE);
@@ -212,7 +223,6 @@ public class CommandParser {
                 min = 0;
             }
 
-            taskTime.set(Calendar.HOUR_OF_DAY, hour);
             taskTime.set(Calendar.MINUTE, min);
         } else {
             taskTime = null;
@@ -226,7 +236,28 @@ public class CommandParser {
 
         if (hasDate) {
             if (daysString != null) {
-                // TODO: next/this/previous week/month/Monday...
+                String weekdayString = taskDetailMap.remove(KEY_WEEKDAY);
+                String prefixString = taskDetailMap.remove(KEY_PREFIX);
+                String unitString = taskDetailMap.remove(KEY_UNIT);
+
+                if (weekdayString != null) {
+                    SimpleDateFormat weekDayFormat = new SimpleDateFormat("E");
+                    try {
+                        Date date = weekDayFormat.parse(weekdayString);
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(date);
+
+                        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+                        taskDate.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+                        if (taskDate.before(Calendar.getInstance())) {
+                            taskDate.add(Calendar.WEEK_OF_MONTH, 1);
+                        }
+                    } catch (ParseException e) {
+
+                    }
+                } else if (prefixString != null && unitString != null) {
+                    // TODO: next/this/previous week/month/Monday...
+                }
             }
 
             if (todayString != null) {
