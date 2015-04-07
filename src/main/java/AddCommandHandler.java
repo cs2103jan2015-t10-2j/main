@@ -84,6 +84,11 @@ public class AddCommandHandler implements ICommandHandler {
         return false;
     }
 
+    @Override
+    public boolean isCommandReady() {
+        return true;
+    }
+
     public int getUniqueId() {
         Random random = new Random();
         int returnVal;

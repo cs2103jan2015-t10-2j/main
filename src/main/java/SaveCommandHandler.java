@@ -38,6 +38,11 @@ public class SaveCommandHandler implements ICommandHandler {
         return false;
     }
 
+    @Override
+    public boolean isCommandReady() {
+        return true;
+    }
+
     public void setFileSavePath(String fileSavePath) {
         this.fileSavePath = fileSavePath;
     }

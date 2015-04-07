@@ -217,6 +217,11 @@ public class ViewScaleCommandHandler implements ICommandHandler {
         return isExtraInputNeeded;
     }
 
+    @Override
+    public boolean isCommandReady() {
+        return true;
+    }
+
     public static enum ViewOption {
         NOT_CHOSEN, THIS_WEEK, THIS_MONTH, NEXT_WEEK, NEXT_MONTH, PREV_WEEK, PREV_MONTH;
     }
