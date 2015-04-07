@@ -11,15 +11,15 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String validCommandAddFloating = "add Lunch with Mabel @ UTown";
 
-    private static final String validCommandDisplay = "display 11/3/2015";
-    private static final String unusedCommandDisplay = "display 11/3/2017";
+    private static final String validCommandDisplay = "display month";
+    private static final String unusedCommandDisplay = "display week";
     private static final String invalidCommandDisplay = "display 11/30/2015";
 
-    private static final String commandViewOptionNegOne = "-1";
-    private static final String commandViewOptionZero = "0";
-    private static final String commandViewOptionOne = "1";
-    private static final String commandViewOptionThree = "3";
-    private static final String commandViewOptionFour = "4";
+    private static final String commandDisplayPrevious = "3";
+    private static final String commandDisplayExit = "5";
+
+    private static final String commandDisplayZero = "0";
+    private static final String commandDisplayFour = "4";
 
     private static final String validCommandAlter = "alter 1 as time 2:00 15/3/2015 len 2 hrs @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
     private static final String unusedCommandAlter = "alter 7 as time 2:00 15/3/2015 len 2 hrs @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
@@ -69,7 +69,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // There should be one item in the map
         assertEquals(1, taskData.getEventMap().size());
     }
-    
+
     @Test
     // BC: valid input for floating task
     public void testExecuteCase3() {
@@ -98,7 +98,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // Display the event list using an UNUSED date and try to alter the
         // event in year view...
         super.executeCommand(unusedCommandDisplay);
-        super.executeCommand(commandViewOptionThree);
+        super.executeCommand(commandDisplayPrevious);
+        super.executeCommand(commandDisplayExit);
         // No events will come up! We can alter nothing!
 
         // We check that the event has NOT been changed.
@@ -120,6 +121,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
         // Display the event list using an invalid date
         super.executeCommand(invalidCommandDisplay);
+
         // No events will come up! We can alter nothing.
 
         // We check that the event has NOT been changed.
@@ -141,7 +143,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // Display the event list using a valid date, but invoke an invalid
         // "view"
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandViewOptionNegOne);
+        super.executeCommand(commandDisplayPrevious);
+        super.executeCommand(commandDisplayExit);
         // No events will come up! We can alter nothing
 
         // We check that the event has NOT been changed.
@@ -163,7 +166,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // Display the event list using a valid date, but invoke an invalid
         // "view"
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandViewOptionZero);
+        super.executeCommand(commandDisplayZero);
+        super.executeCommand(commandDisplayExit);
         // No events will come up! We can alter nothing!
 
         // We check that the event has NOT been changed.
@@ -185,7 +189,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // Display the event list using an valid date and alter the event using
         // a valid view
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandViewOptionOne);
+        super.executeCommand(commandDisplayPrevious);
+        super.executeCommand(commandDisplayExit);
         super.executeCommand(validCommandAlter);
 
         // Success. We check that the event has been changed as needed.
@@ -207,7 +212,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // Display the event list using a valid date, but invoke an invalid
         // "view"
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandViewOptionFour);
+        super.executeCommand(commandDisplayFour);
+        super.executeCommand(commandDisplayExit);
         // No events will come up! We can alter nothing.
 
         // We check that the event has NOT been changed.
@@ -229,7 +235,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // Display the event list using a valid date and view, but try to alter
         // a nonexistent event...
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandViewOptionThree);
+        super.executeCommand(commandDisplayPrevious);
+        super.executeCommand(commandDisplayExit);
         super.executeCommand(unusedCommandAlter);
         // An error will be thrown. The event doesn't exist.
 
@@ -252,7 +259,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // Display the event list using a valid date and view, but use a poorly
         // formed alter command
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandViewOptionThree);
+        super.executeCommand(commandDisplayPrevious);
+        super.executeCommand(commandDisplayExit);
         super.executeCommand(invalidCommandAlter);
         // An error will be thrown. The alter command is messed up.
 
@@ -305,4 +313,3 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
     }
 }
-
