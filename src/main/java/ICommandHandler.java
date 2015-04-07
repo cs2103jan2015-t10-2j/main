@@ -3,5 +3,7 @@ public interface ICommandHandler {
 
     public boolean executeCommand();
 
+    public boolean isCommandReady();
+
     public boolean isExtraInputNeeded();
 }

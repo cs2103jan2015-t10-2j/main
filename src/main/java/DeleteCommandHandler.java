@@ -18,7 +18,7 @@ public class DeleteCommandHandler implements ICommandHandler {
     private static final String taskIdDelimiter = "taskId";
     private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
     private static final String simpleDateFormat = "dd MMM, yyyy";
-    
+
     private static final String messageNumberEvents = "No. of events=%d";
     private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
     private static final String messageDateFormat = "Date: %s\n";
@@ -91,6 +91,11 @@ public class DeleteCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return false;
+    }
+
+    @Override
+    public boolean isCommandReady() {
+        return true;
     }
 
     private void assertObjectNotNull(Object o) {

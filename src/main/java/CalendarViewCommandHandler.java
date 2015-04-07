@@ -7,13 +7,13 @@ import java.util.NoSuchElementException;
 
 public class CalendarViewCommandHandler implements ICommandHandler {
 
+    private static final String MESSAGE_KEY_IN_OPTION_AGAIN = "Please key in option again. Please exit display mode if you want to add, alter, delete or display another view";
     private TaskData taskData;
     private String command;
     private String saveCommand;
-    private boolean invalidOption = false;
     private ArrayList<Integer> floatingMonthIds = new ArrayList<Integer>();
 
-    private boolean isExtraInputNeeded = false;
+    private boolean isExtraInputNeeded;
     private boolean floatingChosen = false;
     private ViewOption chosenView = ViewOption.NOT_CHOSEN;
 
@@ -36,12 +36,10 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private static final String dateFormatString = "d/M/y";
     private static final String simpleDateFormatTimeDayMthyr = "HH:mm dd MMM, yyyy.";
 
-    private static final String messageInvalidOption = "Invalid option";
     private static final String messageReenterDate = "Please either enter display week or display month";
     private static final String messageIncorrectFormat = "Incorrect format";
 
     private static final SimpleDateFormat formatTimeDayMthYr;
-
 
     private int maxMonth = 0;
     private int maxWeek = 0;
@@ -57,22 +55,21 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     }
 
     public CalendarViewCommandHandler(TaskData taskData) {
-        assertObjectNotNull(this);
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
     @Override
     public boolean parseCommand(String command) {
-        assertObjectNotNull(this);
         this.command = command;
-        invalidOption = false;
-        // isExtraInputNeeded = false;
         int firstSpace = command.indexOf(' ');
+        boolean isCommandFormatCorrect = false;
+        boolean isDisplayCommand = !isExtraInputNeeded;
+        isExtraInputNeeded = true;
 
-        if (isExtraInputNeeded != true) {
             //Matcher dateMatcher = patternViewDate.matcher(command);
             //Matcher stringMatcher = patternViewCommand.matcher(command);
+        if (isDisplayCommand) {
 
             /*
              * 
@@ -82,18 +79,16 @@ public class CalendarViewCommandHandler implements ICommandHandler {
              * this.command; return true; }
              */
 
-            if (command.equals(viewCommandWeek)) {
+            if (viewCommandWeek.equalsIgnoreCase(command)) {
                 this.command = command.substring(firstSpace + 1);
                 // System.out.println("Success for Week");
                 this.saveCommand = this.command;
-                return true;
-            }
-
-            else if (command.equals(viewCommandMonth)) {
+                isCommandFormatCorrect = true;
+            } else if (viewCommandMonth.equalsIgnoreCase(command)) {
                 this.command = command.substring(firstSpace + 1);
                 // System.out.println("success for month");
                 this.saveCommand = this.command;
-                return true;
+                isCommandFormatCorrect = true;
             }
 
             /*
@@ -130,27 +125,34 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 System.out.println(messageIncorrectFormat);
                 System.out.println(messageReenterDate);
 
-                isExtraInputNeeded = false;;
-                return false;
+                isExtraInputNeeded = false;
+                isCommandFormatCorrect = false;
             }
         } else {
             try {
                 int chosenViewId = Integer.parseInt(command);
                 if (chosenViewId > 0 && chosenViewId < ViewOption.values().length) {
                     chosenView = ViewOption.values()[chosenViewId];
-                    return true;
-                }
-                else{
+
+                    isCommandFormatCorrect = true;
+                    if (chosenView == ViewOption.EXIT) {
+                        isExtraInputNeeded = false;
+                    } else {
+                        isExtraInputNeeded = true;
+                    }
+                } else {
                     System.out.println("Please enter options 1 to 5");
-                    return false;
+                    isExtraInputNeeded = true;
+                    isCommandFormatCorrect = false;
                 }
             } catch (NumberFormatException e) {
-                System.out.println(messageInvalidOption);
-                invalidOption = true;
-                return true;
+                System.out.println(MESSAGE_KEY_IN_OPTION_AGAIN);
+                isExtraInputNeeded = true;
+                isCommandFormatCorrect = false;
             }
         }
 
+        return isCommandFormatCorrect;
     }
 
     //Will be in use later. Don't delete
@@ -212,13 +214,6 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     @Override
     public boolean executeCommand() {
-        if (invalidOption == true) {
-            System.out.println("Please key in option again. Please exit display mode if you want to add, alter, delete or display another view");
-            return true;
-        } else {
-            invalidOption = false;
-        }
-
         if (this.saveCommand.equals("month")) {
             if (processMonthView()) {
                 return true;
@@ -231,7 +226,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             }
         }
 
-        return true;
+        return false;
     }
 
     private boolean processWeekView() {
@@ -339,7 +334,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             System.out.println("3. Previous month");
             System.out.println("4. Next month");
             System.out.println("5. Exit Display mode");
-              
+
         }
         // 2nd condition
         if (chosenView == ViewOption.FLOATING) {
@@ -360,7 +355,6 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             System.out.println("2. Hit 5 to exit display mode");
             chosenView = ViewOption.NOT_CHOSEN;
         }
-
 
         // 3rd condition
         if (chosenView == ViewOption.EXIT) {
@@ -391,7 +385,6 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             calStart.add(Calendar.DATE, 1);
         }
         endDate = calStart.getTime();
-        
         System.out
         .printf("======================== Week view from from %s to %s ========================\n\n",
                 dateFormat.format(beginDate), dateFormat.format(endDate));
@@ -516,6 +509,11 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return isExtraInputNeeded;
+    }
+
+    @Override
+    public boolean isCommandReady() {
+        return true;
     }
 
     public static enum ViewOption {

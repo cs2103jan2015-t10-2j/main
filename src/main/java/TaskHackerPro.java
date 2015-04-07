@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -15,6 +16,9 @@ public class TaskHackerPro {
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;
+
+    private static final Logger logger = Logger.getGlobal();
+    private static final String COMMAND_ADDED_TO_HISTORY = "Command added to history";
 
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
@@ -39,32 +43,43 @@ public class TaskHackerPro {
             }
 
             ICommandHandler handler = commandHandlerMap.get(command.toLowerCase());
-            assertObjectNotNull(handler);
-
-            boolean isExtraInputNeeded = false;
 
             if (handler == null) {
                 printErrorMsg(command, MESSAGE_COMMAND_NOT_FOUND);
             } else {
-                do {
-                    if (handler.parseCommand(inputLine)) {
-                        if (!handler.executeCommand()) {
-                            printErrorMsg(command, MESSAGE_FAIL_EXECUTION);
-                        }
-                    } else {
-                        printErrorMsg(command, MESSAGE_FORMAT_INCORRECT);
-                    }
+                boolean isExtraInputNeeded = performCommandLifeCycle(handler, inputLine, command);
 
-                    isExtraInputNeeded = handler.isExtraInputNeeded();
-                    if (isExtraInputNeeded && inputSource.hasNextLine()) {
-                        inputLine = inputSource.getNextLine();
-                    }
-                } while (isExtraInputNeeded);
+                while (isExtraInputNeeded && inputSource.hasNextLine()) {
+                    inputLine = inputSource.getNextLine();
+                    isExtraInputNeeded = performCommandLifeCycle(handler, inputLine, command);
+                }
             }
         }
 
         DataManager.getInstance().saveTaskDataToFile(taskData);
         inputSource.closeSource();
+    }
+
+    private boolean performCommandLifeCycle(ICommandHandler handler, String inputLine, String command) {
+        boolean isCommandFormatCorrect = handler.parseCommand(inputLine);
+        boolean isExtraInputNeeded = handler.isExtraInputNeeded();
+        boolean isCommandReady = handler.isCommandReady();
+
+        if (isCommandFormatCorrect) {
+            if (isCommandReady) {
+                if (handler.executeCommand()) {
+                    logger.info(COMMAND_ADDED_TO_HISTORY);
+                } else {
+                    printErrorMsg(command, MESSAGE_FAIL_EXECUTION);
+                }
+            } else {
+                assert (isExtraInputNeeded);
+            }
+        } else {
+            printErrorMsg(command, MESSAGE_FORMAT_INCORRECT);
+        }
+
+        return isExtraInputNeeded;
     }
 
     public TaskData getTaskData() {

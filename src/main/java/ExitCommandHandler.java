@@ -31,6 +31,11 @@ public class ExitCommandHandler implements ICommandHandler {
         return false;
     }
 
+    @Override
+    public boolean isCommandReady() {
+        return true;
+    }
+
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
