@@ -3,6 +3,7 @@ import java.util.Stack;
 
 public class UndoCommandHandler implements ICommandHandler {
 
+    private static final String MESSAGE_NOTHING_TO_UNDO = "Nothing to undo.\n";
     private Stack<ICommand> undoStack;
     private Stack<ICommand> redoStack;
     
@@ -26,7 +27,7 @@ public class UndoCommandHandler implements ICommandHandler {
     @Override
     public ICommand getCommand() {        
         if (undoStack.isEmpty()) {
-            // Nothing to undo
+            System.out.printf(MESSAGE_NOTHING_TO_UNDO);
         } else {
             while (!undoStack.isEmpty()) {
                 ICommand commandToUndo = undoStack.pop();

@@ -79,6 +79,7 @@ public class TaskHackerPro {
             if (commandReady != null) {
                 if (commandReady.execute()) {
                     logger.info(COMMAND_ADDED_TO_HISTORY);
+                    undoStack.push(commandReady);
                 } else {
                     printErrorMsg(command, MESSAGE_FAIL_EXECUTION);
                 }
