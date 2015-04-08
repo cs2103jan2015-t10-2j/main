@@ -215,13 +215,13 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     @Override
     public ICommand getCommand() {
         ICommand displayCommand = new NullCommand();
-        if (this.saveCommand.equals("month")) {
+        if ("month".equalsIgnoreCase(this.saveCommand)) {
             if (processMonthView()) {
                 return displayCommand;
             }
         }
 
-        if (this.saveCommand.equals("week")) {
+        if ("week".equalsIgnoreCase(this.saveCommand)) {
             if (processWeekView()) {
                 return displayCommand;
             }
