@@ -29,6 +29,11 @@ public class AlterCommand implements ICommand {
         return true;
     }
 
+    @Override
+    public boolean isReversible() {
+        return true;
+    }
+
     private void copyEventValues(Event from, Event to) {
         to.setTaskName(from.getTaskName());
         to.setTaskDate(from.getTaskDate());

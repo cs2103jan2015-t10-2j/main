@@ -45,6 +45,11 @@ public class DeleteCommand implements ICommand {
         return this.execute();
     }
 
+    @Override
+    public boolean isReversible() {
+        return true;
+    }
+
     private void printConfirmation(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
         System.out.printf(messageDeleteTask, event.getTaskName());
