@@ -2,14 +2,15 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TaskHackerProRunner {
 
     private IInputSource inputSource;
-    private Stack<ICommand> undoStack;
-    private Stack<ICommand> redoStack;
+    private Stack<Entry<ICommand, String>> undoStack;
+    private Stack<Entry<ICommand, String>> redoStack;
     
     private TaskHackerPro taskHackerPro;
     private Map<String, ICommandHandler> commandHandlerMap;
@@ -30,8 +31,8 @@ public class TaskHackerProRunner {
         this.inputSource = inputSource;
         this.taskData = taskData;
         
-        this.undoStack = new Stack<ICommand>();
-        this.redoStack = new Stack<ICommand>();
+        this.undoStack = new Stack<Entry<ICommand, String>>();
+        this.redoStack = new Stack<Entry<ICommand, String>>();
         this.taskHackerPro = new TaskHackerPro(undoStack, redoStack);
         this.commandHandlerMap = new HashMap<String, ICommandHandler>();
 
@@ -48,6 +49,7 @@ public class TaskHackerProRunner {
         commandHandlerMap.put("alter", new AlterCommandHandler(taskData));
         commandHandlerMap.put("undo", new UndoCommandHandler(undoStack, redoStack));
         commandHandlerMap.put("redo", new RedoCommandHandler(undoStack, redoStack)); 
+        commandHandlerMap.put("history", new HistoryCommandHandler(undoStack, redoStack)); 
         commandHandlerMap.put("save", new SaveCommandHandler(taskData));
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
     }
