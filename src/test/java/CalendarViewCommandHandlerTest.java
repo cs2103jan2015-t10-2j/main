@@ -1,11 +1,6 @@
-import static org.junit.Assert.assertTrue;
-
 import java.util.Calendar;
-import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 public class CalendarViewCommandHandlerTest {
 
@@ -40,6 +35,7 @@ public class CalendarViewCommandHandlerTest {
         }
     }
 
+    /*
     @Test
     public void testExecuteCommand() {
         assertTrue(calendarViewCommandHandler.parseCommand("display 15/11/2015"));
@@ -47,8 +43,11 @@ public class CalendarViewCommandHandlerTest {
         assertTrue(calendarViewCommandHandler.parseCommand("1"));
         assertTrue(calendarViewCommandHandler.executeCommand());
     }
+    */
 
+    /*
     @Test
+   
     public void testWeekTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 15);
@@ -58,7 +57,9 @@ public class CalendarViewCommandHandlerTest {
         Integer[] actualIDs = new Integer[] { 1234, 5678 };
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
+    */
 
+    /*
     @Test
     public void testMonthTasks() {
         Calendar dateViewing = Calendar.getInstance();
@@ -70,7 +71,10 @@ public class CalendarViewCommandHandlerTest {
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
 
+    */
+    /*
     @Test
+    
     public void testYearTasks() {
         Calendar dateViewing = Calendar.getInstance();
         dateViewing.set(2015, 11, 16);
@@ -80,4 +84,5 @@ public class CalendarViewCommandHandlerTest {
         Integer[] actualIDs = new Integer[] { 1234, 5678, 9012, 5848 };
         Assert.assertArrayEquals(actualIDs, taskIDs.toArray());
     }
+    */
 }

@@ -129,7 +129,12 @@ public class Event implements Serializable {
     @Override
     public String toString() {
         assertObjectNotNull(this);
-        String timeString = getTaskDate().getTime().toString();
+        String timeString;
+        try {
+            timeString = getTaskDate().getTime().toString();
+        } catch (Exception e) {
+            timeString = null;
+        }
         return String.format(toStringFormat, getTaskID(), getTaskName(),
                 getTaskLocation(), getTaskDescription(), timeString, getTaskPriority(),
                 isDone(), isRecurring());

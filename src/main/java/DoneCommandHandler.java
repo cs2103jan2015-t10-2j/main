@@ -38,25 +38,25 @@ public class DoneCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
-        assertObjectNotNull(taskData);
-
-        try {
-            int actualId = taskData.getActualId(displayId);
-            Event eventDone = taskData.getEventMap().get(actualId);
-            eventDone.setDone(true);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public boolean isExtraInputNeeded() {
+        return false;
     }
 
     @Override
-    public boolean isExtraInputNeeded() {
-        return false;
+    public ICommand getCommand() {
+        Event eventDone;
+        try {
+            int actualId = taskData.getActualId(displayId);
+            eventDone = taskData.getEventMap().get(actualId);
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+        ICommand doneCommand = new DoneCommand(eventDone);
+        return doneCommand;
     }
 
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
+
 }
