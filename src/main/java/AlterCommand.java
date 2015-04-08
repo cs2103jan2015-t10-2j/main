@@ -34,6 +34,7 @@ public class AlterCommand implements ICommand {
         to.setTaskDate(from.getTaskDate());
         to.setTaskDuration(from.getTaskDuration());
         to.setTaskLocation(from.getTaskLocation());
+        to.setTaskDescription(from.getTaskDescription());
         to.setTaskPriority(from.getTaskPriority());
         to.setDone(from.isDone());
         to.setRecurring(from.isRecurring());

@@ -160,13 +160,13 @@ public class AlterCommandHandler implements ICommandHandler {
             eventToAlter = taskData.getEventMap().get(actualId);
             System.out.printf(messageEditingFormat, eventToAlter.getTaskName());
             System.out.printf(messageBeforeMod);
-            printEventDetails();
+            printEventDetails(eventToAlter);
             updateNewValues(eventToAlter, eventWithUpdatedData);
             
             ICommand alterCommand = new AlterCommand(eventToAlter, eventWithUpdatedData);
             
             System.out.printf(messageAfterMod);
-            printEventDetails();
+            printEventDetails(eventWithUpdatedData);
             logger.log(Level.INFO,
                     String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
             return alterCommand;
@@ -176,6 +176,9 @@ public class AlterCommandHandler implements ICommandHandler {
     }
 
     private void updateNewValues(Event from, Event to) {
+        
+        to.setTaskName(from.getTaskName());
+        
         if (isLocationChanged) {
             to.setTaskLocation(newLocation);
         } else {
@@ -210,14 +213,14 @@ public class AlterCommandHandler implements ICommandHandler {
         }
     }
 
-    private void printEventDetails() {
+    private void printEventDetails(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         System.out.printf(messageDateFormat,
-                format.format(eventToAlter.getTaskDate().getTime()));
-        System.out.printf(messageDurationFormat, minsToHrs(eventToAlter.getTaskDuration()));
-        System.out.printf(messageLocationFormat, eventToAlter.getTaskLocation());
-        System.out.printf(messageDescriptionFormat, eventToAlter.getTaskDescription());
-        System.out.printf(messagePriorityFormat, eventToAlter.getTaskPriority());
+                format.format(event.getTaskDate().getTime()));
+        System.out.printf(messageDurationFormat, minsToHrs(event.getTaskDuration()));
+        System.out.printf(messageLocationFormat, event.getTaskLocation());
+        System.out.printf(messageDescriptionFormat, event.getTaskDescription());
+        System.out.printf(messagePriorityFormat, event.getTaskPriority());
     }
 
     private int hrsToMins(float hours) {

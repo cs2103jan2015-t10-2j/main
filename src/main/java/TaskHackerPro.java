@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.Map;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +14,8 @@ public class TaskHackerPro {
 
     private static final String messageWelcome = "Welcome to TaskHackerPro!";
     private IInputSource inputSource;
+    private Stack<ICommand> undoStack;
+    private Stack<ICommand> redoStack;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;
@@ -23,6 +26,11 @@ public class TaskHackerPro {
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
+    
+    public TaskHackerPro(Stack<ICommand> undoStack, Stack<ICommand> redoStack) {
+        this.undoStack = undoStack;
+        this.redoStack = redoStack;
+    }
 
     public void printErrorMsg(String command, String message) {
         System.out.printf("%s: %s\n", command, message);
@@ -74,8 +82,6 @@ public class TaskHackerPro {
                 } else {
                     printErrorMsg(command, MESSAGE_FAIL_EXECUTION);
                 }
-            } else {
-                assert (isExtraInputNeeded);
             }
         } else {
             printErrorMsg(command, MESSAGE_FORMAT_INCORRECT);
