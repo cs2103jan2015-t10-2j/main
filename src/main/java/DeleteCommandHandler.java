@@ -45,7 +45,6 @@ public class DeleteCommandHandler implements ICommandHandler {
 
     @Override
     public ICommand getCommand() {
-        ICommand deleteCommand = new DeleteCommand(taskData, actualId);
         try {
             actualId = taskData.getActualId(taskId);
         } catch (Exception NoSuchElementException) {
@@ -54,6 +53,7 @@ public class DeleteCommandHandler implements ICommandHandler {
         }
         boolean isExist = taskData.getEventMap().containsKey(actualId);
         if (isExist) {
+            ICommand deleteCommand = new DeleteCommand(taskData, actualId);
             return deleteCommand;
         }
         return null;
