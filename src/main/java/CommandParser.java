@@ -36,9 +36,9 @@ public class CommandParser {
     private static final String timePattern = " ?((at|@) )*((?<hour>[0-1]?[0-9])(:(?<minute>[0-5]?[0-9]))? ?(?<ampm>(am|pm)))|((?<hour24>[0-2]?[0-9])(:(?<minute24>[0-5]?[0-9])))";
     private static final String datePattern = "(^|[\\W]+)((?<days>((((?<prefix>this|next) )(?<unit>week|month|mon(day)?)))|(on) (?<weekday>mon(day)?))"
             + "|((?<today>today|yesterday|tomorrow)"
-            + "|(?<date>(?<day>([1-3])?[0-9])(-|/| )?(?<month>([\\d]{1,2}|(Jan(uary)?|Mar)))((-|/| )?(?<year>(19|20)?[\\d]{2}))?)))($|[\\W]+)";
+            + "|(?<date>(?<day>([1-3])?[0-9])((((-|/| )(?<month>[\\d]{1,2}))|((-|/| )?(?<monthString>(Jan(uary)?|Mar)))))((-|/| )?(?<year>(19|20)?[\\d]{2}))?)))($|[\\W]+)";
     private static final String locationPattern = " ?@ (?<location>.+)";
-    private static final String namePattern = "(?<name>.+)";
+    private static final String namePattern = "add (?<name>.+)";
 
     private static final String VALUE_HOUR = "h";
     private static final String VALUE_AM = "AM";
@@ -172,14 +172,16 @@ public class CommandParser {
         String commandTaskName = taskDetailMap.remove(KEY_NAME);
         String taskName = "";
         if (commandTaskName != null) {
-            int start = commandTaskName.indexOf(commandName + " ");
-
-            if (start == 0) {
-                taskName += commandTaskName.substring(commandName.length() + 1);
-            }
+            taskName += commandTaskName;
         }
 
-        taskName += String.join(" ", taskDetailMap.values());
+        List<String> remainString = new ArrayList<String>();
+        remainString.add(taskName);
+        for (Entry<String, String> entry : list) {
+            remainString.add(entry.getKey().trim());
+            remainString.add(entry.getValue().trim());
+        }
+        taskName = String.join(" ", remainString);
         event.setTaskName(taskName);
 
         return event;
