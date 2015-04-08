@@ -214,9 +214,13 @@ public class AlterCommandHandler implements ICommandHandler {
     }
 
     private void printEventDetails(Event event) {
-        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
-        System.out.printf(messageDateFormat,
-                format.format(event.getTaskDate().getTime()));
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+            System.out.printf(messageDateFormat,
+                    format.format(event.getTaskDate().getTime()));
+        } catch (Exception e) {
+            System.out.printf(messageDateFormat, "unspecified");
+        }
         System.out.printf(messageDurationFormat, minsToHrs(event.getTaskDuration()));
         System.out.printf(messageLocationFormat, event.getTaskLocation());
         System.out.printf(messageDescriptionFormat, event.getTaskDescription());
