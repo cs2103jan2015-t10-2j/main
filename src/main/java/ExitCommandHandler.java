@@ -19,24 +19,21 @@ public class ExitCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
-        assertObjectNotNull(taskHackerPro);
-        taskHackerPro.setContinue(false);
-        System.out.println(messageExiting);
-        return true;
-    }
-
-    @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
 
     @Override
-    public boolean isCommandReady() {
-        return true;
+    public ICommand getCommand() {
+        assertObjectNotNull(taskHackerPro);
+        taskHackerPro.setContinue(false);
+        System.out.println(messageExiting);
+        ICommand exitCommand = new NullCommand(); 
+        return exitCommand;
     }
 
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
+
 }

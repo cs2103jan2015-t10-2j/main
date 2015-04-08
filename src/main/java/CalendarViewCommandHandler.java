@@ -213,20 +213,21 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
+    public ICommand getCommand() {
+        ICommand displayCommand = new NullCommand();
         if (this.saveCommand.equals("month")) {
             if (processMonthView()) {
-                return true;
+                return displayCommand;
             }
         }
 
         if (this.saveCommand.equals("week")) {
             if (processWeekView()) {
-                return true;
+                return displayCommand;
             }
         }
 
-        return false;
+        return null;
     }
 
     private boolean processWeekView() {
@@ -509,11 +510,6 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return isExtraInputNeeded;
-    }
-
-    @Override
-    public boolean isCommandReady() {
-        return true;
     }
 
     public static enum ViewOption {

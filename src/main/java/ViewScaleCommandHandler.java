@@ -58,7 +58,8 @@ public class ViewScaleCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
+    public ICommand getCommand() {
+        ICommand viewCommand = new NullCommand();
 
         SimpleDateFormat format = new SimpleDateFormat("HH:mm dd MMM, yyyy");
 
@@ -76,7 +77,7 @@ public class ViewScaleCommandHandler implements ICommandHandler {
             System.out.println("5. prev week");
             System.out.println("6. prev month");
             isExtraInputNeeded = true;
-            return true;
+            return viewCommand;
         } else {
             List<Integer> taskIds = getMatchingTaskDisplayIDs(dateViewing, choseView);
             switch (choseView) {
@@ -137,7 +138,7 @@ public class ViewScaleCommandHandler implements ICommandHandler {
             dateViewing = null;
             choseView = ViewOption.NOT_CHOSEN;
 
-            return true;
+            return viewCommand;
         }
     }
 
@@ -215,11 +216,6 @@ public class ViewScaleCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return isExtraInputNeeded;
-    }
-
-    @Override
-    public boolean isCommandReady() {
-        return true;
     }
 
     public static enum ViewOption {
