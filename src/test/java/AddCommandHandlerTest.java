@@ -8,7 +8,9 @@ public class AddCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
 
-    private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
+    private static final String commandAdd1 = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
+    private static final String commandAdd2 = "add do homework for ever";
+    private static final String commandAdd3 = "add 123";
 
     @Override
     public TaskData createTaskData() {
@@ -17,16 +19,14 @@ public class AddCommandHandlerTest extends StringBasedTest {
     }
 
     @Test
-    public void testExecuteCommand() {
-        super.executeCommand(commandAdd);
+    public void testExecuteCommand1() {
+        super.executeCommand(commandAdd1);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
 
-        testTask(taskData.getEventMap().get(taskId));
-    }
+        Event event = taskData.getEventMap().get(taskId);
 
-    private void testTask(Event event) {
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
         String actualTaskDescription = event.getTaskDescription();
@@ -45,5 +45,31 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals(60, actualTaskDuration);
         assertEquals("high", actualPriority);
+    }
+
+    @Test
+    public void testExecuteCommand2() {
+        super.executeCommand(commandAdd2);
+
+        assertEquals(1, taskData.getEventMap().size());
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+
+        Event event = taskData.getEventMap().get(taskId);
+
+        String actualTaskName = event.getTaskName();
+        assertEquals("do homework for ever", actualTaskName);
+    }
+
+    @Test
+    public void testExecuteCommand3() {
+        super.executeCommand(commandAdd3);
+
+        assertEquals(1, taskData.getEventMap().size());
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+
+        Event event = taskData.getEventMap().get(taskId);
+
+        String actualTaskName = event.getTaskName();
+        assertEquals("123", actualTaskName);
     }
 }
