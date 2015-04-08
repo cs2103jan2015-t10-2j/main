@@ -3,6 +3,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DeleteCommand implements ICommand {
+    private static final String STRING_TO_BE_SCHEDULED = "To be scheduled";
     private TaskData taskData;
     private int actualId;
     private Event event;
@@ -53,8 +54,12 @@ public class DeleteCommand implements ICommand {
     private void printConfirmation(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
         System.out.printf(messageDeleteTask, event.getTaskName());
-        System.out
-                .printf(messageDateFormat, format.format(event.getTaskDate().getTime()));
+        try {
+            System.out.printf(messageDateFormat,
+                    format.format(event.getTaskDate().getTime()));
+        } catch (NullPointerException e) {
+            System.out.printf(messageDateFormat, STRING_TO_BE_SCHEDULED);
+        }
         System.out.printf(messageDurationFormat, event.getTaskDuration());
         System.out.printf(messageLocationFormat, event.getTaskLocation());
         System.out.printf(messageDescriptionFormat, event.getTaskDescription());
