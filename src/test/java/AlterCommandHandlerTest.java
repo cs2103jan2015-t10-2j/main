@@ -8,22 +8,12 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
     private TaskData taskData;
 
-    private static final String validCommandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
+    private static final String validCommandAddTimed = "add Homework at 4:00 20/4/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String validCommandAddFloating = "add Lunch with Mabel @ UTown";
 
     private static final String validCommandDisplay = "display month";
-    private static final String unusedCommandDisplay = "display week";
-    private static final String invalidCommandDisplay = "display 11/30/2015";
-
-    private static final String commandDisplayPrevious = "3";
-    private static final String commandDisplayExit = "5";
-
-    private static final String commandDisplayZero = "0";
-    private static final String commandDisplayFour = "4";
-
-    private static final String validCommandAlter = "alter 1 as time 2:00 15/3/2015 len 2 hrs @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
-    private static final String unusedCommandAlter = "alter 7 as time 2:00 15/3/2015 len 2 hrs @ Tembusu College desc \"This homework is very tough!\" setPrior HIGH";
-    private static final String invalidCommandAlter = "alter 1 as 2:00 15/3/2015 for 2 in Tembusu College desc \"This\"";
+    private static final String commandExitDisplayMode = "5";
+    private static final String commandDisplayFloating = "2";
 
     @Override
     public TaskData createTaskData() {
@@ -32,240 +22,54 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     }
 
     @Test
-    // Boundary case for all valid inputs
-    public void testExecuteCase1() {
+    public void testAlterChangeTime() {
 
         // Add an event successfully
-        super.executeCommand(validCommandAdd);
-
-        // There should be one item in the map
-        assertEquals(1, taskData.getEventMap().size());
-
+        super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
-        // Check that the task has be inputed correctly.
-        testTaskBefore(taskData.getEventMap().get(taskId));
+        Event event = taskData.getEventMap().get(taskId);
+        testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
-        //super.executeCommand(validCommandAlter); TODO ANSHUMAN. Figure out why this fails in the context of the whole test.
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as time 7:00 12/12/2016");
+        
+        String actualTaskName = event.getTaskName();
+        String actualTaskLocation = event.getTaskLocation();
+        String actualTaskDescription = event.getTaskDescription();
+        Calendar actualTaskDate = event.getTaskDate();
+        int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
-        // We check that the event has been changed as needed.
-        //testTaskAfter(taskData.getEventMap().get(taskId));  TODO ANSHUMAN. Figure out why this fails in the context of the whole test.
+        assertEquals("Homework", actualTaskName);
+        assertEquals("Tembusu College", actualTaskLocation);
+        assertEquals("Work on CS2103 project", actualTaskDescription);
+        assertEquals(7, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
+        assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
+        assertEquals(12, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.DECEMBER, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(2016, actualTaskDate.get(Calendar.YEAR));
+        assertEquals(60, actualTaskDuration);
+        assertEquals("high", actualPriority);
+        
     }
-
+    
     @Test
-    // Boundary case: valid during creation
-    public void testExecuteCase2() {
-
-        // Add a valid event, but then abort.
-        super.executeCommand(validCommandAdd);
-
-        // There should be one item in the map
-        assertEquals(1, taskData.getEventMap().size());
-    }
-
-    @Test
-    // BC: valid input for floating task
-    public void testExecuteCase3() {
-
-        // Add a valid event, but then abort.
-        super.executeCommand(validCommandAddFloating);
-
-        // There should be one item in the map
-        assertEquals(1, taskData.getEventMap().size());
-    }
-
-    @Test
-    // BC: The date is unpopulated
-    public void testExecuteCase5() {
+    public void testAlterChangeDuration() {
 
         // Add an event successfully
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-
+        super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
+        Event event = taskData.getEventMap().get(taskId);
+        testTimedTaskBefore(event);
 
-        // Check that the task has be inputed correctly.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using an UNUSED date and try to alter the
-        // event in year view...
-        super.executeCommand(unusedCommandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
-        // No events will come up! We can alter nothing!
-
-        // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-    }
-
-    @Test
-    // BC: The date is invalid
-    public void testExecuteCase6() {
-
-        // Add an event successfully
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-        int taskId = taskData.getEventMap().keySet().iterator().next();
-
-        // Check that the task has be inputed correctly.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using an invalid date
-        super.executeCommand(invalidCommandDisplay);
-
-        // No events will come up! We can alter nothing.
-
-        // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));        
-    }
-
-    @Test
-    // BC to test for view choice for negative value partition
-    public void testExecuteCase7() {
-
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-
-        int taskId = taskData.getEventMap().keySet().iterator().next();
-
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using a valid date, but invoke an invalid
-        // "view"
+        // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
-        // No events will come up! We can alter nothing
-
-        // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-    }
-
-    @Test
-    // Boundary case to test for view choice for zero
-    public void testExecuteCase8() {
-
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-
-        int taskId = taskData.getEventMap().keySet().iterator().next();
-
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using a valid date, but invoke an invalid
-        // "view"
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayZero);
-        super.executeCommand(commandDisplayExit);
-        // No events will come up! We can alter nothing!
-
-        // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-    }
-
-    @Test
-    // BC: Valid use.
-    public void testExecuteCase9() {
-
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-
-        int taskId = taskData.getEventMap().keySet().iterator().next();
-
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using an valid date and alter the event using
-        // a valid view
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
-        //super.executeCommand(validCommandAlter); TODO ANSHUMAN. Figure out why this fails in the context of the whole test.
-
-        // Success. We check that the event has been changed as needed.
-        //testTaskAfter(taskData.getEventMap().get(taskId));  TODO ANSHUMAN. Figure out why this fails in the context of the whole test.
-    }
-
-    @Test
-    // Boundary case to test for view choice of >3 partition
-    public void testExecuteCase10() {
-
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-
-        int taskId = taskData.getEventMap().keySet().iterator().next();
-
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using a valid date, but invoke an invalid
-        // "view"
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayFour);
-        super.executeCommand(commandDisplayExit);
-        // No events will come up! We can alter nothing.
-
-        // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-    }
-
-    @Test
-    // Unused event ID
-    public void testExecuteCase11() {
-
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-
-        int taskId = taskData.getEventMap().keySet().iterator().next();
-
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using a valid date and view, but try to alter
-        // a nonexistent event...
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
-        super.executeCommand(unusedCommandAlter);
-        // An error will be thrown. The event doesn't exist.
-
-        // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-    }
-
-    @Test
-    // Invalid event ID
-    public void testExecuteCase12() {
-
-        super.executeCommand(validCommandAdd);
-
-        assertEquals(1, taskData.getEventMap().size());
-
-        int taskId = taskData.getEventMap().keySet().iterator().next();
-
-        testTaskBefore(taskData.getEventMap().get(taskId));
-
-        // Display the event list using a valid date and view, but use a poorly
-        // formed alter command
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
-        super.executeCommand(invalidCommandAlter);
-        // An error will be thrown. The alter command is messed up.
-
-        // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));
-    }
-
-    // This method compares the passed event to the ORIGINAL event.
-    private void testTaskBefore(Event event) {
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as len 4 hrs");
+        
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
         String actualTaskDescription = event.getTaskDescription();
@@ -279,15 +83,61 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(4, actualTaskDate.get(Calendar.HOUR_OF_DAY));
         assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
         assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
-        assertEquals(11, actualTaskDate.get(Calendar.DAY_OF_MONTH));
-        assertEquals(Calendar.MARCH, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
+        assertEquals(240, actualTaskDuration);
+        assertEquals("high", actualPriority);
+    }
+
+    @Test
+    public void testAlterChangeLocation() {
+
+        // Add an event successfully
+        super.executeCommand(validCommandAddTimed);
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        Event event = taskData.getEventMap().get(taskId);
+        testTimedTaskBefore(event);
+
+        // Display the event list successfully, and alter the event.
+        super.executeCommand(validCommandDisplay);
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as @ RC4");
+        
+        String actualTaskName = event.getTaskName();
+        String actualTaskLocation = event.getTaskLocation();
+        String actualTaskDescription = event.getTaskDescription();
+        Calendar actualTaskDate = event.getTaskDate();
+        int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
+
+        assertEquals("Homework", actualTaskName);
+        assertEquals("RC4", actualTaskLocation);
+        assertEquals("Work on CS2103 project", actualTaskDescription);
+        assertEquals(4, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
+        assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals(60, actualTaskDuration);
         assertEquals("high", actualPriority);
     }
+    
+    @Test
+    public void testAlterChangeDescription() {
 
-    // This method compares the passed event to the ALTERED event.
-    private void testTaskAfter(Event event) {
+        // Add an event successfully
+        super.executeCommand(validCommandAddTimed);
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        Event event = taskData.getEventMap().get(taskId);
+        testTimedTaskBefore(event);
+
+        // Display the event list successfully, and alter the event.
+        super.executeCommand(validCommandDisplay);
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as desc \"foo\"");
+        
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
         String actualTaskDescription = event.getTaskDescription();
@@ -297,15 +147,179 @@ public class AlterCommandHandlerTest extends StringBasedTest {
 
         assertEquals("Homework", actualTaskName);
         assertEquals("Tembusu College", actualTaskLocation);
-        assertEquals("This homework is very tough!", actualTaskDescription);
-        assertEquals(2, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals("foo", actualTaskDescription);
+        assertEquals(4, actualTaskDate.get(Calendar.HOUR_OF_DAY));
         assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
         assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
-        assertEquals(15, actualTaskDate.get(Calendar.DAY_OF_MONTH));
-        assertEquals(Calendar.MARCH, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
+        assertEquals(60, actualTaskDuration);
+        assertEquals("high", actualPriority);
+    }
+    
+    @Test
+    public void testAlterChangePriority() {
+
+        // Add an event successfully
+        super.executeCommand(validCommandAddTimed);
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        Event event = taskData.getEventMap().get(taskId);
+        testTimedTaskBefore(event);
+
+        // Display the event list successfully, and alter the event.
+        super.executeCommand(validCommandDisplay);
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as setPrior LOW");
+        
+        String actualTaskName = event.getTaskName();
+        String actualTaskLocation = event.getTaskLocation();
+        String actualTaskDescription = event.getTaskDescription();
+        Calendar actualTaskDate = event.getTaskDate();
+        int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
+
+        assertEquals("Homework", actualTaskName);
+        assertEquals("Tembusu College", actualTaskLocation);
+        assertEquals("Work on CS2103 project", actualTaskDescription);
+        assertEquals(4, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
+        assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
+        assertEquals(60, actualTaskDuration);
+        assertEquals("low", actualPriority);
+    }
+    
+    @Test
+    public void testAlterSetSnooze() {
+
+        // Add an event successfully
+        super.executeCommand(validCommandAddTimed);
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        Event event = taskData.getEventMap().get(taskId);
+        testTimedTaskBefore(event);
+
+        // Display the event list successfully, and alter the event.
+        super.executeCommand(validCommandDisplay);
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as snooze 40 days");
+        
+        String actualTaskName = event.getTaskName();
+        String actualTaskLocation = event.getTaskLocation();
+        String actualTaskDescription = event.getTaskDescription();
+        Calendar actualTaskDate = event.getTaskDate();
+        int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
+
+        assertEquals("Homework", actualTaskName);
+        assertEquals("Tembusu College", actualTaskLocation);
+        assertEquals("Work on CS2103 project", actualTaskDescription);
+        assertEquals(4, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
+        assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
+        assertEquals(60, actualTaskDuration);
+        assertEquals("high", actualPriority);
+    }
+    
+    @Test
+    public void testAlterAllFields() {
+
+        // Add an event successfully
+        super.executeCommand(validCommandAddTimed);
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        Event event = taskData.getEventMap().get(taskId);
+        testTimedTaskBefore(event);
+
+        // Display the event list successfully, and alter the event.
+        super.executeCommand(validCommandDisplay);
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as time 6:00 12/12/2016 len 4 hrs @ RC4 desc \"hello\" setPrior LOW");
+        
+        String actualTaskName = event.getTaskName();
+        String actualTaskLocation = event.getTaskLocation();
+        String actualTaskDescription = event.getTaskDescription();
+        Calendar actualTaskDate = event.getTaskDate();
+        int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
+
+        assertEquals("Homework", actualTaskName);
+        assertEquals("RC4", actualTaskLocation);
+        assertEquals("hello", actualTaskDescription);
+        assertEquals(6, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
+        assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
+        assertEquals(12, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.DECEMBER, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(2016, actualTaskDate.get(Calendar.YEAR));
+        assertEquals(240, actualTaskDuration);
+        assertEquals("low", actualPriority);
+    }
+    
+    @Test
+    public void testAlterChangeFloating() {
+
+        // Add an event successfully
+        super.executeCommand(validCommandAddFloating);
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+        Event event = taskData.getEventMap().get(taskId);
+        
+        String actualTaskName = event.getTaskName();
+        String actualTaskLocation = event.getTaskLocation();
+        assertEquals("Lunch with Mabel", actualTaskName);
+        assertEquals("UTown", actualTaskLocation);
+
+        // Display the event list successfully, and alter the event.
+        super.executeCommand(validCommandDisplay);
+        super.executeCommand(commandDisplayFloating);
+        super.executeCommand(commandExitDisplayMode);
+        super.executeCommand("alter 1 as time 20:00 25/12/2015 len 2 hrs @ RC4 desc \"I will cook\" setPrior HIGH");
+        
+        actualTaskName = event.getTaskName();
+        actualTaskLocation = event.getTaskLocation();
+        String actualTaskDescription = event.getTaskDescription();
+        Calendar actualTaskDate = event.getTaskDate();
+        int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
+
+        assertEquals("Lunch with Mabel", actualTaskName);
+        assertEquals("RC4", actualTaskLocation);
+        assertEquals("I will cook", actualTaskDescription);
+        assertEquals(20, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
+        assertEquals(Calendar.PM, actualTaskDate.get(Calendar.AM_PM));
+        assertEquals(25, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.DECEMBER, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals(120, actualTaskDuration);
         assertEquals("high", actualPriority);
-
     }
+    
+
+    // This method compares the passed event to the original timed event.
+    private void testTimedTaskBefore(Event event) {
+        String actualTaskName = event.getTaskName();
+        String actualTaskLocation = event.getTaskLocation();
+        String actualTaskDescription = event.getTaskDescription();
+        Calendar actualTaskDate = event.getTaskDate();
+        int actualTaskDuration = event.getTaskDuration();
+        String actualPriority = event.getTaskPriority().toString().toLowerCase();
+
+        assertEquals("Homework", actualTaskName);
+        assertEquals("Tembusu College", actualTaskLocation);
+        assertEquals("Work on CS2103 project", actualTaskDescription);
+        assertEquals(4, actualTaskDate.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, actualTaskDate.get(Calendar.MINUTE));
+        assertEquals(Calendar.AM, actualTaskDate.get(Calendar.AM_PM));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
+        assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
+        assertEquals(60, actualTaskDuration);
+        assertEquals("high", actualPriority);
+    }
+
 }
