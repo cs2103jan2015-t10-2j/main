@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class AlterCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
-    private Event oldEvent;
+    private Event eventToAlter;
 
     private int eventId;
     private int actualId;
@@ -28,7 +28,7 @@ public class AlterCommandHandler implements ICommandHandler {
     private boolean isDurationChanged;
     private boolean isPriorityChanged;
     private boolean isSnoozeRequested;
-    
+
     private static final String updateCommandFormat = "alter (?<eventID>[0-9]+?) as ?( time (?<time>.+?))??(len (?<duration>[0-9]+?\\.??[0-9]??[0-9]??) hrs)?( @ (?<location>.+?))??( desc \"(?<description>.+)\")??( setPrior (?<priority>.+?))??( snooze (((?<snooze1>[0-9]+?) hrs)|((?<snooze2>[0-9]+?) days)))??$";
     private static final String timeFormatString = "h:m d/M/y";
     private static final String dateFormat = "dd MMM, yyyy";
@@ -59,7 +59,7 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final String priorityDelimiter = "priority";
     private static final String snoozeHrsDelimiter = "snooze1";
     private static final String snoozeDaysDelimiter = "snooze2";
-    
+
     private static final float minsInHour = 60;
 
     static {
@@ -76,7 +76,7 @@ public class AlterCommandHandler implements ICommandHandler {
     @Override
     public boolean parseCommand(String command) {
         Matcher patternMatcher;
-        
+
         logger.log(Level.INFO, String.format(loggerInputCommand, command));
 
         if (command.isEmpty()) {
@@ -91,7 +91,7 @@ public class AlterCommandHandler implements ICommandHandler {
         try {
             if (newTime != null) {
                 Date parsedDate = timeFormat.parse(newTime);
-                newTaskDate.setTime(parsedDate);   
+                newTaskDate.setTime(parsedDate);
                 isTaskDateChanged = true;
             } else {
                 isTaskDateChanged = false;
@@ -108,7 +108,8 @@ public class AlterCommandHandler implements ICommandHandler {
         newTime = patternMatcher.group(timeDelimiter);
         newTaskDate = Calendar.getInstance();
         try {
-            newDuration = hrsToMins(Float.parseFloat(patternMatcher.group(durationDelimiter)));
+            newDuration = hrsToMins(Float.parseFloat(patternMatcher
+                    .group(durationDelimiter)));
             isDurationChanged = true;
         } catch (Exception e) {
             isDurationChanged = false;
@@ -138,96 +139,96 @@ public class AlterCommandHandler implements ICommandHandler {
         } catch (NumberFormatException e) {
         }
         try {
-            snoozeLen = 24*(Integer.parseInt(patternMatcher.group(snoozeDaysDelimiter)));
+            snoozeLen = 24 * (Integer.parseInt(patternMatcher.group(snoozeDaysDelimiter)));
             isSnoozeRequested = true;
         } catch (NumberFormatException e) {
-        } 
+        }
     }
 
     @Override
-    public boolean executeCommand() {
-
-        assertObjectNotNull(this);
-
+    public ICommand getCommand() {
         try {
             actualId = taskData.getActualId(eventId);
         } catch (Exception NoSuchElementException) {
             System.out.println(messageUseDisplayFunction);
-            return false;
+            return null;
         }
-        if (eventAlreadyExists()) {
-            displaySuccess();
+        
+        boolean isEventAlreadyExists = taskData.getEventMap().containsKey(actualId);;
+        if (isEventAlreadyExists) {
+            Event eventWithUpdatedData = new Event();
+            eventToAlter = taskData.getEventMap().get(actualId);
+            System.out.printf(messageEditingFormat, eventToAlter.getTaskName());
+            System.out.printf(messageBeforeMod);
+            printEventDetails(eventToAlter);
+            updateNewValues(eventToAlter, eventWithUpdatedData);
+            
+            ICommand alterCommand = new AlterCommand(eventToAlter, eventWithUpdatedData);
+            
+            System.out.printf(messageAfterMod);
+            printEventDetails(eventWithUpdatedData);
             logger.log(Level.INFO,
                     String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
-            return true;
+            return alterCommand;
         } else {
-            return false;
+            return null;
         }
-    }
-    
-    public void displaySuccess() {
-        oldEvent = extractMethod();
-        System.out.printf(messageEditingFormat, oldEvent.getTaskName());
-        System.out.printf(messageBeforeMod);
-        printEventDetails();
-        updateNewValues();
-        setEventDetails();
-        System.out.printf(messageAfterMod);
-        printEventDetails();
-    }
-    
-    private void updateNewValues() {
-        if (!(isLocationChanged)) {
-            newLocation = oldEvent.getTaskLocation();
-        }
-        if (!(isDescChanged)) {
-            newDescription = oldEvent.getTaskDescription();
-        }
-        if (!(isTaskDateChanged)) {
-            newTaskDate = oldEvent.getTaskDate();
-        }
-        if (!(isDurationChanged)) {
-            newDuration = oldEvent.getTaskDuration();
-        }
-        if (!(isPriorityChanged)) {
-            newPriority = oldEvent.getTaskPriority();
-        }
-    }
-    
-    private void setEventDetails() {
-        oldEvent.setTaskLocation(newLocation);
-        oldEvent.setTaskDescription(newDescription);
-        oldEvent.setTaskDuration(newDuration);
-        oldEvent.setTaskPriority(newPriority);
-        if (isSnoozeRequested) {
-            newTaskDate.add(Calendar.HOUR_OF_DAY, snoozeLen);
-        }
-        oldEvent.setTaskDate(newTaskDate);
-    }
-    
-    private Event extractMethod() {
-        return taskData.getEventMap().get(actualId);
     }
 
-    private boolean eventAlreadyExists() {
-        return taskData.getEventMap().containsKey(actualId);
+    private void updateNewValues(Event from, Event to) {
+        
+        to.setTaskName(from.getTaskName());
+        
+        if (isLocationChanged) {
+            to.setTaskLocation(newLocation);
+        } else {
+            to.setTaskLocation(from.getTaskLocation());
+        }
+
+        if (isDescChanged) {
+            to.setTaskDescription(newDescription);
+        } else {
+            to.setTaskDescription(from.getTaskDescription());
+        }
+        
+        if (isTaskDateChanged) {
+            if (isSnoozeRequested) {
+                newTaskDate.add(Calendar.HOUR_OF_DAY, snoozeLen);
+            }
+            to.setTaskDate(newTaskDate);
+        } else {
+            to.setTaskDate(from.getTaskDate());
+        }
+        
+        if (isDurationChanged) {
+            to.setTaskDuration(newDuration);
+        } else {
+            to.setTaskDuration(from.getTaskDuration());
+        }
+        
+        if (isPriorityChanged) {
+            to.setTaskPriority(newPriority);
+        } else {
+            to.setTaskPriority(from.getTaskPriority());
+        }
     }
 
-    private void printEventDetails() {
+    private void printEventDetails(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
-        System.out.printf(messageDateFormat, format.format(oldEvent.getTaskDate().getTime()));
-        System.out.printf(messageDurationFormat, minsToHrs(oldEvent.getTaskDuration()));
-        System.out.printf(messageLocationFormat, oldEvent.getTaskLocation());
-        System.out.printf(messageDescriptionFormat, oldEvent.getTaskDescription());
-        System.out.printf(messagePriorityFormat, oldEvent.getTaskPriority());
+        System.out.printf(messageDateFormat,
+                format.format(event.getTaskDate().getTime()));
+        System.out.printf(messageDurationFormat, minsToHrs(event.getTaskDuration()));
+        System.out.printf(messageLocationFormat, event.getTaskLocation());
+        System.out.printf(messageDescriptionFormat, event.getTaskDescription());
+        System.out.printf(messagePriorityFormat, event.getTaskPriority());
     }
-    
+
     private int hrsToMins(float hours) {
         return (int) (minsInHour * hours);
     }
 
     private float minsToHrs(int mins) {
-        return (float) (mins/minsInHour);
+        return (float) (mins / minsInHour);
     }
 
     @Override

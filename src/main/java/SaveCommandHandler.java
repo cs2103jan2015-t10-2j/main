@@ -21,7 +21,8 @@ public class SaveCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
+    public ICommand getCommand() {
+        ICommand saveCommand = new SaveCommand();
         try {
             DataManager.getInstance().setPathToSaveLoad(fileSavePath);
             DataManager.getInstance().saveTaskDataToFile(taskData);
@@ -30,7 +31,7 @@ public class SaveCommandHandler implements ICommandHandler {
         }
 
         System.out.println(FILE_SAVE);
-        return true;
+        return saveCommand;
     }
 
     @Override

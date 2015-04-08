@@ -106,7 +106,8 @@ public class SearchCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
+    public ICommand getCommand() {
+        ICommand searchCommand = new NullCommand();
         List<Integer> searchActualIds;
 
         try {
@@ -115,7 +116,7 @@ public class SearchCommandHandler implements ICommandHandler {
                 displaySearchResults(searchActualIds, keyword);
             } else {
                 searchActualIds = this.taskData.searchEmptySlots(this.parsedDateStart,
-                        this.parsedDateEnd);
+                        this.parsedDateEnd, null);
                 System.out.printf("%s", messageEmptySlotsResults);
                 processEmptySlots(searchActualIds, this.parsedDateStart,
                         this.parsedDateEnd);
@@ -124,7 +125,7 @@ public class SearchCommandHandler implements ICommandHandler {
             // logger.log(Level.INFO, loggerExecuteException, e);
             System.out.println(e.getMessage());
         }
-        return true;
+        return searchCommand;
     }
 
     /*
