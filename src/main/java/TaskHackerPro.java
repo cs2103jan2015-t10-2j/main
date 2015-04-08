@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,20 +16,21 @@ public class TaskHackerPro {
 
     private static final String messageWelcome = "Welcome to TaskHackerPro!";
     private IInputSource inputSource;
-    private Stack<ICommand> undoStack;
-    private Stack<ICommand> redoStack;
+    private Stack<Entry<ICommand, String>> undoStack;
+    private Stack<Entry<ICommand, String>> redoStack;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
     private boolean isContinue = true;
 
     private static final Logger logger = Logger.getGlobal();
-    private static final String COMMAND_ADDED_TO_HISTORY = "Command added to history";
+    private static final String COMMAND_ADDED_TO_HISTORY = "%s: command added to history";
 
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
     
-    public TaskHackerPro(Stack<ICommand> undoStack, Stack<ICommand> redoStack) {
+    public TaskHackerPro(Stack<Entry<ICommand, String>> undoStack,
+            Stack<Entry<ICommand, String>> redoStack) {
         this.undoStack = undoStack;
         this.redoStack = redoStack;
     }
@@ -78,7 +81,27 @@ public class TaskHackerPro {
         if (isCommandFormatCorrect) {
             if (commandReady != null) {
                 if (commandReady.execute()) {
-                    logger.info(COMMAND_ADDED_TO_HISTORY);
+                    Entry<ICommand, String> commandEntry = new AbstractMap.SimpleEntry<ICommand, String>(
+                            commandReady, inputLine);
+                    logger.info(String.format(COMMAND_ADDED_TO_HISTORY, command));
+
+                    // Clear redo stack if data is changed
+                    if (commandReady.isReversible()) {
+                        undoStack.push(commandEntry);
+                        redoStack.clear();
+                    }
+                    
+                    logger.info("===========");
+                    logger.info(String.format(
+                            "undo: size=%d, redo: size=%d, last command=[%s]",
+                            undoStack.size(), redoStack.size(), command));
+                    
+                    for (int i=undoStack.size()-1; i>=0; i--) {
+                        logger.info(String.format("History %3d: %s", undoStack.size() - i 
+                                + 1, undoStack.get(i).getValue()));
+                    }
+                    logger.info("===========");
+                    
                 } else {
                     printErrorMsg(command, MESSAGE_FAIL_EXECUTION);
                 }
@@ -118,7 +141,7 @@ public class TaskHackerPro {
     public static void main(String[] args) {
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
-        new TaskHackerProRunner(inputSource, taskData, Level.ALL).start();
+        new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
     private void assertObjectNotNull(Object o) {

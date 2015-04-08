@@ -1,16 +1,21 @@
+import java.util.Map.Entry;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 
 public class UndoCommandHandler implements ICommandHandler {
 
-    private Stack<ICommand> undoStack;
-    private Stack<ICommand> redoStack;
+    private static final String MESSAGE_NOTHING_TO_UNDO = "Nothing to undo.\n";
+    private Stack<Entry<ICommand, String>> undoStack;
+    private Stack<Entry<ICommand, String>> redoStack;
     
+    private static final Logger logger = Logger.getGlobal();            
     private static final String STRING_UNDO = "undo";
     
   
 
-    public UndoCommandHandler(Stack<ICommand> undoStack, Stack<ICommand> redoStack) {
+    public UndoCommandHandler(Stack<Entry<ICommand, String>> undoStack,
+            Stack<Entry<ICommand, String>> redoStack) {
         this.undoStack = undoStack;
         this.redoStack = redoStack;
     }
@@ -24,19 +29,26 @@ public class UndoCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public ICommand getCommand() {        
+    public ICommand getCommand() {
+        ICommand command = null;
+        
         if (undoStack.isEmpty()) {
-            // Nothing to undo
+            System.out.printf(MESSAGE_NOTHING_TO_UNDO);
         } else {
             while (!undoStack.isEmpty()) {
-                ICommand commandToUndo = undoStack.pop();
-                if (commandToUndo.undo()) {
-                    redoStack.push(commandToUndo);
-                    return new NullCommand();
+                Entry<ICommand, String> commandEntryToUndo = undoStack.pop();
+                if (commandEntryToUndo.getKey().undo()) {
+                    if (commandEntryToUndo.getKey().isReversible()) {
+                        redoStack.push(commandEntryToUndo);
+                    }
+                    command = new NullCommand();
+                    break;
                 }
             }
         }
-        return null;
+
+        logger.info(String.format("undo: size=%d, redo: size=%d", undoStack.size(), redoStack.size()));
+        return command;
     }
 
     @Override
