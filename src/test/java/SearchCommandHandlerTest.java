@@ -178,7 +178,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         }
 
         try {
-            searchDateIds = taskData.searchEmptySlots(parsedDateStart, parsedDateEnd);
+            searchDateIds = taskData.searchEmptySlots(parsedDateStart, parsedDateEnd, null);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
         }

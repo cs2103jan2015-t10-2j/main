@@ -115,7 +115,7 @@ public class SearchCommandHandler implements ICommandHandler {
                 displaySearchResults(searchActualIds, keyword);
             } else {
                 searchActualIds = this.taskData.searchEmptySlots(this.parsedDateStart,
-                        this.parsedDateEnd);
+                        this.parsedDateEnd, null);
                 System.out.printf("%s", messageEmptySlotsResults);
                 processEmptySlots(searchActualIds, this.parsedDateStart,
                         this.parsedDateEnd);
