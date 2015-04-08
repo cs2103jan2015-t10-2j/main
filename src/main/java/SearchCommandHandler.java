@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class SearchCommandHandler implements ICommandHandler {
 
-    private static final String messageDispResultsFormat = "%-15s %s %s %s \"%s\"\n";
+    private static final String messageDispResultsFormat = "%-15s %s %s %s %s %s \"%s\"\n";
     private static final String messageTitleFormat = "%-15s %s\n";
     private static final String simpleDateFormatTimeDayMthyr = "HH:mm dd MMM, yyyy";
     private static final String simpleDateFormatHHmm = "HHmm";
@@ -289,10 +289,34 @@ public class SearchCommandHandler implements ICommandHandler {
                 messageTaskDetailsHeader);
 
         for (Integer searchId : searchActualIds) {
+            
+            String taskName, taskLocation, taskDescription;
+            
             event = taskData.getEventMap().get(searchId);
+         // 1st condition
+            if (event.getTaskName() == null) {
+                taskName = "\"task name unspecified\"";
+            } else {
+                taskName = event.getTaskName();
+            }
+
+            // 2nd condition
+            if (event.getTaskLocation() == null) {
+                taskLocation = "\"location unspecified\"";
+            } else {
+                taskLocation = event.getTaskLocation();
+            }
+
+            // 3rd condition
+            if (event.getTaskDescription() == null) {
+                taskDescription = "\"description unspecified\"";
+            } else {
+                taskDescription = event.getTaskDescription();
+            }
+            
             System.out.printf(messageDispResultsFormat, taskData.getDisplayId(searchId),
-                    formatTimeDayMthYr.format(event.getTaskDate().getTime()),
-                    atDelimiter, event.getTaskLocation(), event.getTaskDescription());
+                    formatTimeDayMthYr.format(event.getTaskDate().getTime()), taskName,
+                    atDelimiter, taskLocation, taskDescription, event.getTaskPriority().toString());
         }
     }
 
