@@ -1,15 +1,18 @@
 import java.util.Stack;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 
 public class RedoCommandHandler implements ICommandHandler {
 
-    private Stack<ICommand> undoStack;
-    private Stack<ICommand> redoStack;
+    private Stack<Entry<ICommand, String>> undoStack;
+    private Stack<Entry<ICommand, String>> redoStack;
     
+    private static final Logger logger = Logger.getGlobal();
     private static final String STRING_REDO = "redo";
 
-    public RedoCommandHandler(Stack<ICommand> undoStack, Stack<ICommand> redoStack) {
-        super();
+    public RedoCommandHandler(Stack<Entry<ICommand, String>> undoStack,
+            Stack<Entry<ICommand, String>> redoStack) {
         this.undoStack = undoStack;
         this.redoStack = redoStack;
     }
@@ -28,9 +31,10 @@ public class RedoCommandHandler implements ICommandHandler {
             // Nothing to undo
         } else {
             while (!redoStack.isEmpty()) {
-                ICommand commandToRedo = redoStack.pop();
-                if (commandToRedo.redo()) {
-                    undoStack.push(commandToRedo);
+                Entry<ICommand, String> commandEntryToRedo = redoStack.pop();
+                if (commandEntryToRedo.getKey().redo()) {
+                    undoStack.push(commandEntryToRedo);
+                    logger.info(String.format("undo: size=%d, redo: size=%d", undoStack.size(), redoStack.size()));
                     return new NullCommand();
                 }
             }

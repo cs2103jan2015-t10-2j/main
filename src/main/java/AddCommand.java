@@ -50,6 +50,11 @@ public class AddCommand implements ICommand {
         return this.execute();
     }
 
+    @Override
+    public boolean isReversible() {
+        return true;
+    }
+
     private void printConfirmation(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         System.out.printf(messageAddEventFormat);
