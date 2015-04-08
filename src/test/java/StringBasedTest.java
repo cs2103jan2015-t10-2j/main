@@ -17,6 +17,7 @@ import org.junit.Before;
  */
 public abstract class StringBasedTest {
 
+    private static final String MESSAGE_TASK_HACKER_PRO_EXITS_UNEXPECTEDLY = "TaskHackerPro exits unexpectedly";
     private Semaphore outputLinesAvailableMutex;
     private StringInputSource inputSorurce;
     private TaskHackerProRunner taskHackerProRunner;
@@ -80,8 +81,9 @@ public abstract class StringBasedTest {
      */
     public String[] executeCommand(String command) {
         inputSorurce.addCommand(command);
-        if (taskHackerProRunner.getUncaughtException() != null) {
-            throw new RuntimeException(taskHackerProRunner.getUncaughtException());
+        if (taskHackerProRunner.getUncaughtThrowable() != null) {
+            throw new RuntimeException(MESSAGE_TASK_HACKER_PRO_EXITS_UNEXPECTEDLY,
+                    taskHackerProRunner.getUncaughtThrowable());
         }
         return this.getOutputLines();
     }

@@ -125,7 +125,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         // No events will come up! We can alter nothing.
 
         // We check that the event has NOT been changed.
-        testTaskBefore(taskData.getEventMap().get(taskId));
+        testTaskBefore(taskData.getEventMap().get(taskId));        
     }
 
     @Test
