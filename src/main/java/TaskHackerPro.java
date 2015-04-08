@@ -63,11 +63,13 @@ public class TaskHackerPro {
     private boolean performCommandLifeCycle(ICommandHandler handler, String inputLine, String command) {
         boolean isCommandFormatCorrect = handler.parseCommand(inputLine);
         boolean isExtraInputNeeded = handler.isExtraInputNeeded();
-        boolean isCommandReady = handler.isCommandReady();
+        ICommand commandReady = handler.getCommand();
+        
+        logger.info(String.format("Input Command: %s", inputLine));
 
         if (isCommandFormatCorrect) {
-            if (isCommandReady) {
-                if (handler.executeCommand()) {
+            if (commandReady != null) {
+                if (commandReady.execute()) {
                     logger.info(COMMAND_ADDED_TO_HISTORY);
                 } else {
                     printErrorMsg(command, MESSAGE_FAIL_EXECUTION);

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class AlterCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
-    private Event oldEvent;
+    private Event eventToAlter;
 
     private int eventId;
     private int actualId;
@@ -146,82 +146,78 @@ public class AlterCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
-
-        assertObjectNotNull(this);
-
+    public ICommand getCommand() {
         try {
             actualId = taskData.getActualId(eventId);
         } catch (Exception NoSuchElementException) {
             System.out.println(messageUseDisplayFunction);
-            return false;
+            return null;
         }
-        if (eventAlreadyExists()) {
-            displaySuccess();
+        
+        boolean isEventAlreadyExists = taskData.getEventMap().containsKey(actualId);;
+        if (isEventAlreadyExists) {
+            Event eventWithUpdatedData = new Event();
+            eventToAlter = taskData.getEventMap().get(actualId);
+            System.out.printf(messageEditingFormat, eventToAlter.getTaskName());
+            System.out.printf(messageBeforeMod);
+            printEventDetails();
+            updateNewValues(eventToAlter, eventWithUpdatedData);
+            
+            ICommand alterCommand = new AlterCommand(eventToAlter, eventWithUpdatedData);
+            
+            System.out.printf(messageAfterMod);
+            printEventDetails();
             logger.log(Level.INFO,
                     String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
-            return true;
+            return alterCommand;
         } else {
-            return false;
+            return null;
         }
     }
 
-    public void displaySuccess() {
-        oldEvent = extractMethod();
-        System.out.printf(messageEditingFormat, oldEvent.getTaskName());
-        System.out.printf(messageBeforeMod);
-        printEventDetails();
-        updateNewValues();
-        setEventDetails();
-        System.out.printf(messageAfterMod);
-        printEventDetails();
-    }
+    private void updateNewValues(Event from, Event to) {
+        if (isLocationChanged) {
+            to.setTaskLocation(newLocation);
+        } else {
+            to.setTaskLocation(from.getTaskLocation());
+        }
 
-    private void updateNewValues() {
-        if (!(isLocationChanged)) {
-            newLocation = oldEvent.getTaskLocation();
+        if (isDescChanged) {
+            to.setTaskDescription(newDescription);
+        } else {
+            to.setTaskDescription(from.getTaskDescription());
         }
-        if (!(isDescChanged)) {
-            newDescription = oldEvent.getTaskDescription();
+        
+        if (isTaskDateChanged) {
+            if (isSnoozeRequested) {
+                newTaskDate.add(Calendar.HOUR_OF_DAY, snoozeLen);
+            }
+            to.setTaskDate(newTaskDate);
+        } else {
+            to.setTaskDate(from.getTaskDate());
         }
-        if (!(isTaskDateChanged)) {
-            newTaskDate = oldEvent.getTaskDate();
+        
+        if (isDurationChanged) {
+            to.setTaskDuration(newDuration);
+        } else {
+            to.setTaskDuration(from.getTaskDuration());
         }
-        if (!(isDurationChanged)) {
-            newDuration = oldEvent.getTaskDuration();
+        
+        if (isPriorityChanged) {
+            to.setTaskPriority(newPriority);
+        } else {
+            to.setTaskPriority(from.getTaskPriority());
         }
-        if (!(isPriorityChanged)) {
-            newPriority = oldEvent.getTaskPriority();
-        }
-    }
-
-    private void setEventDetails() {
-        oldEvent.setTaskLocation(newLocation);
-        oldEvent.setTaskDescription(newDescription);
-        oldEvent.setTaskDuration(newDuration);
-        oldEvent.setTaskPriority(newPriority);
-        if (isSnoozeRequested) {
-            newTaskDate.add(Calendar.HOUR_OF_DAY, snoozeLen);
-        }
-        oldEvent.setTaskDate(newTaskDate);
-    }
-
-    private Event extractMethod() {
-        return taskData.getEventMap().get(actualId);
-    }
-
-    private boolean eventAlreadyExists() {
-        return taskData.getEventMap().containsKey(actualId);
     }
 
     private void printEventDetails() {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         System.out.printf(messageDateFormat,
-                format.format(oldEvent.getTaskDate().getTime()));
-        System.out.printf(messageDurationFormat, minsToHrs(oldEvent.getTaskDuration()));
-        System.out.printf(messageLocationFormat, oldEvent.getTaskLocation());
-        System.out.printf(messageDescriptionFormat, oldEvent.getTaskDescription());
-        System.out.printf(messagePriorityFormat, oldEvent.getTaskPriority());
+                format.format(eventToAlter.getTaskDate().getTime()));
+        System.out.printf(messageDurationFormat, minsToHrs(eventToAlter.getTaskDuration()));
+        System.out.printf(messageLocationFormat, eventToAlter.getTaskLocation());
+        System.out.printf(messageDescriptionFormat, eventToAlter.getTaskDescription());
+        System.out.printf(messagePriorityFormat, eventToAlter.getTaskPriority());
     }
 
     private int hrsToMins(float hours) {
@@ -235,11 +231,6 @@ public class AlterCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return false;
-    }
-
-    @Override
-    public boolean isCommandReady() {
-        return true;
     }
 
     private void assertObjectNotNull(Object o) {

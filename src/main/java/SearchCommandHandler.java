@@ -106,7 +106,8 @@ public class SearchCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public boolean executeCommand() {
+    public ICommand getCommand() {
+        ICommand searchCommand = new NullCommand();
         List<Integer> searchActualIds;
 
         try {
@@ -124,7 +125,7 @@ public class SearchCommandHandler implements ICommandHandler {
             // logger.log(Level.INFO, loggerExecuteException, e);
             System.out.println(e.getMessage());
         }
-        return true;
+        return searchCommand;
     }
 
     /*
@@ -298,11 +299,6 @@ public class SearchCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return false;
-    }
-
-    @Override
-    public boolean isCommandReady() {
-        return true;
     }
 
     private void assertObjectNotNull(Object o) {
