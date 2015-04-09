@@ -9,21 +9,25 @@ public class StringInputSource implements IInputSource {
 
     private static final String stringSplitFormat = "[\\r\\n]+";
 
+    //@author A0134704M
     public StringInputSource(Semaphore outputLinesAvailableMutex) {
         this.outputLinesAvailableMutex = outputLinesAvailableMutex;
         lines = new LinkedBlockingDeque<String>(Integer.MAX_VALUE);
     }
 
+    //@author A0134704M
     public void addCommand(String s) {
         lines.addAll(Arrays.asList(s.split(stringSplitFormat)));
     }
 
+    //@author A0134704M
     public void addLine(String[] inputs) {
         for (String input : inputs) {
             lines.addAll(Arrays.asList(input.split(stringSplitFormat)));
         }
     }
 
+    //@author A0134704M
     @Override
     public boolean hasNextLine() {
         try {
@@ -35,6 +39,7 @@ public class StringInputSource implements IInputSource {
         }
     }
 
+    //@author A0134704M
     @Override
     public String getNextLine() {
         try {
@@ -44,6 +49,7 @@ public class StringInputSource implements IInputSource {
         }
     }
 
+    //@author A0134704M
     @Override
     public void closeSource() {
         lines.clear();

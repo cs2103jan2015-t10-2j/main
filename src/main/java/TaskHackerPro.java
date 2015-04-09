@@ -6,12 +6,6 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * 
- * @author t10-2j
- *
- */
-
 public class TaskHackerPro {
 
     private static final String messageWelcome = "Welcome to TaskHackerPro!";
@@ -29,16 +23,19 @@ public class TaskHackerPro {
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
     
+    //@author A0134704M
     public TaskHackerPro(Stack<Entry<ICommand, String>> undoStack,
             Stack<Entry<ICommand, String>> redoStack) {
         this.undoStack = undoStack;
         this.redoStack = redoStack;
     }
 
+    //@author A0134704M
     public void printErrorMsg(String command, String message) {
         System.out.printf("%s: %s\n", command, message);
     }
 
+    //@author A0134704M
     public void parseCommand() throws IOException {
         System.out.println(messageWelcome);
 
@@ -71,6 +68,7 @@ public class TaskHackerPro {
         inputSource.closeSource();
     }
 
+    //@author A0134704M
     private boolean performCommandLifeCycle(ICommandHandler handler, String inputLine, String command) {
         boolean isCommandFormatCorrect = handler.parseCommand(inputLine);
         boolean isExtraInputNeeded = handler.isExtraInputNeeded();
@@ -113,37 +111,44 @@ public class TaskHackerPro {
         return isExtraInputNeeded;
     }
 
+    //@author A0134704M
     public TaskData getTaskData() {
         assertObjectNotNull(taskData);
         return taskData;
     }
 
+    //@author A0134704M
     public void setCommandHandlerMap(Map<String, ICommandHandler> commandHandlerMap) {
         assertObjectNotNull(this);
         this.commandHandlerMap = commandHandlerMap;
     }
 
+    //@author A0134704M
     public void setInputSource(IInputSource inputSource) {
         assertObjectNotNull(this);
         this.inputSource = inputSource;
     }
 
+    //@author A0134704M
     public void setTaskData(TaskData taskData) {
         assertObjectNotNull(this);
         this.taskData = taskData;
     }
 
+    //@author A0134704M
     public void setContinue(boolean isContinue) {
         assertObjectNotNull(this);
         this.isContinue = isContinue;
     }
 
+    //@author A0134704M
     public static void main(String[] args) {
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
         new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

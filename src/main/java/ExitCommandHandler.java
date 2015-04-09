@@ -5,11 +5,13 @@ public class ExitCommandHandler implements ICommandHandler {
     private static final String messageExiting = "Thank you for using TaskHackerPro!";
     private static final String exitDelimiter = "exit";
 
+    //@author A0134704M
     public ExitCommandHandler(TaskHackerPro taskHackerPro) {
         assertObjectNotNull(this);
         this.taskHackerPro = taskHackerPro;
     }
 
+    //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
         if (exitDelimiter.equals(command)) {
@@ -18,11 +20,13 @@ public class ExitCommandHandler implements ICommandHandler {
         return false;
     }
 
+    //@author A0134704M
     @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
 
+    //@author A0134704M
     @Override
     public ICommand getCommand() {
         assertObjectNotNull(taskHackerPro);
@@ -32,6 +36,7 @@ public class ExitCommandHandler implements ICommandHandler {
         return exitCommand;
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

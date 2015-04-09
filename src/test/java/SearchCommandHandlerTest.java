@@ -37,16 +37,19 @@ public class SearchCommandHandlerTest extends StringBasedTest {
     private static final String HasSearchKeyword = "Homework";
     private static final String NoSearchKeyword = "Sports";
 
+    //@author UNKNOWN
     static {
         formatDayMthYr = new SimpleDateFormat(simpleDateFormatDayMthYr);
     }
 
+    //@author UNKNOWN
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
     }
 
+    //@author UNKNOWN
     @Test
     // Boundary case for all valid inputs
     public void testExecuteCase1() {
@@ -76,6 +79,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         testSearchKeyWordTaskAfter(searchKeywordIds);
     }
 
+    //@author UNKNOWN
     // BC: The file is empty
     @Test
     public void testExecuteCase4() {
@@ -88,6 +92,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         }
     }
 
+    //@author UNKNOWN
     // BC: Search results returned 0
     @Test
     public void testExecuteCase5() {
@@ -105,6 +110,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         }
     }
 
+    //@author UNKNOWN
     // This method compares the passed event to the ORIGINAL event.
     private void testSearchKeyWordTaskBefore(Event event, int i) {
         if (i == 0) {
@@ -150,6 +156,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
 
     }
 
+    //@author UNKNOWN
     // Boundary case for 2 task that has keywords
     private void testSearchKeyWordTaskAfter(ArrayList<Integer> searchKeywordIds) {
         assertEquals(2, searchKeywordIds.size());
@@ -159,6 +166,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
                 .get(searchKeywordIds.get(1)).getTaskName());
     }
 
+    //@author UNKNOWN
     @Test
     // Boundary case for all valid inputs
     public void testExecuteCase6() {
