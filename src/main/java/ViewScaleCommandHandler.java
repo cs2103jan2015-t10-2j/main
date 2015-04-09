@@ -18,16 +18,19 @@ public class ViewScaleCommandHandler implements ICommandHandler {
     private static final Pattern patternViewCommand;
     private static final Logger logger = Logger.getLogger("CalendarViewCommandHandler");
 
+    //@author UNKNOWN
     static {
         patternViewCommand = Pattern.compile(viewCommandString);
     }
 
+    //@author UNKNOWN
     public ViewScaleCommandHandler(TaskData taskData) {
         assertObjectNotNull(this);
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
+    //@author UNKNOWN
     @Override
     public boolean parseCommand(String command) {
         assertObjectNotNull(this);
@@ -57,6 +60,7 @@ public class ViewScaleCommandHandler implements ICommandHandler {
         return false;
     }
 
+    //@author UNKNOWN
     @Override
     public ICommand getCommand() {
         ICommand viewCommand = new NullCommand();
@@ -142,6 +146,7 @@ public class ViewScaleCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     public List<Integer> getMatchingTaskDisplayIDs(Calendar dateViewing,
             ViewOption choseView) {
         List<Integer> returnTaskIds = new ArrayList<Integer>();
@@ -213,15 +218,18 @@ public class ViewScaleCommandHandler implements ICommandHandler {
         return returnTaskIds;
     }
 
+    //@author UNKNOWN
     @Override
     public boolean isExtraInputNeeded() {
         return isExtraInputNeeded;
     }
 
+    //@author UNKNOWN
     public static enum ViewOption {
         NOT_CHOSEN, THIS_WEEK, THIS_MONTH, NEXT_WEEK, NEXT_MONTH, PREV_WEEK, PREV_MONTH;
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 public class AddCommandHandler implements ICommandHandler {
     private static final String addCommandName = "add";
 
-
     private static final String loggerInputCommand = "Input command - %s";
 
     private TaskData taskData;
@@ -13,11 +12,13 @@ public class AddCommandHandler implements ICommandHandler {
 
     private static final Logger logger = Logger.getGlobal();
 
+    //@author A0134704M
     public AddCommandHandler(TaskData taskData) {
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
+    //@author A0134704M
     /*
      * add [name] at [time] [date] for [duration] mins @ [location] desc "[description]"
      * 
@@ -38,12 +39,14 @@ public class AddCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author A0134704M
     public void setEvent(String command) {
         event = CommandParser.getDetailFromCommand(addCommandName, command);
         assertObjectNotNull(event);
         event.setTaskID(getUniqueId());
     }
 
+    //@author A0134704M
     @Override
     public ICommand getCommand() {
         ICommand addCommand = null;
@@ -55,11 +58,13 @@ public class AddCommandHandler implements ICommandHandler {
         return addCommand;
     }
 
+    //@author A0134704M
     @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
-    
+
+    //@author UNKNOWN
     public int getUniqueId() {
         Random random = new Random();
         int returnVal;
@@ -70,10 +75,12 @@ public class AddCommandHandler implements ICommandHandler {
         return returnVal;
     }
 
+    //@author A0134704M
     public Event getEvent() {
         return event;
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

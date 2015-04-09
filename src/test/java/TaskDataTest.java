@@ -19,10 +19,12 @@ public class TaskDataTest {
     private static final String timeFormatString = "h:m d/M/y";
     private static final SimpleDateFormat timeFormat;
 
+    //@author A0134704M
     static {
         timeFormat = new SimpleDateFormat(timeFormatString);
     }
 
+    //@author A0134704M
     @Before
     public void setUp() throws Exception {
         taskDate1 = Calendar.getInstance();
@@ -55,6 +57,7 @@ public class TaskDataTest {
         this.taskData.getEventMap().put(eventToBeSearched.getTaskID(), eventToBeSearched);
     }
 
+    //@author A0134704M
     @Test
     public void testSearch() throws Exception {
 
@@ -65,6 +68,7 @@ public class TaskDataTest {
         assertTrue(searchedEvents.contains(98765));
     }
 
+    //@author A0134704M
     @Test
     public void testHasKeyword() {
         Event eventTextNull = null;
@@ -89,6 +93,7 @@ public class TaskDataTest {
                 "Name3"));
     }
 
+    //@author A0134704M
     @Test
     public void testDisplaySearchResults() {
         Event event;
