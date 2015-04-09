@@ -1,12 +1,12 @@
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CalendarViewCommandHandler implements ICommandHandler {
 
@@ -61,6 +61,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private int moveWeek = 0;
     private int moveDate = 0;
 
+    //@author UNKNOWN
     static {
         patternViewDate = Pattern.compile(viewCommandDate);
         dateFormat = new SimpleDateFormat(dateFormatString);
@@ -69,11 +70,13 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         formatHHColonMM = new SimpleDateFormat(simpleDateFormatHHColonMM);
     }
 
+    //@author UNKNOWN
     public CalendarViewCommandHandler(TaskData taskData) {
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
+    //@author UNKNOWN
     @Override
     public boolean parseCommand(String command) {
         this.command = command;
@@ -147,6 +150,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return isCommandFormatCorrect;
     }
 
+    //@author UNKNOWN
     // Will be in use later. Don't delete
     public String hasLogicalDate(String command) {
         int length = command.length();
@@ -204,6 +208,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     }
 
+    //@author UNKNOWN
     @Override
     public ICommand getCommand() {
         ICommand displayCommand = new NullCommand();
@@ -231,6 +236,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return null;
     }
 
+    //@author UNKNOWN
     private boolean processDateView() {
 
         // 1st condition
@@ -298,6 +304,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return true;
     }
 
+    //@author UNKNOWN
     private boolean processWeekView() {
         // 1st condition
         if (chosenView == ViewOption.VIEW_MORE || chosenView == ViewOption.NOT_CHOSEN
@@ -363,6 +370,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return true;
     }
 
+    //@author UNKNOWN
     private boolean processMonthView() {
         if (chosenView == ViewOption.VIEW_MORE || chosenView == ViewOption.NOT_CHOSEN
                 || chosenView == ViewOption.NEXT || chosenView == ViewOption.PREV) {
@@ -428,7 +436,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return true;
     }
 
-   
+    //@author UNKNOWN
     private boolean getDateViewing(int maxDate) {
         Date beginDate;
         List<Integer> dateIds;
@@ -456,6 +464,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     }
 
+    //@author UNKNOWN
     private boolean getWeekViewing(int maxWeek) {
         Calendar calStart = Calendar.getInstance();
         Date beginDate, endDate;
@@ -485,6 +494,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return false;
     }
 
+    //@author UNKNOWN
     private boolean getMonthViewing(int maxMonth) {
         Date begining, end;
         List<Integer> monthIds;
@@ -527,6 +537,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return false;
     }
 
+    //@author UNKNOWN
     public boolean displayDateView(List<Integer> dateIds, Date date) {
         taskData.updateDisplayID(dateIds);
         String taskName, taskLocation, taskDescription;
@@ -576,6 +587,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return false;
     }
 
+    //@author UNKNOWN
     public boolean displayMonthView(List<Integer> monthIds, Date begining, Date end) {
         taskData.updateDisplayID(monthIds);
         Event event;
@@ -631,6 +643,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return false;
     }
 
+    //@author UNKNOWN
     public boolean displayWeekView(List<Integer> weekIds, Date begining, Date end) {
         taskData.updateDisplayID(weekIds);
         Event event;
@@ -686,7 +699,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         System.out.printf("\n\n");
         return false;
     }
-    
+
+    //@author UNKNOWN
     public void displayFloatingTasks(ArrayList<Integer> floatingIds) {
         Event event;
         String taskName, taskLocation, taskDescription;
@@ -726,7 +740,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     }
 
-
+    //@author UNKNOWN
     private static void setTimeToBeginningOfDay(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -734,6 +748,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
+    //@author UNKNOWN
     private static void setTimeToEndofDay(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
@@ -741,21 +756,25 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         calendar.set(Calendar.MILLISECOND, 999);
     }
 
+    //@author UNKNOWN
     private static Calendar getCalendarForNow() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         return calendar;
     }
 
+    //@author UNKNOWN
     @Override
     public boolean isExtraInputNeeded() {
         return isExtraInputNeeded;
     }
 
+    //@author UNKNOWN
     public static enum ViewOption {
         NOT_CHOSEN, VIEW_MORE, FLOATING, PREV, NEXT, EXIT
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

@@ -16,10 +16,12 @@ public class DataManager {
     private static final String MESSAGE_DATA_FILE_LOADED = "Data file loaded successfully with %d event(s)!\n";
     private static final String MESSAGE_DATA_FILE_FAIL_TO_LOAD = "Data file cannot be loaded. New data file is created\n";
 
+    //@author A0134704M
     private DataManager() {
 
     }
 
+    //@author A0134704M
     public void saveTaskDataToFile(TaskData taskData) throws IOException {
         FileOutputStream fos = null;
         File file;
@@ -38,6 +40,7 @@ public class DataManager {
         oos.close();
     }
 
+    //@author A0134704M
     public TaskData loadTaskDataFromFile() {
         FileInputStream fis;
         TaskData taskData = null;
@@ -63,14 +66,17 @@ public class DataManager {
         return taskData;
     }
 
+    //@author A0134704M
     public String getPathToSaveLoad() {
         return pathToSaveLoad;
     }
 
+    //@author A0134704M
     public void setPathToSaveLoad(String pathToSaveLoad) {
         this.pathToSaveLoad = pathToSaveLoad;
     }
 
+    //@author A0134704M
     public static DataManager getInstance() {
         if (instance == null) {
             instance = new DataManager();

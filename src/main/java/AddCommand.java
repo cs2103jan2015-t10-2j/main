@@ -21,11 +21,13 @@ public class AddCommand implements ICommand {
     private static final String messageAddEventFormat = "Added this event:\n";
     private static final String messagePriorityFormat = "Priority level: %s\n";
 
+    //@author A0134704M
     public AddCommand(TaskData taskData, Event event) {
         this.taskData = taskData;
         this.event = event;
     }
 
+    //@author A0134704M
     @Override
     public boolean execute() {
         Event previousEvent = taskData.getEventMap().put(event.getTaskID(), event);
@@ -38,6 +40,7 @@ public class AddCommand implements ICommand {
         return true;
     }
 
+    //@author A0134704M
     @Override
     public boolean undo() {
         boolean isRemoved = taskData.getEventMap().remove(event.getTaskID(), event);
@@ -45,16 +48,19 @@ public class AddCommand implements ICommand {
         return true;
     }
 
+    //@author A0134704M
     @Override
     public boolean redo() {
         return this.execute();
     }
 
+    //@author A0134704M
     @Override
     public boolean isReversible() {
         return true;
     }
 
+    //@author A0134704M
     private void printConfirmation(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         System.out.printf(messageAddEventFormat);
