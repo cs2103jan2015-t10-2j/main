@@ -32,11 +32,12 @@ public class CommandParser {
 
     private static final String priorityPattern = " ?setPrior (?<priority>.+)";
     private static final String descPattern = " ?desc \"(?<description>.+)\"";
-    private static final String durationPattern = " ?for (?<duration>[0-9]+(.[0-9]+)*) ?(?<unit>mins?|h((ou)?rs*)?)";
+    private static final String durationPattern = " ?for (?<duration>[0-9]+(.[0-9]+)*) ?(?<unitDuration>mins?|h((ou)?rs*)?)";
     private static final String timePattern = " ?((at|@) )*((?<hour>[0-1]?[0-9])(:(?<minute>[0-5]?[0-9]))? ?(?<ampm>(am|pm)))|((?<hour24>[0-2]?[0-9])(:(?<minute24>[0-5]?[0-9])))";
     private static final String datePattern = "(^|[\\W]+)((?<days>((((?<prefix>this|next) )(?<unit>week|month|mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))|(on) (?<weekday>mon(day)?))"
             + "|((?<today>today|yesterday|tomorrow)"
             + "|(?<date>(?<day>([1-3])?[0-9])((((-|/)(?<month>[\\d]{1,2}))|((-|/| )?(?<monthString>(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)))))((-|/| )?(?<year>(19|20)?[\\d]{2}))?)))($|[\\W]+))";
+    private static final String duePatten = " ?due (?<date>.+)";
     private static final String locationPattern = " ?@ (?<location>.+)";
     private static final String namePattern = "add (?<name>.+)";
 
@@ -47,6 +48,7 @@ public class CommandParser {
     private static final String KEY_PRIORITY = "priority";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_DURATION = "duration";
+    private static final String KEY_UNIT_DURATION = "unitDuration";
     private static final String KEY_UNIT = "unit";
     private static final String KEY_HOUR = "hour";
     private static final String KEY_MINUTE = "minute";
@@ -90,8 +92,6 @@ public class CommandParser {
         String patternString = String.format(PATTERN, commandName,
                 String.join(REGEX_OR, keywords), KEYWORD, VALUE_WITH_QUOTE,
                 VALUE_WITHOUT_QUOTE);
-
-        logger.info(patternString);
 
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(command);
@@ -138,6 +138,7 @@ public class CommandParser {
             }
 
             Map<String, String> groupNames = parseCommandSegment(pattern, groups, list);
+            logger.info(String.format("pattern=[%s]\n\tData put=[%s]", patternCommandEntry.getKey(), groupNames));
             taskDetailMap.putAll(groupNames);
         }
         if (taskDetailMap.containsKey(KEY_DESCRIPTION)) {
@@ -146,7 +147,7 @@ public class CommandParser {
         }
 
         String duration = taskDetailMap.remove(KEY_DURATION);
-        String unit = taskDetailMap.remove(KEY_UNIT);
+        String unit = taskDetailMap.remove(KEY_UNIT_DURATION);
 
         if (duration != null && unit != null) {
             event.setTaskDuration(getDuration(duration, unit));
@@ -246,23 +247,30 @@ public class CommandParser {
                 String prefixString = taskDetailMap.remove(KEY_PREFIX);
                 String unitString = taskDetailMap.remove(KEY_UNIT);
 
-                if (weekdayString != null) {
-                    SimpleDateFormat weekDayFormat = new SimpleDateFormat("E");
-                    try {
-                        Date date = weekDayFormat.parse(weekdayString);
-                        Calendar c = Calendar.getInstance();
-                        c.setTime(date);
-
-                        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-                        taskDate.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-                        if (taskDate.before(Calendar.getInstance())) {
+                if (prefixString != null) {
+                    if ("next".equalsIgnoreCase(prefixString)) {
+                        if ("month".equalsIgnoreCase(unitString)) {
+                            taskDate.add(Calendar.MONTH, 1);
+                        } else {
                             taskDate.add(Calendar.WEEK_OF_MONTH, 1);
                         }
-                    } catch (ParseException e) {
-
+                    } else if ("previous".equalsIgnoreCase(prefixString)) {
+                        if ("month".equalsIgnoreCase(unitString)) {
+                            taskDate.add(Calendar.MONTH, -1);
+                        } else {
+                            taskDate.add(Calendar.WEEK_OF_MONTH, -1);
+                        }
                     }
-                } else if (prefixString != null && unitString != null) {
-                    // TODO: next/this/previous week/month/Monday...
+                } else if (unitString != null) {
+                    if ("week".equalsIgnoreCase(unitString)) {
+                        //taskDate.set(Calendar.WEEK_OF_MONTH, Calendar.WEEK_OF_MONTH);
+                    } else if ("month".equalsIgnoreCase(unitString)) {
+                        //taskDate.set(Calendar.MONTH, Calendar.MONTH);
+                    } else {
+                        setWeekday(taskDate, unitString);
+                    }
+                } else if (weekdayString != null) {
+                    setWeekday(taskDate, weekdayString);
                 }
             }
 
@@ -292,8 +300,6 @@ public class CommandParser {
                     taskDate.set(Calendar.YEAR, Integer.parseInt(yearString));
                 }
             }
-        } else {
-            taskDate = null;
         }
 
         if (hasTime) {
@@ -301,8 +307,30 @@ public class CommandParser {
             taskDate.set(Calendar.MINUTE, taskTime.get(Calendar.MINUTE));
             taskDate.set(Calendar.SECOND, 0);
         }
+        
+        if (!hasDate && !hasTime) {
+            taskDate = null;
+        }
 
         return taskDate;
+    }
+
+    //@author A0134704M
+    public static void setWeekday(Calendar taskDate, String weekdayString) {
+        SimpleDateFormat weekDayFormat = new SimpleDateFormat("E");
+        try {
+            Date date = weekDayFormat.parse(weekdayString);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+            taskDate.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+            if (taskDate.before(Calendar.getInstance())) {
+                taskDate.add(Calendar.WEEK_OF_MONTH, 1);
+            }
+        } catch (ParseException e) {
+
+        }
     }
 
     //@author A0134704M
