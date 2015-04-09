@@ -260,14 +260,14 @@ public class CommandParser {
                         } else {
                             taskDate.add(Calendar.WEEK_OF_MONTH, -1);
                         }
-                    }
-                } else if (unitString != null) {
-                    if ("week".equalsIgnoreCase(unitString)) {
-                        //taskDate.set(Calendar.WEEK_OF_MONTH, Calendar.WEEK_OF_MONTH);
-                    } else if ("month".equalsIgnoreCase(unitString)) {
-                        //taskDate.set(Calendar.MONTH, Calendar.MONTH);
-                    } else {
-                        setWeekday(taskDate, unitString);
+                    } else if (unitString != null) {
+                        if ("week".equalsIgnoreCase(unitString)) {
+                            //taskDate.add(Calendar.WEEK_OF_MONTH, Calendar.WEEK_OF_MONTH);
+                        } else if ("month".equalsIgnoreCase(unitString)) {
+                            //taskDate.set(Calendar.MONTH, Calendar.MONTH);
+                        } else {
+                            setWeekday(taskDate, unitString);
+                        }
                     }
                 } else if (weekdayString != null) {
                     setWeekday(taskDate, weekdayString);
