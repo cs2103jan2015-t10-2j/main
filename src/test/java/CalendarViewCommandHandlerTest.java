@@ -5,12 +5,11 @@ import org.junit.Before;
 public class CalendarViewCommandHandlerTest {
 
     private TaskData taskData;
-    private CalendarViewCommandHandler calendarViewCommandHandler;
 
+    //@author A0134704M
     @Before
     public void setUp() throws Exception {
         taskData = new TaskData();
-        calendarViewCommandHandler = new CalendarViewCommandHandler(taskData);
 
         Event[] events = new Event[5];
         Calendar[] dates = new Calendar[5];

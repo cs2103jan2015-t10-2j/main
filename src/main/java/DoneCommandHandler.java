@@ -12,16 +12,19 @@ public class DoneCommandHandler implements ICommandHandler {
     private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
     private static final String taskIdDelimiter = "taskId";
 
+    //@author A0134704M
     static {
         patternDoneCommand = Pattern.compile(doneCommandFormat);
     }
 
+    //@author A0134704M
     public DoneCommandHandler(TaskData taskData) {
         assertObjectNotNull(this);
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
+    //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
         try {
@@ -37,11 +40,13 @@ public class DoneCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author A0134704M
     @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
 
+    //@author A0134704M
     @Override
     public ICommand getCommand() {
         Event eventDone;
@@ -55,8 +60,8 @@ public class DoneCommandHandler implements ICommandHandler {
         return doneCommand;
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
-
 }
