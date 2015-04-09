@@ -13,7 +13,6 @@ import org.junit.Before;
  * data behind can be checked between commands. It helps debugging by directly
  * entering command to check if the system matches the expectation.
  *
- * @author Lily Yung
  */
 public abstract class StringBasedTest {
 
@@ -23,6 +22,7 @@ public abstract class StringBasedTest {
     private TaskHackerProRunner taskHackerProRunner;
     private ByteArrayOutputStream baos;
 
+    //@author A0134704M
     /**
      * Create a {@code TaskData} object that is used by {@code StringBasedTest}
      * subclass. There are 2 ways to get a {@code TaskData} object <blockquote>
@@ -39,6 +39,7 @@ public abstract class StringBasedTest {
      */
     public abstract TaskData createTaskData();
 
+    //@author A0134704M
     /**
      * Set up TaskHackerRunner. This method should not be called explicitly
      */
@@ -61,6 +62,7 @@ public abstract class StringBasedTest {
         this.getOutputLines();
     }
 
+    //@author A0134704M
     /**
      * Exit the system. This method should not be called explicitly
      */
@@ -70,6 +72,7 @@ public abstract class StringBasedTest {
         executeCommand("exit");
     }
 
+    //@author A0134704M
     /**
      * Execute a command just like in console. Exception thrown by the system
      * will not be caught. It is blocked until the command is executed and all
@@ -88,6 +91,7 @@ public abstract class StringBasedTest {
         return this.getOutputLines();
     }
 
+    //@author A0134704M
     /**
      * Execute a list of command just like in console. Exception thrown by the
      * system will not be caught. It is blocked until all commands are executed
@@ -108,6 +112,7 @@ public abstract class StringBasedTest {
         return allOutput;
     }
 
+    //@author A0134704M
     private String[] getOutputLines() {
         try {
             outputLinesAvailableMutex.acquire();

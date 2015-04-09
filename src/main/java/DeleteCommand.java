@@ -3,6 +3,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DeleteCommand implements ICommand {
+    private static final String STRING_TO_BE_SCHEDULED = "To be scheduled";
     private TaskData taskData;
     private int actualId;
     private Event event;
@@ -20,11 +21,13 @@ public class DeleteCommand implements ICommand {
     private static final String messagePriorityFormat = "Priority level: %s\n";
     private static final String messageDeleteTask = "Delete task - %s\n";
 
+    //@author A0134704M
     public DeleteCommand(TaskData taskData, int actualId) {
         this.taskData = taskData;
         this.actualId = actualId;
     }
 
+    //@author A0134704M
     @Override
     public boolean execute() {
         event = taskData.getEventMap().remove(actualId);
@@ -34,27 +37,35 @@ public class DeleteCommand implements ICommand {
         return true;
     }
 
+    //@author A0134704M
     @Override
     public boolean undo() {
         taskData.getEventMap().put(actualId, event);
         return true;
     }
 
+    //@author A0134704M
     @Override
     public boolean redo() {
         return this.execute();
     }
 
+    //@author A0134704M
     @Override
     public boolean isReversible() {
         return true;
     }
 
+    //@author A0134704M
     private void printConfirmation(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
         System.out.printf(messageDeleteTask, event.getTaskName());
-        System.out
-                .printf(messageDateFormat, format.format(event.getTaskDate().getTime()));
+        try {
+            System.out.printf(messageDateFormat,
+                    format.format(event.getTaskDate().getTime()));
+        } catch (NullPointerException e) {
+            System.out.printf(messageDateFormat, STRING_TO_BE_SCHEDULED);
+        }
         System.out.printf(messageDurationFormat, event.getTaskDuration());
         System.out.printf(messageLocationFormat, event.getTaskLocation());
         System.out.printf(messageDescriptionFormat, event.getTaskDescription());

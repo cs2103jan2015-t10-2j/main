@@ -11,12 +11,14 @@ public class DataManagerTest {
 
     private final String testFilePath = "bin/testDatManagerFile.dat";
 
+    //@author A0134704M
     @After
     public void tearDown() {
         File file = new File(testFilePath);
         file.delete();
     }
 
+    //@author A0134704M
     @Test
     public void testSaveAndLoad() throws IOException {
         TaskData taskDataToSave = new TaskData();

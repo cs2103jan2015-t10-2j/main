@@ -15,12 +15,14 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     private static final String commandExitDisplayMode = "5";
     private static final String commandDisplayFloating = "2";
 
+    //@author UNKNOWN
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
     }
 
+    //@author UNKNOWN
     @Test
     public void testAlterChangeTime() {
 
@@ -56,6 +58,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         
     }
     
+    //@author UNKNOWN
     @Test
     public void testAlterChangeDuration() {
 
@@ -90,6 +93,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
 
+    //@author UNKNOWN
     @Test
     public void testAlterChangeLocation() {
 
@@ -124,6 +128,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
+    //@author UNKNOWN
     @Test
     public void testAlterChangeDescription() {
 
@@ -158,6 +163,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
+    //@author UNKNOWN
     @Test
     public void testAlterChangePriority() {
 
@@ -192,6 +198,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("low", actualPriority);
     }
     
+    //@author UNKNOWN
     @Test
     public void testAlterSetSnooze() {
 
@@ -226,6 +233,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
+    //@author UNKNOWN
     @Test
     public void testAlterAllFields() {
 
@@ -260,6 +268,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("low", actualPriority);
     }
     
+    //@author UNKNOWN
     @Test
     public void testAlterChangeFloating() {
 
@@ -299,7 +308,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
-
+    //@author UNKNOWN
     // This method compares the passed event to the original timed event.
     private void testTimedTaskBefore(Event event) {
         String actualTaskName = event.getTaskName();

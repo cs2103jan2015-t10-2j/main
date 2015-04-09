@@ -14,16 +14,19 @@ public class DeleteCommandHandler implements ICommandHandler {
     
     private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
     
+    //@author A0134704M
     static {
         patternDelteCommand = Pattern.compile(deleteCommandFormat);
     }
 
+    //@author A0134704M
     public DeleteCommandHandler(TaskData taskData) {
         assertObjectNotNull(this);
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
+    //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
         if (command.isEmpty()) {
@@ -33,6 +36,7 @@ public class DeleteCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author A0134704M
     private boolean setTaskID(String command) {
         Matcher patternMatcher = patternDelteCommand.matcher(command);
         if (patternMatcher.matches()) {
@@ -43,6 +47,7 @@ public class DeleteCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author A0134704M
     @Override
     public ICommand getCommand() {
         try {
@@ -59,11 +64,13 @@ public class DeleteCommandHandler implements ICommandHandler {
         return null;
     }
 
+    //@author A0134704M
     @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

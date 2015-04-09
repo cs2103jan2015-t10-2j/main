@@ -62,17 +62,20 @@ public class AlterCommandHandler implements ICommandHandler {
 
     private static final float minsInHour = 60;
 
+    //@author A0134704M
     static {
         patternUpdateCommand = Pattern.compile(updateCommandFormat);
         timeFormat = new SimpleDateFormat(timeFormatString);
         logger = Logger.getGlobal();
     }
 
+    //@author UNKNOWN
     public AlterCommandHandler(TaskData taskData) {
         assertObjectNotNull(this);
         this.taskData = taskData;
     }
 
+    //@author UNKNOWN
     @Override
     public boolean parseCommand(String command) {
         Matcher patternMatcher;
@@ -103,6 +106,7 @@ public class AlterCommandHandler implements ICommandHandler {
         return true;
     }
 
+    //@author UNKNOWN
     private void setTaskDetails(Matcher patternMatcher) {
         eventId = Integer.parseInt(patternMatcher.group(eventIDDelimiter));
         newTime = patternMatcher.group(timeDelimiter);
@@ -145,6 +149,7 @@ public class AlterCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     @Override
     public ICommand getCommand() {
         try {
@@ -175,6 +180,7 @@ public class AlterCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     private void updateNewValues(Event from, Event to) {
         
         to.setTaskName(from.getTaskName());
@@ -213,6 +219,7 @@ public class AlterCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     private void printEventDetails(Event event) {
         try {
             SimpleDateFormat format = new SimpleDateFormat(dateFormat);
@@ -227,19 +234,23 @@ public class AlterCommandHandler implements ICommandHandler {
         System.out.printf(messagePriorityFormat, event.getTaskPriority());
     }
 
+    //@author UNKNOWN
     private int hrsToMins(float hours) {
         return (int) (minsInHour * hours);
     }
 
+    //@author UNKNOWN
     private float minsToHrs(int mins) {
         return (float) (mins / minsInHour);
     }
 
+    //@author UNKNOWN
     @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

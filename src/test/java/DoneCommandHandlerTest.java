@@ -14,12 +14,14 @@ public class DoneCommandHandlerTest extends StringBasedTest {
     private static final String commandDisplayExit = "5";
     private static final String commandDone = "done 1";
 
+    //@author A0134704M
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
     }
 
+    //@author A0134704M
     @Test
     public void testExexcuteCommand() {
         // Add an event
@@ -32,7 +34,7 @@ public class DoneCommandHandlerTest extends StringBasedTest {
         super.executeCommand(commandDone);
         assertFalse(event.isDone());
 
-        // Display and make done
+        // Display and mark done
         super.executeCommand(commandDisplay);
         super.executeCommand(commandDisplayPrevious);
         super.executeCommand(commandDisplayExit);

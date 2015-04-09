@@ -12,12 +12,14 @@ public class DeleteCommandHandlerTest extends StringBasedTest {
     private static final String commandDisplayExit = "5";
     private static final String commandDelete = "delete 1";
 
+    //@author A0134704M
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
     }
 
+    //@author A0134704M
     @Test
     public void testExecute() {
         // Add an event

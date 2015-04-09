@@ -54,6 +54,7 @@ public class SearchCommandHandler implements ICommandHandler {
     // private static final Logger logger =
     // Logger.getLogger("SearchCommandHandler");
 
+    //@author UNKNOWN
     static {
         patternSearchCommand = Pattern.compile(searchDelimiter2);
         formatTimeDayMthYr = new SimpleDateFormat(simpleDateFormatTimeDayMthyr);
@@ -62,12 +63,14 @@ public class SearchCommandHandler implements ICommandHandler {
         formatHHColonMM = new SimpleDateFormat(simpleDateFormatHHColonMM);
     }
 
+    //@author UNKNOWN
     public SearchCommandHandler(TaskData taskData) {
         assertObjectNotNull(this);
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
+    //@author UNKNOWN
     @Override
     public boolean parseCommand(String command) {
         keyword = null;
@@ -105,6 +108,7 @@ public class SearchCommandHandler implements ICommandHandler {
         return true;
     }
 
+    //@author UNKNOWN
     @Override
     public ICommand getCommand() {
         ICommand searchCommand = new NullCommand();
@@ -128,6 +132,7 @@ public class SearchCommandHandler implements ICommandHandler {
         return searchCommand;
     }
 
+    //@author UNKNOWN
     /*
      * This method stores similar dates together for every iteration. It will
      * then sort its similar dates's timings in increasing order. Finally it
@@ -168,6 +173,7 @@ public class SearchCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     // Once similar dates are found, their timings for each occupied task will
     // be sorted in increasing order.
     public void sortEachDateTime(ArrayList<Event> commonDateIds) {
@@ -192,6 +198,7 @@ public class SearchCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     // Extract empty slot timings from a date and prints them in the display
     // function
     public void extractEmptySlots(ArrayList<Event> commonDateIds) {
@@ -257,6 +264,7 @@ public class SearchCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     public void displayEmptyAndOccupiedResults(Calendar calStartTime,
             Calendar calEndTime, Calendar calCurrTime, Event event) {
 
@@ -278,6 +286,7 @@ public class SearchCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     public void displaySearchResults(List<Integer> searchActualIds, String keyword) {
         Event event;
 
@@ -320,11 +329,13 @@ public class SearchCommandHandler implements ICommandHandler {
         }
     }
 
+    //@author UNKNOWN
     @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
 
+    //@author UNKNOWN
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
