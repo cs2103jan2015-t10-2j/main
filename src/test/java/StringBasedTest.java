@@ -22,7 +22,6 @@ public abstract class StringBasedTest {
     @Rule
     public Timeout globalTimeout = new Timeout(10, TimeUnit.SECONDS);
 
-    private static final String MESSAGE_TASK_HACKER_PRO_EXITS_UNEXPECTEDLY = "TaskHackerPro exits unexpectedly";
     private Semaphore outputLinesAvailableMutex;
     private StringInputSource inputSorurce;
     private TaskHackerProRunner taskHackerProRunner;
@@ -90,10 +89,6 @@ public abstract class StringBasedTest {
      */
     public String[] executeCommand(String command) {
         inputSorurce.addCommand(command);
-        if (taskHackerProRunner.getUncaughtThrowable() != null) {
-            throw new RuntimeException(MESSAGE_TASK_HACKER_PRO_EXITS_UNEXPECTEDLY,
-                    taskHackerProRunner.getUncaughtThrowable());
-        }
         return this.getOutputLines();
     }
 
