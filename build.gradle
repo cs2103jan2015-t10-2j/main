@@ -21,8 +21,4 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(Test){
-    enableAssertions = false
-}
-
 cobertura.coverageFormats = ['html', 'xml']
