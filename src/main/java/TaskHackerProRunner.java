@@ -1,4 +1,3 @@
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,8 +14,9 @@ public class TaskHackerProRunner {
     private TaskHackerPro taskHackerPro;
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
-
-    private Throwable uncaughtException;
+    
+    private static final String MESSAGE_TASK_HACKER_PRO_EXITS_GRACEFULLY = "TaskHackerPro exits gracefully";
+    private static final String MESSAGE_TASK_HACKER_PRO_EXITS_UNEXPECTEDLY = "TaskHackerPro exits unexpectedly";
 
     //@author A0134704M
     public TaskHackerProRunner(IInputSource inputSource) {
@@ -67,30 +67,27 @@ public class TaskHackerProRunner {
         taskHackerPro.setInputSource(inputSource);
         taskHackerPro.setTaskData(taskData);
         taskHackerPro.setCommandHandlerMap(commandHandlerMap);
+        
+        final Thread runnerThread = Thread.currentThread();
 
-        Thread t = new Thread(new Runnable() {
+        Thread systemThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     taskHackerPro.parseCommand();
+                    Logger.getGlobal().info(MESSAGE_TASK_HACKER_PRO_EXITS_GRACEFULLY);
                 } catch (Throwable e) {
-                    TaskHackerProRunner.this.uncaughtException = e;
+                    RuntimeException re = new RuntimeException(e);
+                    Logger.getGlobal().info(MESSAGE_TASK_HACKER_PRO_EXITS_UNEXPECTEDLY);
+                    runnerThread.interrupt();
+                    
+                    re.fillInStackTrace();
+                    throw re;
                 }
             }
         });
-        t.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                TaskHackerProRunner.this.uncaughtException = e;
-            }
-        });
-        t.start();
+        systemThread.start();
 
-        return t;
-    }
-
-    //@author A0134704M
-    public Throwable getUncaughtThrowable() {
-        return uncaughtException;
+        return systemThread;
     }
 }
