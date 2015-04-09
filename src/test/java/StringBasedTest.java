@@ -4,9 +4,12 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.Timeout;
 
 /**
  * This class helps virtually enter command line by line. Console output and
@@ -15,6 +18,9 @@ import org.junit.Before;
  *
  */
 public abstract class StringBasedTest {
+
+    @Rule
+    public Timeout globalTimeout = new Timeout(10, TimeUnit.SECONDS);
 
     private static final String MESSAGE_TASK_HACKER_PRO_EXITS_UNEXPECTEDLY = "TaskHackerPro exits unexpectedly";
     private Semaphore outputLinesAvailableMutex;
