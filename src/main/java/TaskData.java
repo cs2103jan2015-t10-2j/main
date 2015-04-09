@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,7 +15,7 @@ public class TaskData implements Serializable {
     private static final String messageEmptyFile = "File is empty!";
     private static final String simpleDateFormatDayMthYr = "d/M/y";
     private static final String simpleDateFormatHHmm = "HHmm";
-   
+
     private static final long serialVersionUID = 6897919790578039077L;
 
     private static final SimpleDateFormat formatHHmm;
@@ -34,6 +35,52 @@ public class TaskData implements Serializable {
         this.eventMap = new LinkedHashMap<Integer, Event>();
         this.displayIDToActualIDMap = new LinkedHashMap<Integer, Integer>();
         this.actualIDToDisplayIDMap = new LinkedHashMap<Integer, Integer>();
+    }
+
+    public ArrayList<Integer> getDateTasks(Date date, ArrayList<Integer> floatingIds)
+            throws NoSuchElementException {
+        Calendar cal = Calendar.getInstance();
+        ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
+        Event event;
+        Date TestDate;
+
+        if (this.eventMap.isEmpty()) {
+            throw new NoSuchElementException(messageEmptyFile);
+        }
+
+        for (Integer taskId : this.eventMap.keySet()) {
+            event = this.eventMap.get(taskId);
+            cal = event.getTaskDate();
+            if (cal == null) {
+                floatingIds.add(taskId);
+            } else {
+                try {
+                    TestDate = formatDayMthYr.parse(formatDayMthYr.format(cal.getTime()));
+                    if (TestDate.equals(date)) {
+                        rangeTaskIds.add(taskId);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        if (rangeTaskIds.size() == 0) {
+            throw new NoSuchElementException(messageNoResults);
+        }
+        
+        //For dubugging
+        /*
+
+        for (int i = 0; i < rangeTaskIds.size(); i++) {
+            event = getEventMap().get(rangeTaskIds.get(i));
+            System.out.println("task date and times: "
+                    + formatDayMthYr.format(event.getTaskDate().getTime()));
+        }
+
+        */
+        sortDatesIncreasingOrder(rangeTaskIds);
+        return rangeTaskIds;
     }
 
     public ArrayList<Integer> searchEmptySlots(Date parsedDateStart, Date parsedDateEnd,
@@ -62,7 +109,7 @@ public class TaskData implements Serializable {
         if (rangeTaskIds.size() == 0) {
             throw new NoSuchElementException(messageNoResults);
         }
-        
+
         sortDatesIncreasingOrder(rangeTaskIds);
         sortedTaskIds = processCommonDateTimes(rangeTaskIds);
         return sortedTaskIds;
@@ -89,45 +136,44 @@ public class TaskData implements Serializable {
             }
         }
     }
-    
-    public ArrayList<Integer> processCommonDateTimes(ArrayList<Integer> rangeTaskIds){
+
+    public ArrayList<Integer> processCommonDateTimes(ArrayList<Integer> rangeTaskIds) {
         ArrayList<Integer> tempArrayIds = new ArrayList<Integer>();
         ArrayList<Integer> sortedArrayIds = new ArrayList<Integer>();
         String dateInitial;
         String dateCurrent;
         Event event;
-        
+
         event = getEventMap().get(rangeTaskIds.get(0));
         dateInitial = formatDayMthYr.format(event.getTaskDate().getTime());
         tempArrayIds.add(rangeTaskIds.get(0));
-        
-        for(int i = 1; i < rangeTaskIds.size(); i++){
+
+        for (int i = 1; i < rangeTaskIds.size(); i++) {
             event = getEventMap().get(rangeTaskIds.get(i));
             dateCurrent = formatDayMthYr.format(event.getTaskDate().getTime());
-            if(dateInitial.equals(dateCurrent)){
+            if (dateInitial.equals(dateCurrent)) {
+                tempArrayIds.add(rangeTaskIds.get(i));
+            } else if (!dateInitial.equals(dateCurrent)) {
+                event = getEventMap().get(rangeTaskIds.get(i));
+                dateInitial = formatDayMthYr.format(event.getTaskDate().getTime());
+                sortTimeIncreasingOrder(tempArrayIds);
+                for (int j = 0; j < tempArrayIds.size(); j++) {
+                    sortedArrayIds.add(tempArrayIds.get(j));
+                }
+                tempArrayIds = new ArrayList<Integer>();
                 tempArrayIds.add(rangeTaskIds.get(i));
             }
-            else if(!dateInitial.equals(dateCurrent)){
-              event = getEventMap().get(rangeTaskIds.get(i));
-              dateInitial = formatDayMthYr.format(event.getTaskDate().getTime());
-              sortTimeIncreasingOrder(tempArrayIds);
-              for(int j = 0; j < tempArrayIds.size(); j++){
-                  sortedArrayIds.add(tempArrayIds.get(j));
-              }
-              tempArrayIds = new ArrayList<Integer>();
-              tempArrayIds.add(rangeTaskIds.get(i));
-            }
-            
+
         }
-        
-        if(tempArrayIds.size() > 0){
+
+        if (tempArrayIds.size() > 0) {
             sortTimeIncreasingOrder(tempArrayIds);
-            for(int j = 0; j < tempArrayIds.size(); j++){
+            for (int j = 0; j < tempArrayIds.size(); j++) {
                 sortedArrayIds.add(tempArrayIds.get(j));
             }
-            
+
         }
-              
+
         return sortedArrayIds;
     }
 
