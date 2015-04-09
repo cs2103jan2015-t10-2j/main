@@ -1,8 +1,8 @@
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import java.util.Map.Entry;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,17 +16,19 @@ public class TaskHackerProRunner {
     private Map<String, ICommandHandler> commandHandlerMap;
     private TaskData taskData;
 
-    
     private Throwable uncaughtException;
 
+    //@author A0134704M
     public TaskHackerProRunner(IInputSource inputSource) {
         this(inputSource, null);
     }
 
+    //@author A0134704M
     public TaskHackerProRunner(IInputSource inputSource, TaskData taskData) {
         this(inputSource, taskData, Logger.getGlobal().getLevel());
     }
 
+    //@author A0134704M
     public TaskHackerProRunner(IInputSource inputSource, TaskData taskData, Level logLevel) {
         this.inputSource = inputSource;
         this.taskData = taskData;
@@ -39,6 +41,7 @@ public class TaskHackerProRunner {
         Logger.getGlobal().setLevel(logLevel);
     }
 
+    //@author A0134704M
     public void setupCommandMap(TaskData taskData) {
         commandHandlerMap.put("add", new AddCommandHandler(taskData));
         commandHandlerMap.put("delete", new DeleteCommandHandler(taskData));
@@ -54,6 +57,7 @@ public class TaskHackerProRunner {
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
     }
 
+    //@author A0134704M
     public Thread start() {
         if (taskData == null) {
             this.taskData = new TaskData();
@@ -85,6 +89,7 @@ public class TaskHackerProRunner {
         return t;
     }
 
+    //@author A0134704M
     public Throwable getUncaughtThrowable() {
         return uncaughtException;
     }

@@ -18,6 +18,7 @@ public class CommandParserTest {
     private static final String addCommand2d = "add CS3343 Lab 11:00pm on monday";
     private static final String addCommand2ExpectedName = "CS3343 Lab";
 
+    //@author A0134704M
     @Test
     public void testAddCommand1() {
         Event actualEvent = CommandParser.getDetailFromCommand(ADD_NAME, addCommand1);
@@ -31,6 +32,7 @@ public class CommandParserTest {
                 TaskPriority.MEDIUM, expectedTime);
     }
 
+    //@author A0134704M
     @Test
     public void testAddCommandParsingHour() {
         Event actualEvent = CommandParser.getDetailFromCommand(ADD_NAME, addCommand2a);
@@ -62,6 +64,7 @@ public class CommandParserTest {
                 TaskPriority.MEDIUM, expectedTime);
     }
 
+    //@author A0134704M
     public void assertEvent(Event actualEvent, String expectedName,
             String expectedDescription, String expectedLocation, int expectedDuration,
             TaskPriority expectedPriority, Calendar expectedTime) {

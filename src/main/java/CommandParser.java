@@ -72,6 +72,7 @@ public class CommandParser {
     private static final Pattern patternLocationCommand = Pattern.compile(locationPattern);
     private static final Pattern patternNameCommand = Pattern.compile(namePattern);
 
+    //@author A0134704M
     static {
         patternCommands.put(priorityPattern, patternPriorityCommand);
         patternCommands.put(descPattern, patternDescCommand);
@@ -82,6 +83,7 @@ public class CommandParser {
         patternCommands.put(namePattern, patternNameCommand);
     }
 
+    //@author A0134704M
     public static List<Entry<String, String>> parse(String commandName, String command) {
         List<Entry<String, String>> resultList = new ArrayList<Entry<String, String>>();
 
@@ -117,6 +119,7 @@ public class CommandParser {
         return resultList;
     }
 
+    //@author A0134704M
     public static Event getDetailFromCommand(String commandName, String command) {
         Event event = new Event();
         List<Entry<String, String>> list = parse(commandName, command);
@@ -187,6 +190,7 @@ public class CommandParser {
         return event;
     }
 
+    //@author A0134704M
     public static Calendar getDateTime(Map<String, String> taskDetailMap) {
         Calendar taskTime = Calendar.getInstance();
         int min;
@@ -301,6 +305,7 @@ public class CommandParser {
         return taskDate;
     }
 
+    //@author A0134704M
     private static int getDuration(String duration, String unit) {
         double time = Double.parseDouble(duration);
         if (unit.contains(VALUE_HOUR)) {
@@ -309,6 +314,7 @@ public class CommandParser {
         return (int) Math.round(time);
     }
 
+    //@author A0134704M
     private static Map<String, String> parseCommandSegment(Pattern pattern,
             Set<String> groups, List<Entry<String, String>> list) {
 

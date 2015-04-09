@@ -20,11 +20,13 @@ public class DeleteCommand implements ICommand {
     private static final String messagePriorityFormat = "Priority level: %s\n";
     private static final String messageDeleteTask = "Delete task - %s\n";
 
+    //@author A0134704M
     public DeleteCommand(TaskData taskData, int actualId) {
         this.taskData = taskData;
         this.actualId = actualId;
     }
 
+    //@author A0134704M
     @Override
     public boolean execute() {
         event = taskData.getEventMap().remove(actualId);
@@ -34,22 +36,26 @@ public class DeleteCommand implements ICommand {
         return true;
     }
 
+    //@author A0134704M
     @Override
     public boolean undo() {
         taskData.getEventMap().put(actualId, event);
         return true;
     }
 
+    //@author A0134704M
     @Override
     public boolean redo() {
         return this.execute();
     }
 
+    //@author A0134704M
     @Override
     public boolean isReversible() {
         return true;
     }
 
+    //@author A0134704M
     private void printConfirmation(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
         System.out.printf(messageDeleteTask, event.getTaskName());
