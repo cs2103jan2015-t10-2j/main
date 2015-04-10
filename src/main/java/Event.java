@@ -1,7 +1,10 @@
 import java.io.Serializable;
 import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class Event implements Serializable {
+
 
     private static final long serialVersionUID = -6301813687015638579L;
 
@@ -15,7 +18,9 @@ public class Event implements Serializable {
     private boolean isDone;
     private boolean isRecurring;
 
-    private static final String toStringFormat = "ID=%d, Name=\"%s\", Location=\"%s\", Description=\"%s\", Date=%s, Priority=%s, Done=%b, Recurring=%b";
+    private static final String toStringFormat = "ID: %d, Name: \"%s\", Location: \"%s\", Description: \"%s\", Date: %s, Duration: %d, Priority: %s, Done: %b, Recurring: %b";
+    private static final String toStringFieldsFormat = "%d~//~, \"%s\"~//~, \"%s\"~//~, \"%s\"~//~, %s~//~, %d~//~, %s~//~, %b~//~, %b";
+    private static final String splitterForStringArray = "~//~, ";
 
     //@author A0134704M
     public Event() {
@@ -52,12 +57,12 @@ public class Event implements Serializable {
         this.taskDate = taskDate;
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     public int getTaskDuration() {
         return taskDuration;
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     public void setTaskDuration(int taskDuration) {
         this.taskDuration = taskDuration;
     }
@@ -128,14 +133,46 @@ public class Event implements Serializable {
     //@author A0134704M
     @Override
     public String toString() {
-        String timeString;
-        try {
-            timeString = getTaskDate().getTime().toString();
-        } catch (Exception e) {
-            timeString = null;
-        }
         return String.format(toStringFormat, getTaskID(), getTaskName(),
-                getTaskLocation(), getTaskDescription(), timeString, getTaskPriority(),
+                getTaskLocation(), getTaskDescription(), getTimeString(), getTaskDuration(), getTaskPriority(),
                 isDone(), isRecurring());
     }
+    
+    //@author A0109239A
+    public String[] getEventDetails() {
+        String fieldsString = String.format(toStringFieldsFormat, getTaskID(), getTaskName(),
+                getTaskLocation(), getTaskDescription(), getTimeString(), getTaskDuration(), getTaskPriority(),
+                isDone(), isRecurring());
+        String[] fieldsArray = fieldsString.split(splitterForStringArray);
+        return fieldsArray;
+    }
+    
+    //@author A0109239A
+    private String getTimeString() {
+        try {
+            return getTaskDate().getTime().toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    //@author A0109239
+    public static Event setEventDetails(String[] entry) throws Exception {
+        try {
+            Event event = new Event();
+            event.setTaskID(Integer.parseInt(entry[0]));
+            event.setTaskName(entry[1]);
+            event.setTaskLocation(entry[2]);
+            event.setTaskDescription(entry[3]);
+            //event.setTaskDate(DateFormat.parse(entry[4]))); Lily, please help! I'm no longer sure how we're converting strings to dates.
+            event.setTaskDuration(Integer.parseInt(entry[5]));
+            event.setTaskPriority(TaskPriority.valueOf(entry[6]));
+            event.setDone(Boolean.parseBoolean(entry[7]));
+            event.setRecurring(Boolean.parseBoolean(entry[8]));
+            return event;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
 }
