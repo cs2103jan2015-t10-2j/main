@@ -4,12 +4,13 @@ import java.util.logging.Logger;
 
 public class UndoCommandHandler implements ICommandHandler {
 
-    private static final String MESSAGE_NOTHING_TO_UNDO = "Nothing to undo.\n";
     private Stack<Entry<ICommand, String>> undoStack;
     private Stack<Entry<ICommand, String>> redoStack;
 
     private static final Logger logger = Logger.getGlobal();
     private static final String STRING_UNDO = "undo";
+    private static final String MESSAGE_UNDO_SUCCESSFULLY = "Undo successfully!\n";
+    private static final String MESSAGE_NOTHING_TO_UNDO = "Nothing to undo.\n";
 
     //@author A0134704M
     public UndoCommandHandler(Stack<Entry<ICommand, String>> undoStack,
@@ -37,10 +38,15 @@ public class UndoCommandHandler implements ICommandHandler {
         } else {
             while (!undoStack.isEmpty()) {
                 Entry<ICommand, String> commandEntryToUndo = undoStack.pop();
+                String rawCommand = commandEntryToUndo.getValue();
+
+                System.out.println(rawCommand);
                 if (commandEntryToUndo.getKey().undo()) {
                     if (commandEntryToUndo.getKey().isReversible()) {
                         redoStack.push(commandEntryToUndo);
                     }
+
+                    System.out.printf(MESSAGE_UNDO_SUCCESSFULLY);
                     command = new NullCommand();
                     break;
                 }

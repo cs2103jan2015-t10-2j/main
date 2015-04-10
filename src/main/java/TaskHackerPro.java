@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class TaskHackerPro {
 
-    private static final String messageWelcome = "Welcome to TaskHackerPro!";
+    private static final String messageWelcome = "Welcome to TaskHackerPro!\nEnter \"help\" for system usage";
     private IInputSource inputSource;
     private Stack<Entry<ICommand, String>> undoStack;
     private Stack<Entry<ICommand, String>> redoStack;
@@ -19,6 +19,7 @@ public class TaskHackerPro {
     private static final Logger logger = Logger.getGlobal();
     private static final String COMMAND_ADDED_TO_HISTORY = "%s: command added to history";
 
+    private static final String MESSAGE_COMMAND_PROMPT = "\nEnter command: ";
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
@@ -36,10 +37,16 @@ public class TaskHackerPro {
     }
 
     //@author A0134704M
+    private boolean printPromptAndWaitForNewLine() {
+        System.out.printf(MESSAGE_COMMAND_PROMPT);
+        return inputSource.hasNextLine();
+    }
+
+    //@author A0134704M
     public void parseCommand() throws IOException {
         System.out.println(messageWelcome);
 
-        while (isContinue && inputSource.hasNextLine()) {
+        while (isContinue && printPromptAndWaitForNewLine()) {
             String inputLine = inputSource.getNextLine();
             int commandEndPosition = inputLine.indexOf(' ');
             String command;
@@ -57,7 +64,7 @@ public class TaskHackerPro {
             } else {
                 boolean isExtraInputNeeded = performCommandLifeCycle(handler, inputLine, command);
 
-                while (isExtraInputNeeded && inputSource.hasNextLine()) {
+                while (isExtraInputNeeded && printPromptAndWaitForNewLine()) {
                     inputLine = inputSource.getNextLine();
                     isExtraInputNeeded = performCommandLifeCycle(handler, inputLine, command);
                 }
@@ -143,6 +150,8 @@ public class TaskHackerPro {
 
     //@author A0134704M
     public static void main(String[] args) {
+        ConsoleUtility.clearScreen();
+
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
         new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
