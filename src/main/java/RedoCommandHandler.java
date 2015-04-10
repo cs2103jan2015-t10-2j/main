@@ -9,6 +9,7 @@ public class RedoCommandHandler implements ICommandHandler {
 
     private static final Logger logger = Logger.getGlobal();
     private static final String STRING_REDO = "redo";
+    private static final String MESSAGE_REDO_SUCCESSFULLY = "Redo successfully";
 
     //@author A0134704M
     public RedoCommandHandler(Stack<Entry<ICommand, String>> undoStack,
@@ -36,6 +37,8 @@ public class RedoCommandHandler implements ICommandHandler {
                 Entry<ICommand, String> commandEntryToRedo = redoStack.pop();
                 if (commandEntryToRedo.getKey().redo()) {
                     undoStack.push(commandEntryToRedo);
+                    
+                    System.out.println(MESSAGE_REDO_SUCCESSFULLY);
                     logger.info(String.format("undo: size=%d, redo: size=%d",
                             undoStack.size(), redoStack.size()));
                     return new NullCommand();
