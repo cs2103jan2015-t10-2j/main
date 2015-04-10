@@ -150,6 +150,8 @@ public class TaskHackerPro {
 
     //@author A0134704M
     public static void main(String[] args) {
+        ConsoleUtility.clearScreen();
+
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
         new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
