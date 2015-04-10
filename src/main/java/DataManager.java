@@ -60,7 +60,7 @@ public class DataManager {
     
     //@author A0109239A
     public List<String[]> loadCSVFromDisk() throws IOException {
-        CSVReader reader = new CSVReader(new FileReader("yourfile.csv"));
+        CSVReader reader = setUpReader();
         List<String[]> myEntries = reader.readAll();
         reader.close();
         return myEntries;
@@ -68,13 +68,23 @@ public class DataManager {
 
     //@author A0109239A
     private CSVWriter setUpWriter() throws IOException {
-        CSVWriter writer;
-        if (pathToSaveHumanEditable == null) {
-            writer = new CSVWriter(new FileWriter(DEFAULT_PATH_FOR_HUMAN_EDITABLE));
-        } else {
-            writer = new CSVWriter(new FileWriter(pathToSaveHumanEditable));
-        }
+        CSVWriter writer = new CSVWriter(new FileWriter(getPath()));
         return writer;
+    }
+    
+    //@author A0109239A
+    private CSVReader setUpReader() throws IOException {
+        CSVReader reader = new CSVReader(new FileReader(getPath()));
+        return reader;
+    }
+    
+    //@author A0109239A
+    private String getPath() {
+        if (pathToSaveHumanEditable == null) {
+            return DEFAULT_PATH_FOR_HUMAN_EDITABLE;
+        } else {
+            return pathToSaveHumanEditable ;
+        }
     }
 
     //@author A0134704M
