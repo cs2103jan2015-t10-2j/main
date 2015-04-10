@@ -38,11 +38,14 @@ public class UndoCommandHandler implements ICommandHandler {
         } else {
             while (!undoStack.isEmpty()) {
                 Entry<ICommand, String> commandEntryToUndo = undoStack.pop();
+                String rawCommand = commandEntryToUndo.getValue();
+
+                System.out.println(rawCommand);
                 if (commandEntryToUndo.getKey().undo()) {
                     if (commandEntryToUndo.getKey().isReversible()) {
                         redoStack.push(commandEntryToUndo);
                     }
-                    
+
                     System.out.printf(MESSAGE_UNDO_SUCCESSFULLY);
                     command = new NullCommand();
                     break;
