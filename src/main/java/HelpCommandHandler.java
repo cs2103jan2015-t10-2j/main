@@ -5,16 +5,12 @@ public class HelpCommandHandler implements ICommandHandler {
     private static final String CONTENT_2_COLUMNS_EXAMPLE = "＊ %-19s%-61s ＊\n";
     private static final String LINE_SEPARATION = "*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*\n";
     private static final String LINE_COMMAND_USAGE = "\n*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*COMMAND USAGE*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*\n";
-    private static final Object helpDelimiter = "help";
+    private static final Object STRING_HELP = "help";
 
     //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
-        if (helpDelimiter.equals(command)) {
-
-            return true;
-        }
-        return false;
+        return (STRING_HELP.equals(command));
     }
 
     //@author A0134704M
@@ -55,6 +51,8 @@ public class HelpCommandHandler implements ICommandHandler {
         System.out.printf(CONTENT_2_COLUMNS, "delete", "Remove a task from data with its ID");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "done", "Mark a task as finished with its ID");
+        System.out.printf(CONTENT_2_COLUMNS, "", "");
+        System.out.printf(CONTENT_2_COLUMNS, "clear", "Clear the screen");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "undo", "Undo last change");
         System.out.printf(CONTENT_2_COLUMNS, "", "");

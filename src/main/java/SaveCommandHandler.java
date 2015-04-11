@@ -5,7 +5,7 @@ public class SaveCommandHandler implements ICommandHandler {
     private TaskData taskData;
     private String fileSavePath;
 
-    private static final String saveDelimiter = "save";
+    private static final String STRING_SAVE = "save";
     private static final String FILE_SAVE = "File is saved";
 
     //@author A0134704M
@@ -16,10 +16,10 @@ public class SaveCommandHandler implements ICommandHandler {
     //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
-        if (!command.equalsIgnoreCase(saveDelimiter)) {
-            return false;
+        if (command.equalsIgnoreCase(STRING_SAVE)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     //@author A0134704M
