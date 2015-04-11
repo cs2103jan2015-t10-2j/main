@@ -30,14 +30,15 @@ public class CommandParser {
 
     private static final Map<String, Pattern> patternCommands = new LinkedHashMap<String, Pattern>();
 
-    private static final String priorityPattern = " ?setPrior (?<priority>.+)";
+    private static final String priorityPattern = " ?setPrior (?<priority>(H(IGH)?|M(EDIUM)?|L(OW)?).+)";
     private static final String descPattern = " ?desc \"(?<description>.+)\"";
     private static final String durationPattern = " ?for (?<duration>[0-9]+(.[0-9]+)*) ?(?<unitDuration>mins?|h((ou)?rs*)?)";
     private static final String timePattern = " ?((at|@) )*((?<hour>[0-1]?[0-9])(:(?<minute>[0-5]?[0-9]))? ?(?<ampm>(am|pm)))|((?<hour24>[0-2]?[0-9])(:(?<minute24>[0-5]?[0-9])))";
-    private static final String datePattern = "(^|[\\W]+)((?<days>((((?<prefix>this|next) )(?<unit>week|month|mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))|(on) (?<weekday>mon(day)?))"
+    private static final String datePattern = "(^|[\\W]+)((?<days>((((?<prefix>this|next) )(?<unit>week|month|mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))"
+            + "|(on) (?<weekday>mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))"
             + "|((?<today>today|yesterday|tomorrow)"
             + "|(?<date>(?<day>([1-3])?[0-9])((((-|/)(?<month>[\\d]{1,2}))|((-|/| )?(?<monthString>(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)))))((-|/| )?(?<year>(19|20)?[\\d]{2}))?)))($|[\\W]+))";
-    private static final String duePatten = " ?due (?<date>.+)";
+    private static final String duePatten = " ?due (?<dueDate>.+)";
     private static final String locationPattern = " ?@ (?<location>.+)";
     private static final String namePattern = "add (?<name>.+)";
 
@@ -165,7 +166,7 @@ public class CommandParser {
         if (taskDetailMap.containsKey(KEY_PRIORITY)) {
             String newPriorityString = taskDetailMap.get(KEY_PRIORITY);
             try {
-                TaskPriority newPriority = TaskPriority.valueOf(newPriorityString);
+                TaskPriority newPriority = TaskPriority.valueOf(newPriorityString.toUpperCase());
                 event.setTaskPriority(newPriority);
             } catch (IllegalArgumentException e) {
 
