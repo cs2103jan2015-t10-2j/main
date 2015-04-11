@@ -1,5 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -124,35 +125,58 @@ public class CommandParser {
     }
 
     //@author A0134704M
+    private static Set<String> getCapturingGroups(String patternString) {
+        Set<String> groups = new HashSet<String>();
+        Matcher m = Pattern.compile(PATTERN_NAMED_GROUP).matcher(patternString);
+
+        while (m.find()) {
+            groups.add(m.group(1));
+        }
+
+        return groups;
+    }
+
+    //@author A0134704M
     public static Event getDetailFromCommand(String commandName, String command) {
         Event event = new Event();
         List<Entry<String, String>> list = parse(commandName, command);
         logger.info(list.toString());
-        Set<String> groups = new HashSet<String>();
         Map<String, String> taskDetailMap = new HashMap<String, String>();
 
         for (Entry<String, Pattern> patternCommandEntry : patternCommands.entrySet()) {
             String patternString = patternCommandEntry.getKey();
             Pattern pattern = patternCommandEntry.getValue();
+            Set<String> capturingGroups = getCapturingGroups(patternString);
 
-            groups.clear();
-            Matcher m = Pattern.compile(PATTERN_NAMED_GROUP).matcher(patternString);
-            while (m.find()) {
-                groups.add(m.group(1));
-            }
-
-            Map<String, String> groupNames = parseCommandSegment(pattern, groups, list);
+            Map<String, String> groupNames = parseCommandSegment(pattern, capturingGroups, list);
             logger.info(String.format("pattern=[%s]\n\tData put=[%s]", patternCommandEntry.getKey(), groupNames));
             taskDetailMap.putAll(groupNames);
         }
+
         if (taskDetailMap.containsKey(KEY_DESCRIPTION)) {
             event.setTaskDescription(taskDetailMap.get(KEY_DESCRIPTION));
             taskDetailMap.remove(KEY_DESCRIPTION);
         }
+
         if (taskDetailMap.containsKey(KEY_DUEDATE)) {
-            //event.setTaskDueDate(taskDetailMap.get(KEY_DUEDATE));
-            //taskDetailMap.remove(KEY_DUEDATE);
+            String due = taskDetailMap.remove(KEY_DUEDATE);
+            
+            Set<String> dateGroups = getCapturingGroups(datePattern);
+            Set<String> timeGroups = getCapturingGroups(timePattern);
+            List<Entry<String, String>> entryList = new ArrayList<Entry<String, String>>();
+            Map<String, String> dateTimeMap = new HashMap<String, String>();
+
+            entryList.add(new AbstractMap.SimpleEntry<String, String>(KEY_DUEDATE, due));
+            dateTimeMap.putAll(parseCommandSegment(patternDateCommand, dateGroups, entryList));
+            logger.info(dateTimeMap.toString());
+            
+            dateTimeMap.putAll(parseCommandSegment(patternTimeCommand, timeGroups, entryList));
+            logger.info(dateTimeMap.toString());
+            
+            event.setTaskDueDate(getDateTime(dateTimeMap));
+            logger.info(event.getTaskDueDate().toString());
         }
+
         String duration = taskDetailMap.remove(KEY_DURATION);
         String unit = taskDetailMap.remove(KEY_UNIT_DURATION);
 
