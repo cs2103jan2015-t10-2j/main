@@ -1,16 +1,24 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
 public class DataManager {
 
     private String pathToSaveLoad;
+    private String pathToSaveHumanEditable;
 
     private static DataManager instance;
     private static final String DEFAULT_PATH_TO_LOAD_SAVE = "bin/TaskHackerPro.dat";
+    private static final String DEFAULT_PATH_FOR_HUMAN_EDITABLE = "bin/TaskHackerPro.csv";
 
     private static final String MESSAGE_DATA_FILE_NOT_FOUND = "Data file is created\n";
     private static final String MESSAGE_DATA_FILE_LOADED = "Data file loaded successfully with %d event(s)!\n";
@@ -38,6 +46,45 @@ public class DataManager {
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(taskData);
         oos.close();
+    }
+    
+    //@author A0109239A
+    public void saveAsCsvToDisk(TaskData taskData) throws IOException {
+        CSVWriter writer = setUpWriter();
+        List<String[]> allEventDetails = HumanReadable.getDetailsAllEvents(taskData);
+        for (String[] entry : allEventDetails) {
+            writer.writeNext(entry);
+        }
+        writer.close();
+    }
+    
+    //@author A0109239A
+    public List<String[]> loadCSVFromDisk() throws IOException {
+        CSVReader reader = setUpReader();
+        List<String[]> myEntries = reader.readAll();
+        reader.close();
+        return myEntries;
+    }
+
+    //@author A0109239A
+    private CSVWriter setUpWriter() throws IOException {
+        CSVWriter writer = new CSVWriter(new FileWriter(getPath()));
+        return writer;
+    }
+    
+    //@author A0109239A
+    private CSVReader setUpReader() throws IOException {
+        CSVReader reader = new CSVReader(new FileReader(getPath()));
+        return reader;
+    }
+    
+    //@author A0109239A
+    private String getPath() {
+        if (pathToSaveHumanEditable == null) {
+            return DEFAULT_PATH_FOR_HUMAN_EDITABLE;
+        } else {
+            return pathToSaveHumanEditable ;
+        }
     }
 
     //@author A0134704M

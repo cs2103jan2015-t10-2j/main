@@ -1,10 +1,13 @@
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.AbstractMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class TaskHackerPro {
 
@@ -23,6 +26,8 @@ public class TaskHackerPro {
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
+    private static final String MESSAGE_OVERDUE_COUNT = "\nThere are %d overdue task(s).\n";
+    private static final String MESSAGE_OVERDUE_TASK_DISPLAY = "%3d [%s] %s\n";
     
     //@author A0134704M
     public TaskHackerPro(Stack<Entry<ICommand, String>> undoStack,
@@ -43,9 +48,28 @@ public class TaskHackerPro {
     }
 
     //@author A0134704M
-    public void parseCommand() throws IOException {
+    private void showWelcomeMessage() {
         System.out.println(messageWelcome);
 
+        List<Event> overdueTasks = taskData.getOverdueTask();
+        List<Integer> selectedIds = overdueTasks.stream().map(event -> event.getTaskID())
+                .collect(Collectors.toList());
+        taskData.updateDisplayID(selectedIds);
+
+        System.out.printf(MESSAGE_OVERDUE_COUNT, overdueTasks.size());
+        for (Event overdueTask : overdueTasks) {
+            int displayId = taskData.getDisplayId(overdueTask.getTaskID());
+            String dueTime = DateFormat.getDateTimeInstance().format(
+                    overdueTask.getTaskDueDate().getTime());
+            System.out.printf(MESSAGE_OVERDUE_TASK_DISPLAY, displayId, dueTime,
+                    overdueTask.getTaskName());
+        }
+    }
+
+    //@author A0134704M
+    public void parseCommand() throws IOException {
+        showWelcomeMessage();
+        
         while (isContinue && printPromptAndWaitForNewLine()) {
             String inputLine = inputSource.getNextLine();
             int commandEndPosition = inputLine.indexOf(' ');
@@ -154,7 +178,7 @@ public class TaskHackerPro {
 
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
-        new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
+        new TaskHackerProRunner(inputSource, taskData, Level.ALL).start();
     }
 
     //@author UNKNOWN

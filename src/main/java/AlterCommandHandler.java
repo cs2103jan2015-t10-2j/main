@@ -64,18 +64,18 @@ public class AlterCommandHandler implements ICommandHandler {
 
     //@author A0134704M
     static {
-        patternUpdateCommand = Pattern.compile(updateCommandFormat);
+        patternUpdateCommand = Pattern.compile(updateCommandFormat, Pattern.CASE_INSENSITIVE);
         timeFormat = new SimpleDateFormat(timeFormatString);
         logger = Logger.getGlobal();
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     public AlterCommandHandler(TaskData taskData) {
         assertObjectNotNull(this);
         this.taskData = taskData;
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     @Override
     public boolean parseCommand(String command) {
         Matcher patternMatcher;
@@ -106,7 +106,7 @@ public class AlterCommandHandler implements ICommandHandler {
         return true;
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private void setTaskDetails(Matcher patternMatcher) {
         eventId = Integer.parseInt(patternMatcher.group(eventIDDelimiter));
         newTime = patternMatcher.group(timeDelimiter);
@@ -131,7 +131,8 @@ public class AlterCommandHandler implements ICommandHandler {
             isDescChanged = false;
         }
         try {
-            newPriority = TaskPriority.valueOf(patternMatcher.group(priorityDelimiter));
+            String priority = (patternMatcher.group(priorityDelimiter)).toUpperCase();
+            newPriority = TaskPriority.valueOf(priority);
             isPriorityChanged = true;
         } catch (NullPointerException e) {
             isPriorityChanged = false;
@@ -180,7 +181,7 @@ public class AlterCommandHandler implements ICommandHandler {
         }
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private void updateNewValues(Event from, Event to) {
         
         to.setTaskName(from.getTaskName());
@@ -219,7 +220,7 @@ public class AlterCommandHandler implements ICommandHandler {
         }
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private void printEventDetails(Event event) {
         try {
             SimpleDateFormat format = new SimpleDateFormat(dateFormat);
@@ -234,12 +235,12 @@ public class AlterCommandHandler implements ICommandHandler {
         System.out.printf(messagePriorityFormat, event.getTaskPriority());
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private int hrsToMins(float hours) {
         return (int) (minsInHour * hours);
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private float minsToHrs(int mins) {
         return (float) (mins / minsInHour);
     }

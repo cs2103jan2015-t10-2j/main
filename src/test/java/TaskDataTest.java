@@ -55,6 +55,28 @@ public class TaskDataTest {
         eventToBeSearched.setTaskDescription("Shopping in IMM");
         eventToBeSearched.setTaskDate(taskDate2);
         this.taskData.getEventMap().put(eventToBeSearched.getTaskID(), eventToBeSearched);
+        
+        Calendar tempTaskDate = Calendar.getInstance();
+        tempTaskDate.add(Calendar.MONTH, -1);
+        eventToBeSearched = new Event();
+        eventToBeSearched.setTaskID(780970);
+        eventToBeSearched.setTaskName("Task Name3");
+        eventToBeSearched.setTaskPriority(TaskPriority.LOW);
+        eventToBeSearched.setTaskLocation("Yale NUS");
+        eventToBeSearched.setTaskDescription("Do CS2103 Project");
+        eventToBeSearched.setTaskDueDate(tempTaskDate);
+        this.taskData.getEventMap().put(eventToBeSearched.getTaskID(), eventToBeSearched);
+        
+        tempTaskDate = Calendar.getInstance();
+        tempTaskDate.add(Calendar.YEAR, 1);
+        eventToBeSearched = new Event();
+        eventToBeSearched.setTaskID(345435);
+        eventToBeSearched.setTaskName("Task Name4");
+        eventToBeSearched.setTaskPriority(TaskPriority.HIGH);
+        eventToBeSearched.setTaskLocation("Swimming Pool");
+        eventToBeSearched.setTaskDescription("Go swimming");
+        eventToBeSearched.setTaskDueDate(tempTaskDate);
+        this.taskData.getEventMap().put(eventToBeSearched.getTaskID(), eventToBeSearched);
     }
 
     //@author A0134704M
@@ -62,10 +84,11 @@ public class TaskDataTest {
     public void testSearch() throws Exception {
 
         List<Integer> searchedEvents = this.taskData.searchByKeyword("in");
-        assertEquals(2, searchedEvents.size());
+        assertEquals(3, searchedEvents.size());
 
         assertTrue(searchedEvents.contains(23456));
         assertTrue(searchedEvents.contains(98765));
+        assertTrue(searchedEvents.contains(345435));
     }
 
     //@author A0134704M
@@ -150,6 +173,15 @@ public class TaskDataTest {
             System.out.println(e.getMessage());
             assertEquals("Your search request returned 0 results", e.getMessage());
         }
+    }
+    
+    //@author A0134704M
+    @Test
+    public void testOverdueTask() {
+        List<Event> selectedEvents = this.taskData.getOverdueTask();
+        assertEquals(1, selectedEvents.size());
 
+        Calendar dateBefore = selectedEvents.get(0).getTaskDueDate();
+        assertTrue(Calendar.getInstance().after(dateBefore));
     }
 }
