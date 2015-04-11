@@ -164,7 +164,10 @@ public class Event implements Serializable {
             event.setTaskName(entry[1]);
             event.setTaskLocation(entry[2]);
             event.setTaskDescription(entry[3]);
-            //event.setTaskDate(DateFormat.parse(entry[4]))); Lily, please help! I'm no longer sure how we're converting strings to dates.
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy EEE h:mm a"); 
+            Calendar cal=Calendar.getInstance();
+            cal.setTime(format.parse(entry[4]));
+            event.setTaskDate(cal); //Lily, please help! I'm no longer sure how we're converting strings to dates.
             event.setTaskDuration(Integer.parseInt(entry[5]));
             event.setTaskPriority(TaskPriority.valueOf(entry[6]));
             event.setDone(Boolean.parseBoolean(entry[7]));
