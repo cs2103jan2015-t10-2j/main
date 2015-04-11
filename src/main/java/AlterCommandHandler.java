@@ -64,7 +64,7 @@ public class AlterCommandHandler implements ICommandHandler {
 
     //@author A0134704M
     static {
-        patternUpdateCommand = Pattern.compile(updateCommandFormat);
+        patternUpdateCommand = Pattern.compile(updateCommandFormat, Pattern.CASE_INSENSITIVE);
         timeFormat = new SimpleDateFormat(timeFormatString);
         logger = Logger.getGlobal();
     }

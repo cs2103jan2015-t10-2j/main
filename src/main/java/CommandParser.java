@@ -1,5 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 public class CommandParser {
 
     private static final String PATTERN_NAMED_GROUP = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
-    private static final String PATTERN = "(?<%3$s>%1$s|%2$s) (((?<%4$s>\".*?\")(?=($| (%2$s)))|((?<%5$s>.*?)(?=($| (%2$s))))))";
+    private static final String PATTERN = "(?<%3$s>%1$s|%2$s) (((?<%4$s>\".*?\")(?=($| (%2$s)))|((?<%5$s>.*?)(?=($| (%2$s)( |$))))))";
     private static final String REGEX_OR = "|";
     private static final String KEYWORD = "keyword";
     private static final String VALUE_WITH_QUOTE = "valueQuote";
@@ -30,14 +31,15 @@ public class CommandParser {
 
     private static final Map<String, Pattern> patternCommands = new LinkedHashMap<String, Pattern>();
 
-    private static final String priorityPattern = " ?setPrior (?<priority>.+)";
+    private static final String priorityPattern = " ?setPrior (?<priority>(H(IGH)?|M(EDIUM)?|L(OW)?).+)";
     private static final String descPattern = " ?desc \"(?<description>.+)\"";
     private static final String durationPattern = " ?for (?<duration>[0-9]+(.[0-9]+)*) ?(?<unitDuration>mins?|h((ou)?rs*)?)";
     private static final String timePattern = " ?((at|@) )*((?<hour>[0-1]?[0-9])(:(?<minute>[0-5]?[0-9]))? ?(?<ampm>(am|pm)))|((?<hour24>[0-2]?[0-9])(:(?<minute24>[0-5]?[0-9])))";
-    private static final String datePattern = "(^|[\\W]+)((?<days>((((?<prefix>this|next) )(?<unit>week|month|mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))|(on) (?<weekday>mon(day)?))"
+    private static final String datePattern = "(^|[\\W]+)((?<days>((((?<prefix>this|next) )(?<unit>week|month|mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))"
+            + "|(on) (?<weekday>mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))"
             + "|((?<today>today|yesterday|tomorrow)"
             + "|(?<date>(?<day>([1-3])?[0-9])((((-|/)(?<month>[\\d]{1,2}))|((-|/| )?(?<monthString>(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)))))((-|/| )?(?<year>(19|20)?[\\d]{2}))?)))($|[\\W]+))";
-    private static final String duePatten = " ?due (?<date>.+)";
+    private static final String duePattern = " ?due (?<dueDate>.+)";
     private static final String locationPattern = " ?@ (?<location>.+)";
     private static final String namePattern = "add (?<name>.+)";
 
@@ -47,6 +49,7 @@ public class CommandParser {
 
     private static final String KEY_PRIORITY = "priority";
     private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_DUEDATE = "dueDate";
     private static final String KEY_DURATION = "duration";
     private static final String KEY_UNIT_DURATION = "unitDuration";
     private static final String KEY_UNIT = "unit";
@@ -66,19 +69,21 @@ public class CommandParser {
     private static final String KEY_LOCATION = "location";
     private static final String KEY_NAME = "name";
 
-    private static final Pattern patternPriorityCommand = Pattern.compile(priorityPattern);
-    private static final Pattern patternDescCommand = Pattern.compile(descPattern);
-    private static final Pattern patternDurationCommand = Pattern.compile(durationPattern);
-    private static final Pattern patternTimeCommand = Pattern.compile(timePattern);
-    private static final Pattern patternDateCommand = Pattern.compile(datePattern);
-    private static final Pattern patternLocationCommand = Pattern.compile(locationPattern);
-    private static final Pattern patternNameCommand = Pattern.compile(namePattern);
+    private static final Pattern patternPriorityCommand = Pattern.compile(priorityPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDescCommand = Pattern.compile(descPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDurationCommand = Pattern.compile(durationPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDueCommand = Pattern.compile(duePattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternTimeCommand = Pattern.compile(timePattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDateCommand = Pattern.compile(datePattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternLocationCommand = Pattern.compile(locationPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternNameCommand = Pattern.compile(namePattern, Pattern.CASE_INSENSITIVE);
 
     //@author A0134704M
     static {
         patternCommands.put(priorityPattern, patternPriorityCommand);
         patternCommands.put(descPattern, patternDescCommand);
         patternCommands.put(durationPattern, patternDurationCommand);
+        patternCommands.put(duePattern, patternDueCommand);
         patternCommands.put(timePattern, patternTimeCommand);
         patternCommands.put(datePattern, patternDateCommand);
         patternCommands.put(locationPattern, patternLocationCommand);
@@ -93,7 +98,7 @@ public class CommandParser {
                 String.join(REGEX_OR, keywords), KEYWORD, VALUE_WITH_QUOTE,
                 VALUE_WITHOUT_QUOTE);
 
-        Pattern pattern = Pattern.compile(patternString);
+        Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(command);
         while (matcher.find()) {
             String keyword = matcher.group(KEYWORD);
@@ -120,30 +125,56 @@ public class CommandParser {
     }
 
     //@author A0134704M
+    private static Set<String> getCapturingGroups(String patternString) {
+        Set<String> groups = new HashSet<String>();
+        Matcher m = Pattern.compile(PATTERN_NAMED_GROUP, Pattern.CASE_INSENSITIVE).matcher(patternString);
+
+        while (m.find()) {
+            groups.add(m.group(1));
+        }
+
+        return groups;
+    }
+
+    //@author A0134704M
     public static Event getDetailFromCommand(String commandName, String command) {
         Event event = new Event();
         List<Entry<String, String>> list = parse(commandName, command);
         logger.info(list.toString());
-        Set<String> groups = new HashSet<String>();
         Map<String, String> taskDetailMap = new HashMap<String, String>();
 
         for (Entry<String, Pattern> patternCommandEntry : patternCommands.entrySet()) {
             String patternString = patternCommandEntry.getKey();
             Pattern pattern = patternCommandEntry.getValue();
+            Set<String> capturingGroups = getCapturingGroups(patternString);
 
-            groups.clear();
-            Matcher m = Pattern.compile(PATTERN_NAMED_GROUP).matcher(patternString);
-            while (m.find()) {
-                groups.add(m.group(1));
-            }
-
-            Map<String, String> groupNames = parseCommandSegment(pattern, groups, list);
+            Map<String, String> groupNames = parseCommandSegment(pattern, capturingGroups, list);
             logger.info(String.format("pattern=[%s]\n\tData put=[%s]", patternCommandEntry.getKey(), groupNames));
             taskDetailMap.putAll(groupNames);
         }
+
         if (taskDetailMap.containsKey(KEY_DESCRIPTION)) {
             event.setTaskDescription(taskDetailMap.get(KEY_DESCRIPTION));
             taskDetailMap.remove(KEY_DESCRIPTION);
+        }
+
+        if (taskDetailMap.containsKey(KEY_DUEDATE)) {
+            String due = taskDetailMap.remove(KEY_DUEDATE);
+            
+            Set<String> dateGroups = getCapturingGroups(datePattern);
+            Set<String> timeGroups = getCapturingGroups(timePattern);
+            List<Entry<String, String>> entryList = new ArrayList<Entry<String, String>>();
+            Map<String, String> dateTimeMap = new HashMap<String, String>();
+
+            entryList.add(new AbstractMap.SimpleEntry<String, String>(KEY_DUEDATE, due));
+            dateTimeMap.putAll(parseCommandSegment(patternDateCommand, dateGroups, entryList));
+            logger.info(dateTimeMap.toString());
+            
+            dateTimeMap.putAll(parseCommandSegment(patternTimeCommand, timeGroups, entryList));
+            logger.info(dateTimeMap.toString());
+            
+            event.setTaskDueDate(getDateTime(dateTimeMap));
+            logger.info(event.getTaskDueDate().toString());
         }
 
         String duration = taskDetailMap.remove(KEY_DURATION);
@@ -165,7 +196,7 @@ public class CommandParser {
         if (taskDetailMap.containsKey(KEY_PRIORITY)) {
             String newPriorityString = taskDetailMap.get(KEY_PRIORITY);
             try {
-                TaskPriority newPriority = TaskPriority.valueOf(newPriorityString);
+                TaskPriority newPriority = TaskPriority.valueOf(newPriorityString.toUpperCase());
                 event.setTaskPriority(newPriority);
             } catch (IllegalArgumentException e) {
 

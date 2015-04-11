@@ -16,7 +16,7 @@ public class DeleteCommandHandler implements ICommandHandler {
     
     //@author A0134704M
     static {
-        patternDelteCommand = Pattern.compile(deleteCommandFormat);
+        patternDelteCommand = Pattern.compile(deleteCommandFormat, Pattern.CASE_INSENSITIVE);
     }
 
     //@author A0134704M
