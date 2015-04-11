@@ -13,7 +13,9 @@ public class AddCommand implements ICommand {
     private static final String dateFormat = "dd MMM, yyyy EEE h:mm a";
 
     private static final String messageDateFormat = "Date: %s\n";
-    private static final String messageDateFormatFloating = "Date: To be scheduled\n";
+    private static final String messageNoDateFormat = "Date: To be scheduled\n";
+    private static final String messageDueDateFormat = "Due Date: %s\n";
+    private static final String messageNoDueDateFormat = "Due Date: To be scheduled\n";
     private static final String messageDescriptionFormat = "Description: %s\n";
     private static final String messageDurationFormat = "Duration: %d minutes\n";
     private static final String messageLocationFormat = "Location: %s\n";
@@ -72,7 +74,13 @@ public class AddCommand implements ICommand {
             System.out.printf(messageDateFormat,
                     format.format(event.getTaskDate().getTime()));
         } catch (NullPointerException e) {
-            System.out.printf(messageDateFormatFloating);
+            System.out.printf(messageNoDateFormat);
+        }
+        try {
+            System.out.printf(messageDueDateFormat,
+                    format.format(event.getTaskDueDate().getTime()));
+        } catch (NullPointerException e) {
+            System.out.printf(messageNoDueDateFormat);
         }
         System.out.printf(messagePriorityFormat, event.getTaskPriority().toString()
                 .toLowerCase());

@@ -321,9 +321,9 @@ public class TaskData implements Serializable {
         }
 
         TaskData taskData = (TaskData) obj;
-        if (eventMap == null || eventMap == null) {
+        if (eventMap == null || taskData.eventMap == null) {
             return false;
-        } else if (!eventMap.equals(eventMap)) {
+        } else if (!eventMap.equals(taskData.eventMap)) {
             return false;
         }
 
