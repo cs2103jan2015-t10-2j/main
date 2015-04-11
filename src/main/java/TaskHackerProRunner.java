@@ -52,6 +52,7 @@ public class TaskHackerProRunner {
         commandHandlerMap.put("undo", new UndoCommandHandler(undoStack, redoStack));
         commandHandlerMap.put("redo", new RedoCommandHandler(undoStack, redoStack)); 
         commandHandlerMap.put("history", new HistoryCommandHandler(undoStack, redoStack)); 
+        commandHandlerMap.put("help", new HelpCommandHandler());
         commandHandlerMap.put("save", new SaveCommandHandler(taskData));
         commandHandlerMap.put("exit", new ExitCommandHandler(taskHackerPro));
     }
