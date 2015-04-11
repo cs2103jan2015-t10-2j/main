@@ -1,6 +1,8 @@
 import java.io.IOException;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,6 +10,8 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import org.fusesource.jansi.Ansi.Color;
 
 public class TaskHackerPro {
 
@@ -18,17 +22,21 @@ public class TaskHackerPro {
     private TaskData taskData;
     private boolean isContinue = true;
 
+    private static final int DAY_VISIBLE_COMING_EVENT = 2;
+
     private static final Logger logger = Logger.getGlobal();
     
     private static final String COMMAND_ADDED_TO_HISTORY = "%s: command added to history";
 
-    private static final String WELCOME_MESSAGE = "Welcome to TaskHackerPro!\nEnter \"help\" for system usage\n";
+    private static final String MESSAGE_WELCOME = "Welcome to TaskHackerPro!\nEnter \"help\" for system usage\n";
     private static final String MESSAGE_COMMAND_PROMPT = "\nEnter command: ";
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
-    private static final String MESSAGE_OVERDUE_COUNT = "\nThere are %d overdue task(s).\n";
+    private static final String MESSAGE_DUE_TASK_COUNT = "\nThere are %d overdue task(s) and %d coming task(s) in coming %d day(s)\n";
+    private static final String MESSAGE_COMING_EVENT_COUNT = "\nThere are %d event(s) in coming %d day(s)\n";
     private static final String MESSAGE_OVERDUE_TASK_DISPLAY = "%3d [%s] %s\n";
+    private static final String MESSAGE_COMING_EVENT_DISPLAY = "%3d [%s] %s\n";
     
     //@author A0134704M
     public TaskHackerPro(Stack<Entry<ICommand, String>> undoStack,
@@ -50,20 +58,71 @@ public class TaskHackerPro {
 
     //@author A0134704M
     private void showWelcomeMessage() {
-        System.out.println(WELCOME_MESSAGE);
+        System.out.println(MESSAGE_WELCOME);
         printLogo();
-        List<Event> overdueTasks = taskData.getOverdueTask();
-        List<Integer> selectedIds = overdueTasks.stream().map(event -> event.getTaskID())
-                .collect(Collectors.toList());
-        taskData.updateDisplayID(selectedIds);
 
-        System.out.printf(MESSAGE_OVERDUE_COUNT, overdueTasks.size());
-        for (Event overdueTask : overdueTasks) {
-            int displayId = taskData.getDisplayId(overdueTask.getTaskID());
-            String dueTime = DateFormat.getDateTimeInstance().format(
-                    overdueTask.getTaskDueDate().getTime());
-            System.out.printf(MESSAGE_OVERDUE_TASK_DISPLAY, displayId, dueTime,
-                    overdueTask.getTaskName());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, yyyy hh:mm a");
+        List<Integer> allActualIds = new ArrayList<Integer>();
+        List<Event> allDueTasks = new ArrayList<Event>();
+
+        // Retrieve list of overdue tasks
+        List<Event> overdueTasks = taskData.getOverdueTask();
+        allDueTasks.addAll(overdueTasks);
+
+        // Retrieve list of due tasks in near future
+        Calendar currentTime = Calendar.getInstance();
+        Calendar endTime = Calendar.getInstance();
+
+        endTime.add(Calendar.DAY_OF_MONTH, DAY_VISIBLE_COMING_EVENT);
+        List<Event> comingDueTasks = taskData.getTaskInDateRange(currentTime, endTime, true);
+        allDueTasks.addAll(comingDueTasks);
+
+        List<Integer> dueTaskIds = allDueTasks.stream().map(event -> event.getTaskID())
+                .collect(Collectors.toList());
+        allActualIds.addAll(dueTaskIds);
+        
+        // Retrieve list of events in near future
+        List<Event> comingEvents = taskData.getTaskInDateRange(currentTime, endTime, false);
+        List<Integer> comingEventsIds = comingEvents.stream().map(event -> event.getTaskID())
+                .collect(Collectors.toList());
+        comingEventsIds.removeAll(dueTaskIds);
+        allActualIds.addAll(comingEventsIds);
+
+        taskData.updateDisplayID(allActualIds);
+
+        // Print current time
+        System.out.printf("Current time is %s\n",
+                dateFormat.format(Calendar.getInstance().getTime()));
+
+        // Print overdue tasks
+        System.out.printf(MESSAGE_DUE_TASK_COUNT, overdueTasks.size(),
+                comingDueTasks.size(), DAY_VISIBLE_COMING_EVENT);
+        for (Event dueTask : allDueTasks) {
+            int displayId = taskData.getDisplayId(dueTask.getTaskID());
+            Calendar dueTime = dueTask.getTaskDueDate();
+            String dueTimeString = dateFormat.format(dueTime.getTime());
+            Color color;
+
+            if (currentTime.before(dueTask.getTaskDueDate())) {
+                color = Color.GREEN;
+            } else {
+                color = Color.RED;
+            }
+
+            ConsoleUtility.printf(color, MESSAGE_OVERDUE_TASK_DISPLAY, displayId,
+                    dueTimeString, dueTask.getTaskName());
+        }
+
+        // Print coming events
+        System.out.printf(MESSAGE_COMING_EVENT_COUNT, comingEvents.size(),
+                DAY_VISIBLE_COMING_EVENT);
+        for (Event comingEvent : comingEvents) {
+            int displayId = taskData.getDisplayId(comingEvent.getTaskID());
+            String timeString = dateFormat.format(comingEvent.getTaskDate().getTime());
+
+            ConsoleUtility.printf(Color.CYAN, MESSAGE_COMING_EVENT_DISPLAY,
+                    displayId, timeString, comingEvent.getTaskName());
+
         }
     }
 

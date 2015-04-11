@@ -38,15 +38,15 @@ public class HelpCommandHandler implements ICommandHandler {
         System.out.printf(CONTENT_2_COLUMNS_EXAMPLE, "", "display floating");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "alter", "Modify details of a task with its ID");
-        System.out.printf(CONTENT_2_COLUMNS, "Example: ", "alter 1 as 3:00 pm 4 May");
+        System.out.printf(CONTENT_2_COLUMNS, "", "Example: alter 1 as 3:00 pm 4 May");
         System.out.printf(CONTENT_2_COLUMNS_EXAMPLE, "", "alter 2 as @ ABC Restaurant");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "search", "Find a task with keywords");
-        System.out.printf(CONTENT_2_COLUMNS, "Example: ", "search meeting (for finding task with the word \"meeting\"");
+        System.out.printf(CONTENT_2_COLUMNS, "", "Example: search meeting (for finding task with the word \"meeting\"");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "save", "Save the changes made. If no path is specified, the default path");
         System.out.printf(CONTENT_2_COLUMNS, "", "is where the program saved.");
-        System.out.printf(CONTENT_2_COLUMNS, "Example: ", "save \\User\\Documents\\");
+        System.out.printf(CONTENT_2_COLUMNS, "", "Example: save \\User\\Documents\\");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "delete", "Remove a task from data with its ID");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
