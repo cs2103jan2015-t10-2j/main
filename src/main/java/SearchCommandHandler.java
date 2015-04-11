@@ -56,7 +56,7 @@ public class SearchCommandHandler implements ICommandHandler {
 
     //@author UNKNOWN
     static {
-        patternSearchCommand = Pattern.compile(searchDelimiter2);
+        patternSearchCommand = Pattern.compile(searchDelimiter2, Pattern.CASE_INSENSITIVE);
         formatTimeDayMthYr = new SimpleDateFormat(simpleDateFormatTimeDayMthyr);
         formatDayMthYr = new SimpleDateFormat(simpleDateFormatDayMthYr);
         formatHHmm = new SimpleDateFormat(simpleDateFormatHHmm);

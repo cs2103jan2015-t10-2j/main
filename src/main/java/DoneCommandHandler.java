@@ -14,7 +14,7 @@ public class DoneCommandHandler implements ICommandHandler {
 
     //@author A0134704M
     static {
-        patternDoneCommand = Pattern.compile(doneCommandFormat);
+        patternDoneCommand = Pattern.compile(doneCommandFormat, Pattern.CASE_INSENSITIVE);
     }
 
     //@author A0134704M

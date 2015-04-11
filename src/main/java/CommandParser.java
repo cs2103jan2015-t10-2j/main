@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class CommandParser {
 
     private static final String PATTERN_NAMED_GROUP = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
-    private static final String PATTERN = "(?<%3$s>%1$s|%2$s) (((?<%4$s>\".*?\")(?=($| (%2$s)))|((?<%5$s>.*?)(?=($| (%2$s))))))";
+    private static final String PATTERN = "(?<%3$s>%1$s|%2$s) (((?<%4$s>\".*?\")(?=($| (%2$s)))|((?<%5$s>.*?)(?=($| (%2$s)( |$))))))";
     private static final String REGEX_OR = "|";
     private static final String KEYWORD = "keyword";
     private static final String VALUE_WITH_QUOTE = "valueQuote";
@@ -69,14 +69,14 @@ public class CommandParser {
     private static final String KEY_LOCATION = "location";
     private static final String KEY_NAME = "name";
 
-    private static final Pattern patternPriorityCommand = Pattern.compile(priorityPattern);
-    private static final Pattern patternDescCommand = Pattern.compile(descPattern);
-    private static final Pattern patternDurationCommand = Pattern.compile(durationPattern);
-    private static final Pattern patternDueCommand = Pattern.compile(duePattern);
-    private static final Pattern patternTimeCommand = Pattern.compile(timePattern);
-    private static final Pattern patternDateCommand = Pattern.compile(datePattern);
-    private static final Pattern patternLocationCommand = Pattern.compile(locationPattern);
-    private static final Pattern patternNameCommand = Pattern.compile(namePattern);
+    private static final Pattern patternPriorityCommand = Pattern.compile(priorityPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDescCommand = Pattern.compile(descPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDurationCommand = Pattern.compile(durationPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDueCommand = Pattern.compile(duePattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternTimeCommand = Pattern.compile(timePattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternDateCommand = Pattern.compile(datePattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternLocationCommand = Pattern.compile(locationPattern, Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternNameCommand = Pattern.compile(namePattern, Pattern.CASE_INSENSITIVE);
 
     //@author A0134704M
     static {
@@ -98,7 +98,7 @@ public class CommandParser {
                 String.join(REGEX_OR, keywords), KEYWORD, VALUE_WITH_QUOTE,
                 VALUE_WITHOUT_QUOTE);
 
-        Pattern pattern = Pattern.compile(patternString);
+        Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(command);
         while (matcher.find()) {
             String keyword = matcher.group(KEYWORD);
@@ -127,7 +127,7 @@ public class CommandParser {
     //@author A0134704M
     private static Set<String> getCapturingGroups(String patternString) {
         Set<String> groups = new HashSet<String>();
-        Matcher m = Pattern.compile(PATTERN_NAMED_GROUP).matcher(patternString);
+        Matcher m = Pattern.compile(PATTERN_NAMED_GROUP, Pattern.CASE_INSENSITIVE).matcher(patternString);
 
         while (m.find()) {
             groups.add(m.group(1));
