@@ -8,11 +8,11 @@ public class NaturalLanguageTest extends StringBasedTest {
 
     private TaskData taskData;
 
-    private static final String commandAdd1 = "add Meeting 1 @ Meeting Room 1";
-    private static final String commandAdd2 = "add Meeting with 1h for 1h";
-    private static final String commandAdd3 = "add Go to Forever 21 21Apr";
-    private static final String commandAdd4 = "add Assignment 2 for 2 hr";
-    private static final String commandAdd5 = "add this tuesday Dinner @ Ruby Tuesday 6pm";
+    private static final String COMMAND_NATURAL_1 = "add Meeting 1 @ Meeting Room 1";
+    private static final String COMMAND_NATURAL_2 = "add Meeting with 1h for 1h";
+    private static final String COMMAND_NATURAL_3 = "add Go to Forever 21 21Apr";
+    private static final String COMMAND_NATURAL_4 = "add Assignment 2 for 2 hr";
+    private static final String COMMAND_NATURAL_5 = "add this tuesday Dinner @ Ruby Tuesday 6pm";
 
     //@author A0134704M
     @Override
@@ -24,7 +24,7 @@ public class NaturalLanguageTest extends StringBasedTest {
     //@author A0134704M
     @Test
     public void testDuplicateWordsInNameAndLocation() {
-        super.executeCommand(commandAdd1);
+        super.executeCommand(COMMAND_NATURAL_1);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
@@ -48,7 +48,7 @@ public class NaturalLanguageTest extends StringBasedTest {
     //@author A0134704M
     @Test
     public void testDuplicateWordsInNameAndDuration() {
-        super.executeCommand(commandAdd2);
+        super.executeCommand(COMMAND_NATURAL_2);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
@@ -72,7 +72,7 @@ public class NaturalLanguageTest extends StringBasedTest {
     //@author A0134704M
     @Test
     public void testDuplicateWordsInNameAndDate() {
-        super.executeCommand(commandAdd3);
+        super.executeCommand(COMMAND_NATURAL_3);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
@@ -98,7 +98,7 @@ public class NaturalLanguageTest extends StringBasedTest {
     //@author A0134704M
     @Test
     public void testDuplicateWordsInNameAndTime() {
-        super.executeCommand(commandAdd4);
+        super.executeCommand(COMMAND_NATURAL_4);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();
@@ -122,7 +122,7 @@ public class NaturalLanguageTest extends StringBasedTest {
   //@author A0134704M
     @Test
     public void testDuplicateWordsInLocationAndDateOfWeek() {
-        super.executeCommand(commandAdd5);
+        super.executeCommand(COMMAND_NATURAL_5);
 
         assertEquals(1, taskData.getEventMap().size());
         int taskId = taskData.getEventMap().keySet().iterator().next();

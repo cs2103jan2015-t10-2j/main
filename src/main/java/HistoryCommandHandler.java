@@ -3,6 +3,7 @@ import java.util.Stack;
 
 public class HistoryCommandHandler implements ICommandHandler {
 
+    private static final String STRING_HISTORY = "history";
     private Stack<Entry<ICommand, String>> undoStack;
     private Stack<Entry<ICommand, String>> redoStack;
 
@@ -16,7 +17,7 @@ public class HistoryCommandHandler implements ICommandHandler {
     //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
-        return "history".equalsIgnoreCase(command);
+        return STRING_HISTORY.equalsIgnoreCase(command);
     }
 
     //@author A0134704M

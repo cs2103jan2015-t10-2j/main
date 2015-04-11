@@ -2,8 +2,8 @@ public class ExitCommandHandler implements ICommandHandler {
 
     private TaskHackerPro taskHackerPro;
 
-    private static final String messageExiting = "Thank you for using TaskHackerPro!";
-    private static final String exitDelimiter = "exit";
+    private static final String MESSAGE_EXITING = "Thank you for using TaskHackerPro!";
+    private static final String STRING_EXIT = "exit";
 
     //@author A0134704M
     public ExitCommandHandler(TaskHackerPro taskHackerPro) {
@@ -14,7 +14,7 @@ public class ExitCommandHandler implements ICommandHandler {
     //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
-        if (exitDelimiter.equals(command)) {
+        if (STRING_EXIT.equalsIgnoreCase(command)) {
             return true;
         }
         return false;
@@ -31,7 +31,7 @@ public class ExitCommandHandler implements ICommandHandler {
     public ICommand getCommand() {
         assertObjectNotNull(taskHackerPro);
         taskHackerPro.setContinue(false);
-        System.out.println(messageExiting);
+        System.out.println(MESSAGE_EXITING);
         ICommand exitCommand = new NullCommand(); 
         return exitCommand;
     }

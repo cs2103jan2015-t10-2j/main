@@ -5,16 +5,12 @@ public class HelpCommandHandler implements ICommandHandler {
     private static final String CONTENT_2_COLUMNS_EXAMPLE = "＊ %-19s%-61s ＊\n";
     private static final String LINE_SEPARATION = "*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*\n";
     private static final String LINE_COMMAND_USAGE = "\n*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*COMMAND USAGE*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'*\n";
-    private static final Object helpDelimiter = "help";
+    private static final Object STRING_HELP = "help";
 
     //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
-        if (helpDelimiter.equals(command)) {
-
-            return true;
-        }
-        return false;
+        return (STRING_HELP.equals(command));
     }
 
     //@author A0134704M
@@ -42,19 +38,21 @@ public class HelpCommandHandler implements ICommandHandler {
         System.out.printf(CONTENT_2_COLUMNS_EXAMPLE, "", "display floating");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "alter", "Modify details of a task with its ID");
-        System.out.printf(CONTENT_2_COLUMNS, "Example: ", "alter 1 as 3:00 pm 4 May");
+        System.out.printf(CONTENT_2_COLUMNS, "", "Example: alter 1 as 3:00 pm 4 May");
         System.out.printf(CONTENT_2_COLUMNS_EXAMPLE, "", "alter 2 as @ ABC Restaurant");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "search", "Find a task with keywords");
-        System.out.printf(CONTENT_2_COLUMNS, "Example: ", "search meeting (for finding task with the word \"meeting\"");
+        System.out.printf(CONTENT_2_COLUMNS, "", "Example: search meeting (for finding task with the word \"meeting\"");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "save", "Save the changes made. If no path is specified, the default path");
         System.out.printf(CONTENT_2_COLUMNS, "", "is where the program saved.");
-        System.out.printf(CONTENT_2_COLUMNS, "Example: ", "save \\User\\Documents\\");
+        System.out.printf(CONTENT_2_COLUMNS, "", "Example: save \\User\\Documents\\");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "delete", "Remove a task from data with its ID");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "done", "Mark a task as finished with its ID");
+        System.out.printf(CONTENT_2_COLUMNS, "", "");
+        System.out.printf(CONTENT_2_COLUMNS, "clear", "Clear the screen");
         System.out.printf(CONTENT_2_COLUMNS, "", "");
         System.out.printf(CONTENT_2_COLUMNS, "undo", "Undo last change");
         System.out.printf(CONTENT_2_COLUMNS, "", "");

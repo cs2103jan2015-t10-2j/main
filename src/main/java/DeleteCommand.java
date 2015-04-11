@@ -3,7 +3,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DeleteCommand implements ICommand {
-    private static final String STRING_TO_BE_SCHEDULED = "To be scheduled";
+    
     private TaskData taskData;
     private int actualId;
     private Event event;
@@ -12,14 +12,16 @@ public class DeleteCommand implements ICommand {
 
     private static final String simpleDateFormat = "dd MMM, yyyy";
 
-    private static final String messageNumberEvents = "No. of events=%d";
+    private static final String STRING_TO_BE_SCHEDULED = "To be scheduled";
+    
+    private static final String MESSAGE_NUMBER_OF_EVENTS = "No. of events=%d";
 
-    private static final String messageDateFormat = "Date: %s\n";
-    private static final String messageDescriptionFormat = "Description: %s\n";
-    private static final String messageDurationFormat = "Duration: %d minutes\n";
-    private static final String messageLocationFormat = "Location: %s\n";
-    private static final String messagePriorityFormat = "Priority level: %s\n";
-    private static final String messageDeleteTask = "Delete task - %s\n";
+    private static final String MESSAGE_DATE_FORMAT = "Date: %s\n";
+    private static final String MESSAGE_DESCRIPTION_FORMAT = "Description: %s\n";
+    private static final String MESSAGE_DURATION_FORMAT = "Duration: %d minutes\n";
+    private static final String MESSAGE_LOCATION_FORMAT = "Location: %s\n";
+    private static final String MESSAGE_PRIORITY_FORMAT = "Priority level: %s\n";
+    private static final String MESSAGE_DELETE_TASK = "Delete task - %s\n";
 
     //@author A0134704M
     public DeleteCommand(TaskData taskData, int actualId) {
@@ -32,7 +34,7 @@ public class DeleteCommand implements ICommand {
     public boolean execute() {
         event = taskData.getEventMap().remove(actualId);
         logger.log(Level.INFO,
-                String.format(messageNumberEvents, taskData.getEventMap().size()));
+                String.format(MESSAGE_NUMBER_OF_EVENTS, taskData.getEventMap().size()));
         printConfirmation(event);
         return true;
     }
@@ -59,17 +61,17 @@ public class DeleteCommand implements ICommand {
     //@author A0134704M
     private void printConfirmation(Event event) {
         SimpleDateFormat format = new SimpleDateFormat(simpleDateFormat);
-        System.out.printf(messageDeleteTask, event.getTaskName());
+        System.out.printf(MESSAGE_DELETE_TASK, event.getTaskName());
         try {
-            System.out.printf(messageDateFormat,
+            System.out.printf(MESSAGE_DATE_FORMAT,
                     format.format(event.getTaskDate().getTime()));
         } catch (NullPointerException e) {
-            System.out.printf(messageDateFormat, STRING_TO_BE_SCHEDULED);
+            System.out.printf(MESSAGE_DATE_FORMAT, STRING_TO_BE_SCHEDULED);
         }
-        System.out.printf(messageDurationFormat, event.getTaskDuration());
-        System.out.printf(messageLocationFormat, event.getTaskLocation());
-        System.out.printf(messageDescriptionFormat, event.getTaskDescription());
-        System.out.printf(messagePriorityFormat, event.getTaskPriority().toString()
+        System.out.printf(MESSAGE_DURATION_FORMAT, event.getTaskDuration());
+        System.out.printf(MESSAGE_LOCATION_FORMAT, event.getTaskLocation());
+        System.out.printf(MESSAGE_DESCRIPTION_FORMAT, event.getTaskDescription());
+        System.out.printf(MESSAGE_PRIORITY_FORMAT, event.getTaskPriority().toString()
                 .toLowerCase());
     }
 }
