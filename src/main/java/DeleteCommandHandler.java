@@ -9,10 +9,10 @@ public class DeleteCommandHandler implements ICommandHandler {
 
     private static final Pattern patternDelteCommand;
     
-    private static final String taskIdDelimiter = "taskId";
-    private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
+    private static final String STRING_TASK_ID = "taskId";
+    private static final String MESSAGE_USE_DISPLAY_FUNCTION = "Please use \"display\" function to get the ID!";
     
-    private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
+    private static final String deleteCommandFormat = "^delete (?<taskId>[0-9]+)$";
     
     //@author A0134704M
     static {
@@ -40,7 +40,7 @@ public class DeleteCommandHandler implements ICommandHandler {
     private boolean setTaskID(String command) {
         Matcher patternMatcher = patternDelteCommand.matcher(command);
         if (patternMatcher.matches()) {
-            taskId = Integer.parseInt(patternMatcher.group(taskIdDelimiter));
+            taskId = Integer.parseInt(patternMatcher.group(STRING_TASK_ID));
             return true;
         } else {
             return false;
@@ -53,7 +53,7 @@ public class DeleteCommandHandler implements ICommandHandler {
         try {
             actualId = taskData.getActualId(taskId);
         } catch (Exception NoSuchElementException) {
-            System.out.println(messageUseDisplayFunction);
+            System.out.println(MESSAGE_USE_DISPLAY_FUNCTION);
             return null;
         }
         boolean isExist = taskData.getEventMap().containsKey(actualId);

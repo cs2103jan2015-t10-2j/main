@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class TaskHackerPro {
 
-    private static final String messageWelcome = "Welcome to TaskHackerPro!\nEnter \"help\" for system usage";
     private IInputSource inputSource;
     private Stack<Entry<ICommand, String>> undoStack;
     private Stack<Entry<ICommand, String>> redoStack;
@@ -20,8 +19,10 @@ public class TaskHackerPro {
     private boolean isContinue = true;
 
     private static final Logger logger = Logger.getGlobal();
+    
     private static final String COMMAND_ADDED_TO_HISTORY = "%s: command added to history";
 
+    private static final String WELCOME_MESSAGE = "Welcome to TaskHackerPro!\nEnter \"help\" for system usage\n";
     private static final String MESSAGE_COMMAND_PROMPT = "\nEnter command: ";
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
@@ -49,8 +50,8 @@ public class TaskHackerPro {
 
     //@author A0134704M
     private void showWelcomeMessage() {
-        System.out.println(messageWelcome);
-
+        System.out.println(WELCOME_MESSAGE);
+        printLogo();
         List<Event> overdueTasks = taskData.getOverdueTask();
         List<Integer> selectedIds = overdueTasks.stream().map(event -> event.getTaskID())
                 .collect(Collectors.toList());
@@ -64,6 +65,15 @@ public class TaskHackerPro {
             System.out.printf(MESSAGE_OVERDUE_TASK_DISPLAY, displayId, dueTime,
                     overdueTask.getTaskName());
         }
+    }
+
+    private void printLogo() {
+        System.out.println("████████╗ █████╗ ███████╗██╗  ██╗██╗  ██╗ █████╗  ██████╗██╗  ██╗███████╗██████╗ ██████╗ ██████╗ ██████╗ ");
+        System.out.println("╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝██║  ██║██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔═══██╗");
+        System.out.println("   ██║   ███████║███████╗█████╔╝ ███████║███████║██║     █████╔╝ █████╗  ██████╔╝██████╔╝██████╔╝██║   ██║");
+        System.out.println("   ██║   ██╔══██║╚════██║██╔═██╗ ██╔══██║██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██║   ██║");
+        System.out.println("   ██║   ██║  ██║███████║██║  ██╗██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║██║     ██║  ██║╚██████╔╝");
+        System.out.println("   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ");
     }
 
     //@author A0134704M
@@ -178,7 +188,7 @@ public class TaskHackerPro {
 
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
-        new TaskHackerProRunner(inputSource, taskData, Level.ALL).start();
+        new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
     //@author UNKNOWN
