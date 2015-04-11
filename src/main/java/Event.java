@@ -26,6 +26,17 @@ public class Event implements Serializable {
     public Event() {
         taskDate = Calendar.getInstance();
     }
+    
+    //@author A0134704M
+    public TaskType getTaskType() {
+        if (taskDate != null) {
+            return TaskType.SCHEDULED;
+        } else if (taskDueDate != null) {
+            return TaskType.DUE;
+        } else {
+            return TaskType.FLOATING;
+        }
+    }
 
     //@author A0134704M
     public int getTaskID() {
