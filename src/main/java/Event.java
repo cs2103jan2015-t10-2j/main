@@ -1,6 +1,5 @@
-import java.io.Serializable;
 import java.util.Calendar;
-import java.text.DateFormat;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 public class Event implements Serializable {
@@ -11,6 +10,7 @@ public class Event implements Serializable {
     private int taskID;
     private String taskName;
     private Calendar taskDate;
+    private Calendar taskDueDate;
     private int taskDuration;
     private String taskLocation;
     private String taskDescription;
@@ -55,6 +55,16 @@ public class Event implements Serializable {
     //@author A0134704M
     public void setTaskDate(Calendar taskDate) {
         this.taskDate = taskDate;
+    }
+
+    //@author A0134704M
+    public Calendar getTaskDueDate() {
+        return taskDueDate;
+    }
+
+    //@author A0134704M
+    public void setTaskDueDate(Calendar taskDueDate) {
+        this.taskDueDate = taskDueDate;
     }
 
     //@author A0109239A

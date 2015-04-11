@@ -38,7 +38,7 @@ public class CommandParser {
             + "|(on) (?<weekday>mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?))"
             + "|((?<today>today|yesterday|tomorrow)"
             + "|(?<date>(?<day>([1-3])?[0-9])((((-|/)(?<month>[\\d]{1,2}))|((-|/| )?(?<monthString>(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)))))((-|/| )?(?<year>(19|20)?[\\d]{2}))?)))($|[\\W]+))";
-    private static final String duePatten = " ?due (?<dueDate>.+)";
+    private static final String duePattern = " ?due (?<dueDate>.+)";
     private static final String locationPattern = " ?@ (?<location>.+)";
     private static final String namePattern = "add (?<name>.+)";
 
@@ -48,6 +48,7 @@ public class CommandParser {
 
     private static final String KEY_PRIORITY = "priority";
     private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_DUEDATE = "dueDate";
     private static final String KEY_DURATION = "duration";
     private static final String KEY_UNIT_DURATION = "unitDuration";
     private static final String KEY_UNIT = "unit";
@@ -70,6 +71,7 @@ public class CommandParser {
     private static final Pattern patternPriorityCommand = Pattern.compile(priorityPattern);
     private static final Pattern patternDescCommand = Pattern.compile(descPattern);
     private static final Pattern patternDurationCommand = Pattern.compile(durationPattern);
+    private static final Pattern patternDueCommand = Pattern.compile(duePattern);
     private static final Pattern patternTimeCommand = Pattern.compile(timePattern);
     private static final Pattern patternDateCommand = Pattern.compile(datePattern);
     private static final Pattern patternLocationCommand = Pattern.compile(locationPattern);
@@ -80,6 +82,7 @@ public class CommandParser {
         patternCommands.put(priorityPattern, patternPriorityCommand);
         patternCommands.put(descPattern, patternDescCommand);
         patternCommands.put(durationPattern, patternDurationCommand);
+        patternCommands.put(duePattern, patternDueCommand);
         patternCommands.put(timePattern, patternTimeCommand);
         patternCommands.put(datePattern, patternDateCommand);
         patternCommands.put(locationPattern, patternLocationCommand);
@@ -146,7 +149,10 @@ public class CommandParser {
             event.setTaskDescription(taskDetailMap.get(KEY_DESCRIPTION));
             taskDetailMap.remove(KEY_DESCRIPTION);
         }
-
+        if (taskDetailMap.containsKey(KEY_DUEDATE)) {
+            //event.setTaskDueDate(taskDetailMap.get(KEY_DUEDATE));
+            //taskDetailMap.remove(KEY_DUEDATE);
+        }
         String duration = taskDetailMap.remove(KEY_DURATION);
         String unit = taskDetailMap.remove(KEY_UNIT_DURATION);
 
