@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class TaskData implements Serializable {
 
@@ -84,6 +87,67 @@ public class TaskData implements Serializable {
         */
         sortDatesIncreasingOrder(rangeTaskIds);
         return rangeTaskIds;
+    }
+
+    //@author A0134704M
+    public List<Event> getOverdueTask() {
+        List<Event> selectedList = eventMap.values().stream()
+                .filter(getOverduePredicate()).filter(getIsDonePredicate(false))
+                .sorted((e1, e2) -> {
+                    boolean before = e1.getTaskDueDate().before(e2.getTaskDueDate());
+                    boolean after = e1.getTaskDueDate().after(e2.getTaskDueDate());
+
+                    if (before) {
+                        return -1;
+                    } else if (after) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }).collect(Collectors.toList());
+
+        return selectedList;
+    }
+
+    //@author A0134704M
+    private Predicate<Event> getOverduePredicate() {
+        Calendar currentTime = Calendar.getInstance();
+
+        Predicate<Event> predicate = (event -> {
+            Calendar eventDate = event.getTaskDueDate();
+            return eventDate != null && eventDate.before(currentTime);
+        });
+
+        return predicate;
+    }
+
+    //@author A0134704M
+    private Predicate<Event> getIsDonePredicate(boolean isDone) {
+        return (event -> (event.isDone() == isDone));
+    }
+
+    //@author A0134704M
+    public List<Integer> getTaskWithinDateRange(Calendar startTime, Calendar endTime,
+            boolean isDueDate, TaskType type) {
+        ArrayList<Integer> taskIds = new ArrayList<Integer>();
+
+        for (Entry<Integer, Event> entry : eventMap.entrySet()) {
+            Calendar eventDate;
+            if (isDueDate) {
+                eventDate = entry.getValue().getTaskDueDate();
+            } else {
+                eventDate = entry.getValue().getTaskDate();
+            }
+
+            boolean isOnOrAfterStartTime = !startTime.before(eventDate);
+            boolean isOnOrBeforeEndTime = !startTime.after(eventDate);
+            boolean isSameTaskType = (entry.getValue().getTaskType() == type);
+            if (isOnOrAfterStartTime && isOnOrBeforeEndTime && isSameTaskType) {
+                taskIds.add(entry.getKey());
+            }
+        }
+
+        return taskIds;
     }
 
     //@author UNKNOWN
