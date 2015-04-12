@@ -25,7 +25,7 @@ public class SaveCommandHandler implements ICommandHandler {
     //@author A0134704M
     @Override
     public ICommand getCommand() {
-        ICommand saveCommand = new SaveCommand();
+        ICommand saveCommand = new NullCommand();
         try {
             DataManager.getInstance().setPathToSaveLoad(fileSavePath);
             DataManager.getInstance().saveTaskDataToFile(taskData);
