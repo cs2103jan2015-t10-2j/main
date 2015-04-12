@@ -44,12 +44,12 @@ public class TaskHackerProRunner {
     //@author A0134704M
     public void setupCommandMap(TaskData taskData) {
         commandHandlerMap.put("add", new AddCommandHandler(taskData));
-        commandHandlerMap.put("delete", new DeleteCommandHandler(taskData));
-        commandHandlerMap.put("done", new DoneCommandHandler(taskData));
+        commandHandlerMap.put("delete", new DeleteCommandHandler(taskData, inputSource));
+        commandHandlerMap.put("done", new DoneCommandHandler(taskData, inputSource));
         commandHandlerMap.put("clear", new ClearCommandHandler());
         commandHandlerMap.put("search", new SearchCommandHandler(taskData));
         commandHandlerMap.put("display", new CalendarViewCommandHandler(taskData, inputSource));
-        commandHandlerMap.put("alter", new AlterCommandHandler(taskData));
+        commandHandlerMap.put("alter", new AlterCommandHandler(taskData, inputSource));
         commandHandlerMap.put("undo", new UndoCommandHandler(undoStack, redoStack));
         commandHandlerMap.put("redo", new RedoCommandHandler(undoStack, redoStack)); 
         commandHandlerMap.put("history", new HistoryCommandHandler(undoStack, redoStack)); 

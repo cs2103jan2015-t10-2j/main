@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,7 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TaskData implements Serializable {
 
@@ -30,87 +33,87 @@ public class TaskData implements Serializable {
 
     private static final SimpleDateFormat formatDayMthYr;
 
-    //@author A0134704M
+    // @author A0134704M
     static {
         formatHHmm = new SimpleDateFormat(simpleDateFormatHHmm);
         formatDayMthYr = new SimpleDateFormat(simpleDateFormatDayMthYr);
     }
 
-    //@author A0134704M
+    // @author A0134704M
     public TaskData() {
         eventMap = new LinkedHashMap<Integer, Event>();
         this.displayIDToActualIDMap = new LinkedHashMap<Integer, Integer>();
         this.actualIDToDisplayIDMap = new LinkedHashMap<Integer, Integer>();
     }
 
-   
-    
+
+    //@author A0134704M
+    public boolean isDisplayIdMapEmpty() {
+        return displayIDToActualIDMap.size() == 0;
+    }    
     
 
+    //@author A0105886W
     public ArrayList<Integer> getSortedPriIds() throws NoSuchElementException{
         ArrayList<Integer> tasksId = new ArrayList<Integer>();
-        
+
         int i;
         int limit;
         int currPriLevel = 0;
         int nextPriLevel = 0;
         String currPri;
-        String nextPri;  
+        String nextPri;
         Event event;
-        
+
         if (this.eventMap.isEmpty()) {
             throw new NoSuchElementException(messageEmptyFile);
         }
-        
-        //get all the ids from map
-        for(Integer taskId : this.eventMap.keySet()){
+
+        // get all the ids from map
+        for (Integer taskId : this.eventMap.keySet()) {
             tasksId.add(taskId);
         }
-        
+
         if (tasksId.size() == 0) {
             throw new NoSuchElementException(messageNoResults);
         }
-        
+
         int size = tasksId.size();
-        
+
         for (limit = size - 2; limit >= 0; limit--) {
             for (i = 0; i <= limit; i++) {
                 event = getEventMap().get(tasksId.get(i));
                 currPri = event.getTaskPriority().toString().toLowerCase();
-                if(currPri.equals("low")){
+                if (currPri.equals("low")) {
                     currPriLevel = 1;
-                }
-                else if(currPri.equalsIgnoreCase("medium")){
+                } else if (currPri.equalsIgnoreCase("medium")) {
                     currPriLevel = 2;
-                }
-                else if(currPri.equals("high")){
+                } else if (currPri.equals("high")) {
                     currPriLevel = 3;
                 }
-                 
+
                 event = getEventMap().get(tasksId.get(i + 1));
                 nextPri = event.getTaskPriority().toString().toLowerCase();
-                
-                if(nextPri.equals("low")){
+
+                if (nextPri.equals("low")) {
                     nextPriLevel = 1;
-                }
-                else if(nextPri.equalsIgnoreCase("medium")){
+                } else if (nextPri.equalsIgnoreCase("medium")) {
                     nextPriLevel = 2;
-                }
-                else if(nextPri.equals("high")){
+                } else if (nextPri.equals("high")) {
                     nextPriLevel = 3;
                 }
-                
-                if (currPriLevel > nextPriLevel) {
+
+                if (currPriLevel < nextPriLevel) {
                     tasksId.add(i, tasksId.remove(i + 1));
                 }
             }
         }
-         
-        
+
         return tasksId;
     }
 
-    public boolean hasDonetasks(){
+    // @author A0105886W
+    public boolean hasDonetasks() {
         Event event;
 
         for (Integer taskId : this.eventMap.keySet()) {
@@ -120,11 +123,10 @@ public class TaskData implements Serializable {
             }
         }
 
-        return false;   
+        return false;
     }
-    
-    
-    
+
+    // @author a0105886W
     public boolean hasFloatingTasks() {
 
         Event event;
@@ -141,7 +143,8 @@ public class TaskData implements Serializable {
         return false;
 
     }
-    
+
+    // @author a0105886W
     public ArrayList<Integer> getDoneIds(ArrayList<Integer> doneIds)
             throws NoSuchElementException {
         Event event;
@@ -157,18 +160,14 @@ public class TaskData implements Serializable {
             }
         }
 
-        System.out.println("floating size: " + doneIds.size());
         if (doneIds.size() == 0) {
-            System.out.println("Its print true");
             throw new NoSuchElementException(messageNoResults);
         }
 
         return doneIds;
     }
-    
-    
 
-    // @author UNKNOWN
+    // @author A0105886W
     public ArrayList<Integer> getFloatingIds(ArrayList<Integer> floatingIds)
             throws NoSuchElementException {
         Event event;
@@ -194,6 +193,7 @@ public class TaskData implements Serializable {
 
     }
 
+    // @author A0105886
     public ArrayList<Integer> getDateTasks(Date date) throws NoSuchElementException {
         Calendar cal = Calendar.getInstance();
         ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
@@ -235,45 +235,69 @@ public class TaskData implements Serializable {
         sortDatesIncreasingOrder(rangeTaskIds);
         return rangeTaskIds;
     }
-    
-    //@author A0134704M
+
+    // @author A0134704M
     public List<Event> getTaskInDateRange(Calendar startTime, Calendar endTime,
             boolean isDueDate) {
-        List<Event> selectedList = eventMap.values().stream()
-                .filter(getTaskWithinDatePredicate(startTime, endTime, isDueDate))
-                .sorted(getDateComparator()).collect(Collectors.toList());
-        
-        return selectedList;
-    }
-
-    //@author A0134704M
-    public List<Event> getOverdueTask() {
-        List<Event> selectedList = eventMap.values().stream()
-                .filter(getOverduePredicate()).filter(getIsDonePredicate(false))
-                .sorted(getDateComparator()).collect(Collectors.toList());
+        Stream<Event> eventStream = eventMap.values().stream();
+        eventStream = eventStream.filter(getTaskWithinDatePredicate(startTime, endTime, isDueDate));
+        eventStream = eventStream.sorted(getDateComparator(false));
+        List<Event> selectedList = eventStream.collect(Collectors.toList());
 
         return selectedList;
     }
 
     // @author A0134704M
-    public Predicate<Event> getTaskWithinDatePredicate(Calendar startTime,
-            Calendar endTime, boolean isDueDate) {
-        Predicate<Event> predicate = (event -> {
-            Calendar eventDate = event.getTaskDueDate();
-            if (isDueDate) {
-                eventDate = event.getTaskDueDate();
-            } else {
-                eventDate = event.getTaskDate();
-            }
+    public List<Event> getOverdueTask() {
+        List<Event> selectedList = eventMap.values().stream()
+                .filter(getOverduePredicate()).filter(getIsDonePredicate(false))
+                .sorted(getDateComparator(true)).collect(Collectors.toList());
 
-            return eventDate != null && !eventDate.before(startTime)
-                    && !eventDate.after(endTime);
+        return selectedList;
+    }
+
+    //@author A0134704M
+    public Predicate<Event> getTaskWithinDatePredicate(Calendar startSearchTime,
+            Calendar endSearchTime, boolean isDueDate) {
+        Predicate<Event> predicate = (event -> {
+            if (isDueDate) {
+                Calendar dueDate = event.getTaskDueDate();
+                return dueDate != null && !dueDate.before(startSearchTime)
+                        && !dueDate.after(endSearchTime);
+            } else {
+                Calendar startEventTime = event.getTaskDate();
+
+                if (startEventTime == null) {
+                    return false;
+                } else {
+                    int duration = event.getTaskDuration();
+                    assert (duration >= 0);
+
+                    Calendar endEventTime = Calendar.getInstance();
+                    endEventTime.setTimeInMillis(startEventTime.getTimeInMillis());
+                    endEventTime.add(Calendar.MINUTE, duration);
+
+                    boolean isEventStartAfterEndSearchTime = startEventTime.after(endSearchTime);
+                    boolean isEventEndBeforeStartSearchTime = endEventTime.before(startSearchTime);
+
+                    Logger.getGlobal().info(
+                            String.format("search: [%s,%s], event: [%s,%s], isEventStartAfterEndSearchTime=%b, isEventEndBeforeStartSearchTime=%b",
+                                    DateFormat.getDateTimeInstance().format(startSearchTime.getTime()),
+                                    DateFormat.getDateTimeInstance().format(endSearchTime.getTime()),
+                                    DateFormat.getDateTimeInstance().format(startEventTime.getTime()),
+                                    DateFormat.getDateTimeInstance().format(endEventTime.getTime()),
+                                            isEventEndBeforeStartSearchTime,
+                                            isEventEndBeforeStartSearchTime));
+
+                    return !isEventStartAfterEndSearchTime && !isEventEndBeforeStartSearchTime;   
+                }
+            }
         });
 
         return predicate;
     }
 
-    //@author A0134704M
+    // @author A0134704M
     private Predicate<Event> getOverduePredicate() {
         Calendar currentTime = Calendar.getInstance();
 
@@ -285,28 +309,45 @@ public class TaskData implements Serializable {
         return predicate;
     }
 
-    //@author A0134704M
+    // @author A0134704M
     private Predicate<Event> getIsDonePredicate(boolean isDone) {
         return (event -> (event.isDone() == isDone));
     }
-    
-    //@author A0134704M
-    private Comparator<? super Event> getDateComparator() {
-        return (e1, e2) -> {
-            boolean before = e1.getTaskDueDate().before(e2.getTaskDueDate());
-            boolean after = e1.getTaskDueDate().after(e2.getTaskDueDate());
 
-            if (before) {
+    // @author A0134704M
+    private Comparator<? super Event> getDateComparator(boolean isDueDate) {
+        return (e1, e2) -> {
+            Calendar e1Time;
+            Calendar e2Time;
+            
+            if (isDueDate) {
+                e1Time = e1.getTaskDueDate();
+                e2Time = e2.getTaskDueDate();
+            } else {
+                e1Time = e1.getTaskDate();
+                e2Time = e2.getTaskDate();
+            }
+            
+            if (e1Time == null) {
                 return -1;
-            } else if (after) {
+            } else if (e2Time == null) {
                 return 1;
             } else {
-                return 0;
+                boolean before = e1Time.before(e2Time);
+                boolean after = e1Time.after(e2Time);
+
+                if (before) {
+                    return -1;
+                } else if (after) {
+                    return 1;
+                } else {
+                    return 0;
+                }                
             }
         };
     }
 
-    //@author A0134704M
+    // @author A0134704M
     public List<Integer> getTaskWithinDateRange(Calendar startTime, Calendar endTime,
             boolean isDueDate, TaskType type) {
         ArrayList<Integer> taskIds = new ArrayList<Integer>();
@@ -330,7 +371,7 @@ public class TaskData implements Serializable {
         return taskIds;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public ArrayList<Integer> searchEmptySlots(Date parsedDateStart, Date parsedDateEnd)
             throws NoSuchElementException {
         ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
@@ -361,7 +402,7 @@ public class TaskData implements Serializable {
         return sortedTaskIds;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public void sortDatesIncreasingOrder(ArrayList<Integer> rangeTaskIds) {
         int limit;
         int size = rangeTaskIds.size();
@@ -384,7 +425,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public ArrayList<Integer> processCommonDateTimes(ArrayList<Integer> rangeTaskIds) {
         ArrayList<Integer> tempArrayIds = new ArrayList<Integer>();
         ArrayList<Integer> sortedArrayIds = new ArrayList<Integer>();
@@ -425,7 +466,7 @@ public class TaskData implements Serializable {
         return sortedArrayIds;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public void sortTimeIncreasingOrder(ArrayList<Integer> rangeTaskIds) {
         int i;
         int limit;
@@ -534,9 +575,6 @@ public class TaskData implements Serializable {
         } else if (event.getTaskDescription() != null
                 && event.getTaskDescription().toLowerCase().contains(keyWord)) {
             return true;
-        } else if (event.getTaskDate() != null
-                && event.getTaskDate().getTime().toString().contains(keyWord)) {
-            return true;
         } else if (event.getTaskPriority() != null
                 && event.getTaskPriority().toString().toLowerCase().contains(keyWord)) {
             return true;
@@ -545,22 +583,17 @@ public class TaskData implements Serializable {
         return false;
     }
 
-    
-    
-    
-    
-
-    //@author A0134704M
+    // @author A0134704M
     public Map<Integer, Event> getEventMap() {
         return eventMap;
     }
-    
-    //@author A0109239
-    public void setEventMap (Map<Integer,Event> userEventMap) {
+
+    // @author A0109239
+    public void setEventMap(Map<Integer, Event> userEventMap) {
         this.eventMap = userEventMap;
     }
 
-    //@author A0134704M
+    // @author A0134704M
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof TaskData)) {
