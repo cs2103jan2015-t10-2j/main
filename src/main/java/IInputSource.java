@@ -5,6 +5,7 @@ public interface IInputSource {
     //@author A0134704M
     public String getNextLine();
     
+    //@author UNKNOWN
     public void addCommand(String s);
 
     //@author A0134704M

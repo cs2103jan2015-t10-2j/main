@@ -31,7 +31,11 @@ public class StringInputSource implements IInputSource {
     @Override
     public boolean hasNextLine() {
         try {
-            outputLinesAvailableMutex.release();
+            // Notify observers only when all commands are executed
+            if (lines.size() <= 0) {
+                outputLinesAvailableMutex.release();
+            }
+
             lines.putFirst(lines.takeFirst());
             return true;
         } catch (InterruptedException e) {

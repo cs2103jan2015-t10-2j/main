@@ -10,8 +10,7 @@ public class DoneCommandHandlerTest extends StringBasedTest {
 
     private static final String commandAdd = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String commandDisplay = "display month";
-    private static final String commandDisplayPrevious = "3";
-    private static final String commandDisplayExit = "5";
+    private static final String commandDisplayPrevious = "2";
     private static final String commandDone = "done 1";
 
     //@author A0134704M
@@ -37,7 +36,6 @@ public class DoneCommandHandlerTest extends StringBasedTest {
         // Display and mark done
         super.executeCommand(commandDisplay);
         super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
         super.executeCommand(commandDone);
         assertTrue(event.isDone());
     }
