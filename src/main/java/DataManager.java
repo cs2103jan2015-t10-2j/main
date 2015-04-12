@@ -47,7 +47,7 @@ public class DataManager {
         oos.writeObject(taskData);
         oos.close();
     }
-    
+
     //@author A0109239A
     public void saveAsCsvToDisk(TaskData taskData) throws IOException {
         CSVWriter writer = setUpWriter();
@@ -57,13 +57,19 @@ public class DataManager {
         }
         writer.close();
     }
-    
+
     //@author A0109239A
-    public List<String[]> loadCSVFromDisk() throws IOException {
-        CSVReader reader = setUpReader();
-        List<String[]> myEntries = reader.readAll();
-        reader.close();
-        return myEntries;
+    public List<String[]> loadCSVFromDisk() {
+        try {
+            CSVReader reader = setUpReader();
+            List<String[]> myEntries = reader.readAll();
+            reader.close();
+            return myEntries;
+        }
+        catch (IOException e) {
+            System.out.printf(MESSAGE_DATA_FILE_NOT_FOUND);
+        }
+        return null;
     }
 
     //@author A0109239A
@@ -71,19 +77,19 @@ public class DataManager {
         CSVWriter writer = new CSVWriter(new FileWriter(getPath()));
         return writer;
     }
-    
+
     //@author A0109239A
     private CSVReader setUpReader() throws IOException {
         CSVReader reader = new CSVReader(new FileReader(getPath()));
         return reader;
     }
-    
+
     //@author A0109239A
     private String getPath() {
         if (pathToSaveHumanEditable == null) {
             return DEFAULT_PATH_FOR_HUMAN_EDITABLE;
         } else {
-            return pathToSaveHumanEditable ;
+            return pathToSaveHumanEditable;
         }
     }
 
@@ -133,5 +139,10 @@ public class DataManager {
             instance = new DataManager();
         }
         return instance;
+    }
+
+    //@author A0134704M
+    public void setPathToSaveHumanEditable(String pathToSaveHumanEditable) {
+            this.pathToSaveHumanEditable = pathToSaveHumanEditable;
     }
 }
