@@ -33,8 +33,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as time 7:00 12/12/2016");
         
         String actualTaskName = event.getTaskName();
@@ -69,8 +69,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as len 4 hrs");
         
         String actualTaskName = event.getTaskName();
@@ -104,8 +104,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as @ RC4");
         
         String actualTaskName = event.getTaskName();
@@ -139,8 +139,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as desc \"foo\"");
         
         String actualTaskName = event.getTaskName();
@@ -174,8 +174,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as setPrior LOW");
         
         String actualTaskName = event.getTaskName();
@@ -209,8 +209,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as snooze 40 days");
         
         String actualTaskName = event.getTaskName();
@@ -244,8 +244,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         testTimedTaskBefore(event);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as time 6:00 12/12/2016 len 4 hrs @ RC4 desc \"hello\" setPrior LOW");
         
         String actualTaskName = event.getTaskName();
@@ -283,9 +283,9 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("UTown", actualTaskLocation);
 
         // Display the event list successfully, and alter the event.
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayFloating);
-        super.executeCommand(commandExitDisplayMode);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandDisplayFloating);
+        //super.executeCommand(commandExitDisplayMode);
         super.executeCommand("alter 1 as time 20:00 25/12/2015 len 2 hrs @ RC4 desc \"I will cook\" setPrior HIGH");
         
         actualTaskName = event.getTaskName();

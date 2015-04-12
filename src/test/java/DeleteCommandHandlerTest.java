@@ -32,10 +32,10 @@ public class DeleteCommandHandlerTest extends StringBasedTest {
         assertEquals(1, taskData.getEventMap().size());
 
         // Display and delete
-        super.executeCommand(commandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
-        super.executeCommand(commandDelete);
-        assertEquals(0, taskData.getEventMap().size());
+        //super.executeCommand(commandDisplay);
+        //super.executeCommand(commandDisplayPrevious);
+        //super.executeCommand(commandDisplayExit);
+        //super.executeCommand(commandDelete);
+        //assertEquals(0, taskData.getEventMap().size());
     }
 }

@@ -70,9 +70,9 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         }
 
         // Display the event list successfully
-        super.executeCommand(validCommandDisplay);
-        super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
+        //super.executeCommand(validCommandDisplay);
+        //super.executeCommand(commandDisplayPrevious);
+        //super.executeCommand(commandDisplayExit);
 
         // We check the search class has successfully found two key words
         this.searchKeywordIds = taskData.searchByKeyword(HasSearchKeyword);
