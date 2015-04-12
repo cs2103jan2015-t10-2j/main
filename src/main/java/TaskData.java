@@ -39,24 +39,172 @@ public class TaskData implements Serializable {
         this.actualIDToDisplayIDMap = new LinkedHashMap<Integer, Integer>();
     }
 
-    //@author UNKNOWN
-    public ArrayList<Integer> getDateTasks(Date date, ArrayList<Integer> floatingIds)
+   
+    
+    
+
+    public ArrayList<Integer> getSortedPriIds() throws NoSuchElementException{
+        ArrayList<Integer> tasksId = new ArrayList<Integer>();
+        
+        int i;
+        int limit;
+        int currPriLevel = 0;
+        int nextPriLevel = 0;
+        String currPri;
+        String nextPri;  
+        Event event;
+        
+        if (this.eventMap.isEmpty()) {
+            throw new NoSuchElementException(messageEmptyFile);
+        }
+        
+        //get all the ids from map
+        for(Integer taskId : this.eventMap.keySet()){
+            tasksId.add(taskId);
+        }
+        
+        if (tasksId.size() == 0) {
+            throw new NoSuchElementException(messageNoResults);
+        }
+        
+        int size = tasksId.size();
+        
+        for (limit = size - 2; limit >= 0; limit--) {
+            for (i = 0; i <= limit; i++) {
+                event = getEventMap().get(tasksId.get(i));
+                currPri = event.getTaskPriority().toString().toLowerCase();
+                if(currPri.equals("low")){
+                    currPriLevel = 1;
+                }
+                else if(currPri.equalsIgnoreCase("medium")){
+                    currPriLevel = 2;
+                }
+                else if(currPri.equals("high")){
+                    currPriLevel = 3;
+                }
+                 
+                event = getEventMap().get(tasksId.get(i + 1));
+                nextPri = event.getTaskPriority().toString().toLowerCase();
+                
+                if(nextPri.equals("low")){
+                    nextPriLevel = 1;
+                }
+                else if(nextPri.equalsIgnoreCase("medium")){
+                    nextPriLevel = 2;
+                }
+                else if(nextPri.equals("high")){
+                    nextPriLevel = 3;
+                }
+                
+                if (currPriLevel > nextPriLevel) {
+                    tasksId.add(i, tasksId.remove(i + 1));
+                }
+            }
+        }
+         
+        
+        return tasksId;
+    }
+
+    public boolean hasDonetasks(){
+        Event event;
+
+        for (Integer taskId : this.eventMap.keySet()) {
+            event = this.eventMap.get(taskId);
+            if (event.isDone()) {
+                return true;
+            }
+        }
+
+        return false;   
+    }
+    
+    
+    
+    public boolean hasFloatingTasks() {
+
+        Event event;
+        Calendar cal = Calendar.getInstance();
+
+        for (Integer taskId : this.eventMap.keySet()) {
+            event = this.eventMap.get(taskId);
+            cal = event.getTaskDate();
+            if (cal == null) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+    
+    public ArrayList<Integer> getDoneIds(ArrayList<Integer> doneIds)
             throws NoSuchElementException {
+        Event event;
+
+        if (this.eventMap.isEmpty()) {
+            throw new NoSuchElementException(messageEmptyFile);
+        }
+
+        for (Integer taskId : this.eventMap.keySet()) {
+            event = this.eventMap.get(taskId);
+            if (event.isDone()) {
+                doneIds.add(taskId);
+            }
+        }
+
+        System.out.println("floating size: " + doneIds.size());
+        if (doneIds.size() == 0) {
+            System.out.println("Its print true");
+            throw new NoSuchElementException(messageNoResults);
+        }
+
+        return doneIds;
+    }
+    
+    
+
+    // @author UNKNOWN
+    public ArrayList<Integer> getFloatingIds(ArrayList<Integer> floatingIds)
+            throws NoSuchElementException {
+        Event event;
+        Calendar cal = Calendar.getInstance();
+
+        if (this.eventMap.isEmpty()) {
+            throw new NoSuchElementException(messageEmptyFile);
+        }
+
+        for (Integer taskId : this.eventMap.keySet()) {
+            event = this.eventMap.get(taskId);
+            cal = event.getTaskDate();
+            if (cal == null) {
+                floatingIds.add(taskId);
+            }
+        }
+
+        if (floatingIds.size() == 0) {
+            throw new NoSuchElementException(messageNoResults);
+        }
+
+        return floatingIds;
+
+    }
+
+    public ArrayList<Integer> getDateTasks(Date date) throws NoSuchElementException {
         Calendar cal = Calendar.getInstance();
         ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
         Event event;
         Date TestDate;
 
-        if (eventMap.isEmpty()) {
+        if (this.eventMap.isEmpty()) {
             throw new NoSuchElementException(messageEmptyFile);
         }
 
-        for (Integer taskId : eventMap.keySet()) {
-            event = eventMap.get(taskId);
+        for (Integer taskId : this.eventMap.keySet()) {
+            event = this.eventMap.get(taskId);
             cal = event.getTaskDate();
-            if (cal == null) {
-                floatingIds.add(taskId);
-            } else {
+
+            if (cal != null) {
                 try {
                     TestDate = formatDayMthYr.parse(formatDayMthYr.format(cal.getTime()));
                     if (TestDate.equals(date)) {
@@ -67,42 +215,38 @@ public class TaskData implements Serializable {
                 }
             }
         }
-        
+
         if (rangeTaskIds.size() == 0) {
             throw new NoSuchElementException(messageNoResults);
         }
-        
-        //For dubugging
+
+        // For dubugging
         /*
-
-        for (int i = 0; i < rangeTaskIds.size(); i++) {
-            event = getEventMap().get(rangeTaskIds.get(i));
-            System.out.println("task date and times: "
-                    + formatDayMthYr.format(event.getTaskDate().getTime()));
-        }
-
-        */
+         * 
+         * for (int i = 0; i < rangeTaskIds.size(); i++) { event =
+         * getEventMap().get(rangeTaskIds.get(i));
+         * System.out.println("task date and times: " +
+         * formatDayMthYr.format(event.getTaskDate().getTime())); }
+         */
         sortDatesIncreasingOrder(rangeTaskIds);
         return rangeTaskIds;
     }
 
-    //@author UNKNOWN
-    public ArrayList<Integer> searchEmptySlots(Date parsedDateStart, Date parsedDateEnd,
-            ArrayList<Integer> floatingIds) throws NoSuchElementException {
+    // @author UNKNOWN
+    public ArrayList<Integer> searchEmptySlots(Date parsedDateStart, Date parsedDateEnd)
+            throws NoSuchElementException {
         ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
         ArrayList<Integer> sortedTaskIds = new ArrayList<Integer>();
         Calendar cal = Calendar.getInstance();
 
-        if (eventMap.isEmpty()) {
+        if (this.eventMap.isEmpty()) {
             throw new NoSuchElementException(messageEmptyFile);
         }
 
-        for (Integer taskId : eventMap.keySet()) {
-            Event event = eventMap.get(taskId);
+        for (Integer taskId : this.eventMap.keySet()) {
+            Event event = this.eventMap.get(taskId);
             cal = event.getTaskDate();
-            if (cal == null) {
-                floatingIds.add(taskId);
-            } else {
+            if (cal != null) {
                 Date TestDate = cal.getTime();
                 if (TestDate.after(parsedDateStart) && TestDate.before(parsedDateEnd)) {
                     rangeTaskIds.add(taskId);
@@ -119,7 +263,7 @@ public class TaskData implements Serializable {
         return sortedTaskIds;
     }
 
-    //@author UNKNOWN
+    // @author UNKNOWN
     public void sortDatesIncreasingOrder(ArrayList<Integer> rangeTaskIds) {
         int limit;
         int size = rangeTaskIds.size();
@@ -128,11 +272,11 @@ public class TaskData implements Serializable {
 
         for (limit = size - 2; limit >= 0; limit--) {
             for (int i = 0; i <= limit; i++) {
-                Event event1 = eventMap.get(rangeTaskIds.get(i));
+                Event event1 = this.eventMap.get(rangeTaskIds.get(i));
                 cal1 = event1.getTaskDate();
                 Date Date1 = cal1.getTime();
 
-                Event event2 = eventMap.get(rangeTaskIds.get(i + 1));
+                Event event2 = this.eventMap.get(rangeTaskIds.get(i + 1));
                 cal2 = event2.getTaskDate();
                 Date Date2 = cal2.getTime();
                 if (Date1.after(Date2)) {
@@ -142,7 +286,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    //@author UNKNOWN
+    // @author UNKNOWN
     public ArrayList<Integer> processCommonDateTimes(ArrayList<Integer> rangeTaskIds) {
         ArrayList<Integer> tempArrayIds = new ArrayList<Integer>();
         ArrayList<Integer> sortedArrayIds = new ArrayList<Integer>();
@@ -183,7 +327,7 @@ public class TaskData implements Serializable {
         return sortedArrayIds;
     }
 
-    //@author UNKNOWN
+    // @author UNKNOWN
     public void sortTimeIncreasingOrder(ArrayList<Integer> rangeTaskIds) {
         int i;
         int limit;
@@ -207,11 +351,11 @@ public class TaskData implements Serializable {
         }
     }
 
-    //@author A0134704M
+    // @author A0134704M
     public ArrayList<Integer> searchByKeyword(String keyword)
             throws NoSuchElementException {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
-        if (eventMap.isEmpty()) {
+        if (this.eventMap.isEmpty()) {
             throw new NoSuchElementException(messageEmptyFile);
         } else {
             matchedTaskIds = findMatchedIds(keyword, matchedTaskIds);
@@ -219,11 +363,11 @@ public class TaskData implements Serializable {
         return matchedTaskIds;
     }
 
-    //@author A0134704M
+    // @author A0134704M
     private ArrayList<Integer> findMatchedIds(String keyword,
             ArrayList<Integer> matchedTaskIds) {
-        for (Integer taskId : eventMap.keySet()) {
-            Event event = eventMap.get(taskId);
+        for (Integer taskId : this.eventMap.keySet()) {
+            Event event = this.eventMap.get(taskId);
 
             if (this.hasKeyWord(event, keyword)) {
                 matchedTaskIds.add(taskId);
@@ -236,7 +380,7 @@ public class TaskData implements Serializable {
         return matchedTaskIds;
     }
 
-    //@author A0134704M
+    // @author A0134704M
     public int getActualId(int displayId) throws NoSuchElementException {
         Integer actualId = this.displayIDToActualIDMap.get(displayId);
 
@@ -247,7 +391,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    //@author A0134704M
+    // @author A0134704M
     public int getDisplayId(int actualId) throws NoSuchElementException {
         Integer displayId = this.actualIDToDisplayIDMap.get(actualId);
 
@@ -258,7 +402,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    //@author A0134704M
+    // @author A0134704M
     public void updateDisplayID(List<Integer> actualIDs) {
         int displayID = 1;
         this.displayIDToActualIDMap.clear();
@@ -271,7 +415,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    //@author A0134704M
+    // @author A0134704M
     public boolean hasKeyWord(Event event, String keyWord) {
 
         if (event == null || keyWord == null) {
@@ -302,6 +446,11 @@ public class TaskData implements Serializable {
 
         return false;
     }
+
+    
+    
+    
+    
 
     //@author A0134704M
     public Map<Integer, Event> getEventMap() {

@@ -18,7 +18,7 @@ public class HistoryCommandHandler implements ICommandHandler {
     public boolean parseCommand(String command) {
         return "history".equalsIgnoreCase(command);
     }
-
+    
     //@author A0134704M
     @Override
     public ICommand getCommand() {
