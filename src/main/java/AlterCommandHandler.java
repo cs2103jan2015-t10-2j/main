@@ -176,7 +176,7 @@ public class AlterCommandHandler implements ICommandHandler {
             printEventDetails(eventToAlter);
             updateNewValues(eventToAlter, eventWithUpdatedData);
             
-            ICommand alterCommand = new AlterCommand(eventToAlter, eventWithUpdatedData);
+            ICommand alterCommand = new AlterCommand(taskData, eventToAlter, eventWithUpdatedData);
             
             System.out.printf(messageAfterMod);
             printEventDetails(eventWithUpdatedData);

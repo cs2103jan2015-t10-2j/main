@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,7 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TaskData implements Serializable {
 
@@ -236,9 +239,10 @@ public class TaskData implements Serializable {
     // @author A0134704M
     public List<Event> getTaskInDateRange(Calendar startTime, Calendar endTime,
             boolean isDueDate) {
-        List<Event> selectedList = eventMap.values().stream()
-                .filter(getTaskWithinDatePredicate(startTime, endTime, isDueDate))
-                .sorted(getDateComparator()).collect(Collectors.toList());
+        Stream<Event> eventStream = eventMap.values().stream();
+        eventStream = eventStream.filter(getTaskWithinDatePredicate(startTime, endTime, isDueDate));
+        eventStream = eventStream.sorted(getDateComparator(false));
+        List<Event> selectedList = eventStream.collect(Collectors.toList());
 
         return selectedList;
     }
@@ -247,24 +251,47 @@ public class TaskData implements Serializable {
     public List<Event> getOverdueTask() {
         List<Event> selectedList = eventMap.values().stream()
                 .filter(getOverduePredicate()).filter(getIsDonePredicate(false))
-                .sorted(getDateComparator()).collect(Collectors.toList());
+                .sorted(getDateComparator(true)).collect(Collectors.toList());
 
         return selectedList;
     }
 
-    // @author A0134704M
-    public Predicate<Event> getTaskWithinDatePredicate(Calendar startTime,
-            Calendar endTime, boolean isDueDate) {
+    //@author A0134704M
+    public Predicate<Event> getTaskWithinDatePredicate(Calendar startSearchTime,
+            Calendar endSearchTime, boolean isDueDate) {
         Predicate<Event> predicate = (event -> {
-            Calendar eventDate = event.getTaskDueDate();
             if (isDueDate) {
-                eventDate = event.getTaskDueDate();
+                Calendar dueDate = event.getTaskDueDate();
+                return dueDate != null && !dueDate.before(startSearchTime)
+                        && !dueDate.after(endSearchTime);
             } else {
-                eventDate = event.getTaskDate();
-            }
+                Calendar startEventTime = event.getTaskDate();
 
-            return eventDate != null && !eventDate.before(startTime)
-                    && !eventDate.after(endTime);
+                if (startEventTime == null) {
+                    return false;
+                } else {
+                    int duration = event.getTaskDuration();
+                    assert (duration >= 0);
+
+                    Calendar endEventTime = Calendar.getInstance();
+                    endEventTime.setTimeInMillis(startEventTime.getTimeInMillis());
+                    endEventTime.add(Calendar.MINUTE, duration);
+
+                    boolean isEventStartAfterEndSearchTime = startEventTime.after(endSearchTime);
+                    boolean isEventEndBeforeStartSearchTime = endEventTime.before(startSearchTime);
+
+                    Logger.getGlobal().info(
+                            String.format("search: [%s,%s], event: [%s,%s], isEventStartAfterEndSearchTime=%b, isEventEndBeforeStartSearchTime=%b",
+                                    DateFormat.getDateTimeInstance().format(startSearchTime.getTime()),
+                                    DateFormat.getDateTimeInstance().format(endSearchTime.getTime()),
+                                    DateFormat.getDateTimeInstance().format(startEventTime.getTime()),
+                                    DateFormat.getDateTimeInstance().format(endEventTime.getTime()),
+                                            isEventEndBeforeStartSearchTime,
+                                            isEventEndBeforeStartSearchTime));
+
+                    return !isEventStartAfterEndSearchTime && !isEventEndBeforeStartSearchTime;   
+                }
+            }
         });
 
         return predicate;
@@ -288,17 +315,34 @@ public class TaskData implements Serializable {
     }
 
     // @author A0134704M
-    private Comparator<? super Event> getDateComparator() {
+    private Comparator<? super Event> getDateComparator(boolean isDueDate) {
         return (e1, e2) -> {
-            boolean before = e1.getTaskDueDate().before(e2.getTaskDueDate());
-            boolean after = e1.getTaskDueDate().after(e2.getTaskDueDate());
-
-            if (before) {
+            Calendar e1Time;
+            Calendar e2Time;
+            
+            if (isDueDate) {
+                e1Time = e1.getTaskDueDate();
+                e2Time = e2.getTaskDueDate();
+            } else {
+                e1Time = e1.getTaskDate();
+                e2Time = e2.getTaskDate();
+            }
+            
+            if (e1Time == null) {
                 return -1;
-            } else if (after) {
+            } else if (e2Time == null) {
                 return 1;
             } else {
-                return 0;
+                boolean before = e1Time.before(e2Time);
+                boolean after = e1Time.after(e2Time);
+
+                if (before) {
+                    return -1;
+                } else if (after) {
+                    return 1;
+                } else {
+                    return 0;
+                }                
             }
         };
     }
