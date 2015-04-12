@@ -48,7 +48,7 @@ public class TaskHackerProRunner {
         commandHandlerMap.put("done", new DoneCommandHandler(taskData));
         commandHandlerMap.put("clear", new ClearCommandHandler());
         commandHandlerMap.put("search", new SearchCommandHandler(taskData));
-        commandHandlerMap.put("display", new CalendarViewCommandHandler(taskData));
+        commandHandlerMap.put("display", new CalendarViewCommandHandler(taskData, inputSource));
         commandHandlerMap.put("alter", new AlterCommandHandler(taskData));
         commandHandlerMap.put("undo", new UndoCommandHandler(undoStack, redoStack));
         commandHandlerMap.put("redo", new RedoCommandHandler(undoStack, redoStack)); 

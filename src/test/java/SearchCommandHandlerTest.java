@@ -31,8 +31,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
     private static final String validCommandAdd10 = "search 9/3/2015 to 15/3/2015";
 
     private static final String validCommandDisplay = "display month";
-    private static final String commandDisplayPrevious = "3";
-    private static final String commandDisplayExit = "5";
+    private static final String commandDisplayPrevious = "2";
 
     private static final String HasSearchKeyword = "Homework";
     private static final String NoSearchKeyword = "Sports";
@@ -72,7 +71,6 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         // Display the event list successfully
         super.executeCommand(validCommandDisplay);
         super.executeCommand(commandDisplayPrevious);
-        super.executeCommand(commandDisplayExit);
 
         // We check the search class has successfully found two key words
         this.searchKeywordIds = taskData.searchByKeyword(HasSearchKeyword);
@@ -190,7 +188,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         }
 
         try {
-            searchDateIds = taskData.searchEmptySlots(parsedDateStart, parsedDateEnd, null);
+            searchDateIds = taskData.searchEmptySlots(parsedDateStart, parsedDateEnd);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
         }
