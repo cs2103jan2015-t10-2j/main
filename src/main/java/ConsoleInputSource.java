@@ -18,6 +18,7 @@ public class ConsoleInputSource implements IInputSource {
             return true;
         }
         
+        System.out.printf(TaskHackerPro.MESSAGE_COMMAND_PROMPT);
         return scanner.hasNextLine();
     }
 

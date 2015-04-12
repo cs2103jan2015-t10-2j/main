@@ -34,6 +34,7 @@ public class StringInputSource implements IInputSource {
             // Notify observers only when all commands are executed
             if (lines.size() <= 0) {
                 outputLinesAvailableMutex.release();
+                System.out.printf(TaskHackerPro.MESSAGE_COMMAND_PROMPT);
             }
 
             lines.putFirst(lines.takeFirst());
