@@ -57,8 +57,8 @@ public class TaskHackerPro {
 
     //@author A0134704M
     private void showWelcomeMessage() {
+        ConsoleUtility.printLogo();
         System.out.println(MESSAGE_WELCOME);
-        printLogo();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, yyyy hh:mm a");
         List<Integer> allActualIds = new ArrayList<Integer>();
@@ -123,15 +123,6 @@ public class TaskHackerPro {
                     displayId, timeString, comingEvent.getTaskName());
 
         }
-    }
-
-    private void printLogo() {
-        System.out.println("████████╗ █████╗ ███████╗██╗  ██╗██╗  ██╗ █████╗  ██████╗██╗  ██╗███████╗██████╗ ██████╗ ██████╗ ██████╗ ");
-        System.out.println("╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝██║  ██║██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔═══██╗");
-        System.out.println("   ██║   ███████║███████╗█████╔╝ ███████║███████║██║     █████╔╝ █████╗  ██████╔╝██████╔╝██████╔╝██║   ██║");
-        System.out.println("   ██║   ██╔══██║╚════██║██╔═██╗ ██╔══██║██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██║   ██║");
-        System.out.println("   ██║   ██║  ██║███████║██║  ██╗██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║██║     ██║  ██║╚██████╔╝");
-        System.out.println("   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ");
     }
 
     //@author A0134704M
