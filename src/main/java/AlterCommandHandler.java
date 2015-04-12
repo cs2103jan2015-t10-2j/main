@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 public class AlterCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
+    private IInputSource inputSource;
     private Event eventToAlter;
 
     private int eventId;
@@ -37,12 +38,14 @@ public class AlterCommandHandler implements ICommandHandler {
     private static final SimpleDateFormat timeFormat;
     private static final Logger logger;
 
+    private static final String COMMAND_DISPLAY_MONTH = "display month";
+    private static final String MESSAGE_EVENT_NOT_FOUND = "Event not found.";
+
     private static final String messageDateFormat = "\tDate: %s\n";
     private static final String messageDescriptionFormat = "\tDescription: %s\n";
     private static final String messageDurationFormat = "\tDuration: %.1f hours\n";
     private static final String messageLocationFormat = "\tLocation: %s\n";
     private static final String messagePriorityFormat = "\tPriority level: %s\n";
-    private static final String messageUseDisplayFunction = "Please use \"display\" function to get the ID!";
     private static final String messageAfterMod = "  After modification:\n";
     private static final String messageBeforeMod = "  Before modification:\n";
     private static final String messageEditingFormat = "Editing task - %s\n";
@@ -70,9 +73,9 @@ public class AlterCommandHandler implements ICommandHandler {
     }
 
     //@author A0109239A
-    public AlterCommandHandler(TaskData taskData) {
-        assertObjectNotNull(this);
+    public AlterCommandHandler(TaskData taskData, IInputSource inputSource) {
         this.taskData = taskData;
+        this.inputSource = inputSource;
     }
 
     //@author A0109239A
@@ -156,7 +159,11 @@ public class AlterCommandHandler implements ICommandHandler {
         try {
             actualId = taskData.getActualId(eventId);
         } catch (Exception NoSuchElementException) {
-            System.out.println(messageUseDisplayFunction);
+            if (taskData.isDisplayIdMapEmpty()) {
+                inputSource.addCommand(COMMAND_DISPLAY_MONTH);
+            } else {
+                System.out.println(MESSAGE_EVENT_NOT_FOUND);
+            }
             return null;
         }
         
@@ -249,10 +256,5 @@ public class AlterCommandHandler implements ICommandHandler {
     @Override
     public boolean isExtraInputNeeded() {
         return false;
-    }
-
-    //@author UNKNOWN
-    private void assertObjectNotNull(Object o) {
-        assert (o != null);
     }
 }

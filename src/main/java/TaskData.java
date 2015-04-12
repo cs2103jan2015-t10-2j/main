@@ -43,8 +43,10 @@ public class TaskData implements Serializable {
         this.actualIDToDisplayIDMap = new LinkedHashMap<Integer, Integer>();
     }
 
-   
-    
+    //@author A0134704M
+    public boolean isDisplayIdMapEmpty() {
+        return displayIDToActualIDMap.size() == 0;
+    }    
     
 
     public ArrayList<Integer> getSortedPriIds() throws NoSuchElementException{
