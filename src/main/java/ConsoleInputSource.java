@@ -34,7 +34,7 @@ public class ConsoleInputSource implements IInputSource {
         return scanner.nextLine();
     }
     
-    
+    //@author A0105886W
     public void addCommand(String s){
         this.addCommand = s; 
     }

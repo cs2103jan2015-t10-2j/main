@@ -36,19 +36,19 @@ public class SearchCommandHandlerTest extends StringBasedTest {
     private static final String HasSearchKeyword = "Homework";
     private static final String NoSearchKeyword = "Sports";
 
-    //@author UNKNOWN
+    //@author A0105886W
     static {
         formatDayMthYr = new SimpleDateFormat(simpleDateFormatDayMthYr);
     }
 
-    //@author UNKNOWN
+    //@author A0105886W
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
     }
 
-    //@author UNKNOWN
+    //@author A0105886W
     @Test
     // Boundary case for all valid inputs
     public void testExecuteCase1() {
@@ -77,7 +77,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         testSearchKeyWordTaskAfter(searchKeywordIds);
     }
 
-    //@author UNKNOWN
+    //@author A0105886W
     // BC: The file is empty
     @Test
     public void testExecuteCase4() {
@@ -90,7 +90,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         }
     }
 
-    //@author UNKNOWN
+    //@author A0105886W
     // BC: Search results returned 0
     @Test
     public void testExecuteCase5() {
@@ -108,7 +108,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
         }
     }
 
-    //@author UNKNOWN
+    //@author A0105886W
     // This method compares the passed event to the ORIGINAL event.
     private void testSearchKeyWordTaskBefore(Event event, int i) {
         if (i == 0) {
@@ -154,7 +154,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
 
     }
 
-    //@author UNKNOWN
+    //@author A0105886W
     // Boundary case for 2 task that has keywords
     private void testSearchKeyWordTaskAfter(ArrayList<Integer> searchKeywordIds) {
         assertEquals(2, searchKeywordIds.size());
@@ -164,9 +164,10 @@ public class SearchCommandHandlerTest extends StringBasedTest {
                 .get(searchKeywordIds.get(1)).getTaskName());
     }
 
-    //@author UNKNOWN
+    //@author A0105886W
     @Test
     // Boundary case for all valid inputs
+    //This is to test searchEmpty slots in taskdata
     public void testExecuteCase6() {
 
         // Add seven events successfully
