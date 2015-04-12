@@ -6,11 +6,14 @@ public class AddCommand implements ICommand {
 
     private TaskData taskData;
     private Event event;
+    private TimeConflictAlert timeConflictAlert;
 
     private static final Logger logger = Logger.getGlobal();
     private static final String loggerNumberOfEvents = "No. of events=%d";
 
-    private static final String dateFormat = "dd MMM, yyyy EEE h:mm a";
+    private static final String dateFormatString = "dd MMM, yyyy EEE h:mm a";
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+            dateFormatString);
 
     private static final String messageDateFormat = "Date: %s\n";
     private static final String messageNoDateFormat = "Date: To be scheduled\n";
@@ -25,21 +28,29 @@ public class AddCommand implements ICommand {
 
     //@author A0134704M
     public AddCommand(TaskData taskData, Event event) {
+        assert (taskData != null);
+        assert (event != null);
+
         this.taskData = taskData;
         this.event = event;
+        timeConflictAlert = new TimeConflictAlert(taskData, event);
     }
 
     //@author A0134704M
     @Override
     public boolean execute() {
-        Event previousEvent = taskData.getEventMap().put(event.getTaskID(), event);
-        assert (previousEvent == null);
-
         printConfirmation(event);
-        logger.log(Level.INFO,
-                String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
+        timeConflictAlert.alertTimeConflict();
+        addEventToRecord();
 
         return true;
+    }
+
+    private void addEventToRecord() {
+        Event previousEvent = taskData.getEventMap().put(event.getTaskID(), event);
+        assert (previousEvent == null);
+        logger.log(Level.INFO,
+                String.format(loggerNumberOfEvents, taskData.getEventMap().size()));
     }
 
     //@author A0134704M
@@ -64,7 +75,6 @@ public class AddCommand implements ICommand {
 
     //@author A0134704M
     private void printConfirmation(Event event) {
-        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         System.out.printf(messageAddEventFormat);
         System.out.printf(messageNameFormat, event.getTaskName());
         System.out.printf(messageLocationFormat, event.getTaskLocation());
@@ -72,13 +82,13 @@ public class AddCommand implements ICommand {
         System.out.printf(messageDescriptionFormat, event.getTaskDescription());
         try {
             System.out.printf(messageDateFormat,
-                    format.format(event.getTaskDate().getTime()));
+                    dateFormat.format(event.getTaskDate().getTime()));
         } catch (NullPointerException e) {
             System.out.printf(messageNoDateFormat);
         }
         try {
             System.out.printf(messageDueDateFormat,
-                    format.format(event.getTaskDueDate().getTime()));
+                    dateFormat.format(event.getTaskDueDate().getTime()));
         } catch (NullPointerException e) {
             System.out.printf(messageNoDueDateFormat);
         }

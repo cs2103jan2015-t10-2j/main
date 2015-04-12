@@ -3,9 +3,15 @@ public class AlterCommand implements ICommand {
     private Event eventToAlter;
     private Event eventWithUpdatedData;
     private Event eventWithOldData;
+    private TimeConflictAlert timeConflictAlert;
 
     //@author A0134704M
-    public AlterCommand(Event eventToAlter, Event eventWithUpdatedData) {
+    public AlterCommand(TaskData taskData, Event eventToAlter, Event eventWithUpdatedData) {
+        assert (taskData != null);
+        assert (eventToAlter != null);
+        assert (eventWithUpdatedData != null);
+        
+        this.timeConflictAlert = new TimeConflictAlert(taskData, eventWithUpdatedData);
         this.eventToAlter = eventToAlter;
         this.eventWithUpdatedData = eventWithUpdatedData;
         this.eventWithOldData = new Event();
@@ -14,6 +20,7 @@ public class AlterCommand implements ICommand {
     //@author A0134704M
     @Override
     public boolean execute() {
+        timeConflictAlert.alertTimeConflict(); 
         copyEventValues(eventToAlter, eventWithOldData);
         copyEventValues(eventWithUpdatedData, eventToAlter);
         return true;

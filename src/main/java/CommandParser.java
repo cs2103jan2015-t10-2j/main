@@ -230,6 +230,8 @@ public class CommandParser {
         String hourString = taskDetailMap.remove(KEY_HOUR);
         String hour24String = taskDetailMap.remove(KEY_HOUR24);
 
+        taskTime.clear(Calendar.MILLISECOND);
+
         boolean hasTime = (hourString != null || hour24String != null);
         if (hasTime) {
             if (hourString != null) {
@@ -271,6 +273,8 @@ public class CommandParser {
         String todayString = taskDetailMap.remove(KEY_TODAY);
         String dateString = taskDetailMap.remove(KEY_DATE);
         boolean hasDate = (daysString != null || todayString != null || dateString != null);
+
+        taskDate.clear(Calendar.MILLISECOND);
 
         if (hasDate) {
             if (daysString != null) {
@@ -353,6 +357,7 @@ public class CommandParser {
             Date date = weekDayFormat.parse(weekdayString);
             Calendar c = Calendar.getInstance();
             c.setTime(date);
+            c.clear(Calendar.MILLISECOND);
 
             int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
             taskDate.set(Calendar.DAY_OF_WEEK, dayOfWeek);
