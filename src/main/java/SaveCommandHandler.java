@@ -1,12 +1,19 @@
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SaveCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
     private String fileSavePath;
 
-    private static final String STRING_SAVE = "save";
-    private static final String FILE_SAVE = "File is saved";
+    private static final String KEY_SAVE_PATH = "fileSavePath";
+    private static final String DONE_COMMAND_FORMAT = "^save *(?<fileSavePath>.+)?$";
+    private static final String MESSAGE_FILE_SAVE = "File saved to %s\n";
+    private static final String MESSAGE_SAVE_FAILED = "Cannot save to %s\n";
+
+    private static final Pattern patternDoneCommand = Pattern.compile(
+            DONE_COMMAND_FORMAT, Pattern.CASE_INSENSITIVE);
 
     //@author A0134704M
     public SaveCommandHandler(TaskData taskData) {
@@ -16,10 +23,13 @@ public class SaveCommandHandler implements ICommandHandler {
     //@author A0134704M
     @Override
     public boolean parseCommand(String command) {
-        if (command.equalsIgnoreCase(STRING_SAVE)) {
+        Matcher m = patternDoneCommand.matcher(command);
+        if (m.matches()) {
+            this.fileSavePath = m.group(KEY_SAVE_PATH);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     //@author A0134704M
@@ -28,23 +38,20 @@ public class SaveCommandHandler implements ICommandHandler {
         ICommand saveCommand = new NullCommand();
         try {
             DataManager.getInstance().setPathToSaveLoad(fileSavePath);
-            DataManager.getInstance().saveTaskDataToFile(taskData);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            fileSavePath = DataManager.getInstance().getPathToSaveLoad();
 
-        System.out.println(FILE_SAVE);
-        return saveCommand;
+            DataManager.getInstance().saveTaskDataToFile(taskData);
+            System.out.printf(MESSAGE_FILE_SAVE, fileSavePath);
+            return saveCommand;
+        } catch (IOException e) {
+            System.out.printf(MESSAGE_SAVE_FAILED, fileSavePath);
+            return null;
+        }
     }
 
     //@author A0134704M
     @Override
     public boolean isExtraInputNeeded() {
         return false;
-    }
-
-    //@author A0134704M
-    public void setFileSavePath(String fileSavePath) {
-        this.fileSavePath = fileSavePath;
     }
 }
