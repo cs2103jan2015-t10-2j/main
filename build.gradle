@@ -12,6 +12,17 @@ configurations.all {
     }
 }
 
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'TaskHackerPro',
+            'Implementation-Version': 'V0.5',
+            'Main-Class': 'TaskHackerPro'
+    }
+    baseName = 'TaskHackerPro'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.11'
