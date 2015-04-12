@@ -29,7 +29,7 @@ public class TaskHackerPro {
     private static final String COMMAND_ADDED_TO_HISTORY = "%s: command added to history";
 
     private static final String MESSAGE_WELCOME = "Welcome to TaskHackerPro!\nEnter \"help\" for system usage\n";
-    private static final String MESSAGE_COMMAND_PROMPT = "\nEnter command: ";
+    public static final String MESSAGE_COMMAND_PROMPT = "\nEnter command: ";
     private static final String MESSAGE_COMMAND_NOT_FOUND = "Command not found";
     private static final String MESSAGE_FORMAT_INCORRECT = "Format incorrect";
     private static final String MESSAGE_FAIL_EXECUTION = "Fail execution";
@@ -52,7 +52,6 @@ public class TaskHackerPro {
 
     //@author A0134704M
     private boolean printPromptAndWaitForNewLine() {
-        System.out.printf(MESSAGE_COMMAND_PROMPT);
         return inputSource.hasNextLine();
     }
 
@@ -120,7 +119,7 @@ public class TaskHackerPro {
             int displayId = taskData.getDisplayId(comingEvent.getTaskID());
             String timeString = dateFormat.format(comingEvent.getTaskDate().getTime());
 
-            ConsoleUtility.printf(Color.CYAN, MESSAGE_COMING_EVENT_DISPLAY,
+            ConsoleUtility.printf(Color.BLUE, MESSAGE_COMING_EVENT_DISPLAY,
                     displayId, timeString, comingEvent.getTaskName());
 
         }

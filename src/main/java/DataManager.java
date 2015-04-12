@@ -115,7 +115,11 @@ public class DataManager {
 
     //@author A0134704M
     public String getPathToSaveLoad() {
-        return pathToSaveLoad;
+        if (pathToSaveLoad == null) {
+            return DEFAULT_PATH_TO_LOAD_SAVE;
+        } else {
+            return pathToSaveLoad;   
+        }
     }
 
     //@author A0134704M
