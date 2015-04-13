@@ -23,17 +23,14 @@ public class SearchCommandHandler implements ICommandHandler {
         formatTimeDayMthYr = new SimpleDateFormat(simpleDateFormatTimeDayMthyr);
     }
 
-    // private static final Logger logger =
-    // Logger.getLogger("SearchCommandHandler");
-
-    // @author A0105886
+    // @author A0105886W
     public SearchCommandHandler(TaskData taskData) {
         assertObjectNotNull(this);
         assertObjectNotNull(taskData);
         this.taskData = taskData;
     }
 
-    // @author A0105886
+    // @author A0105886W
     @Override
     public boolean parseCommand(String command) {
         // logger.log(Level.INFO, String.format(loggerInputCommand, command));
@@ -52,7 +49,7 @@ public class SearchCommandHandler implements ICommandHandler {
         return true;
     }
 
-    // @author A0105886
+    // @author A0105886W
     @Override
     public ICommand getCommand() {
         ICommand searchCommand = new NullCommand();
@@ -69,7 +66,7 @@ public class SearchCommandHandler implements ICommandHandler {
         return searchCommand;
     }
 
-    // @author A0105886
+    // @author A0105886W
     public void displaySearchResults(List<Integer> searchActualIds, String keyword) {
         Event event;
         String taskName, taskLocation, taskDescription, taskDuration, taskDate;
@@ -120,13 +117,13 @@ public class SearchCommandHandler implements ICommandHandler {
         }
     }
 
-    // @author A0105886
+    // @author A0105886W
     @Override
     public boolean isExtraInputNeeded() {
         return false;
     }
 
-    // @author A0105886
+    // @author A0105886W
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

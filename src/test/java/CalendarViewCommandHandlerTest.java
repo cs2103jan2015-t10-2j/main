@@ -29,14 +29,14 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
     private static final String commandDelete = "delete 1";
     private static final String commandDone = "done 1";
 
-    // @author A0105886
+    // @author A0105886W
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
     }
 
-    // @author A0105886
+    // @author A0105886W
     @Test
     public void testExecuteCOmmand0() {
         super.executeCommand(validCommandAdd1);
@@ -55,7 +55,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         assertEquals(5, taskData.getEventMap().size());
     }
 
-    // @author A0105886
+    // @author A0105886W
     @Test
     public void testExecuteCommand1() {
 
@@ -94,6 +94,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
 
     }
 
+    //@author A0134704M
     private void testTimedTaskBefore(Event event) {
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
@@ -115,6 +116,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
 
+    //@author A0134704M
     @Test
     // @author A0105886
     public void testExecuteCommand2() {
@@ -134,7 +136,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         assertEquals(0, taskData.getEventMap().size());
     }
 
-    // @author A0105886
+    // @author A0105886W
     @Test
     public void testExecuteCommand3() {
 
@@ -153,7 +155,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         assertEquals(0, taskData.getEventMap().size());
     }
 
-    // @author A0105886
+    // @author A0105886W
     @Test
     public void testExecuteCommand4() {
         super.executeCommand(validCommandAdd1);

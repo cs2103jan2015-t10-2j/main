@@ -64,7 +64,7 @@ public class AddCommandHandler implements ICommandHandler {
         return false;
     }
 
-    //@author UNKNOWN
+    //@author A0134704M
     public int getUniqueId() {
         Random random = new Random();
         int returnVal;

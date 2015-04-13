@@ -21,6 +21,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         return taskData;
     }
 
+    //@author A0134704M
     @Test
     public void testAlterChangeTime() {
 
@@ -54,7 +55,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
         
     }
-    
+
+    //@author A0134704M
     @Test
     public void testAlterChangeDuration() {
 
@@ -86,6 +88,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
 
+    //@author A0134704M
     @Test
     public void testAlterChangeLocation() {
 
@@ -116,7 +119,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(60, actualTaskDuration);
         assertEquals("high", actualPriority);
     }
-    
+
+    //@author A0134704M
     @Test
     public void testAlterChangeDescription() {
 
@@ -147,7 +151,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(60, actualTaskDuration);
         assertEquals("high", actualPriority);
     }
-    
+
+    //@author A0134704M
     @Test
     public void testAlterChangePriority() {
 
@@ -178,7 +183,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(60, actualTaskDuration);
         assertEquals("low", actualPriority);
     }
-    
+
+    //@author A0134704M
     @Test
     public void testAlterSetSnooze() {
 
@@ -209,7 +215,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(60, actualTaskDuration);
         assertEquals("high", actualPriority);
     }
-    
+
+    //@author A0134704M
     @Test
     public void testAlterAllFieldsTogether() {
 
@@ -240,7 +247,8 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals(240, actualTaskDuration);
         assertEquals("low", actualPriority);
     }
-    
+
+    //@author A0134704M
     @Test
     public void testAlterChangeFloatingTask() {
 

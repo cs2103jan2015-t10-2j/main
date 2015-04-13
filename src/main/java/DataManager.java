@@ -36,12 +36,14 @@ public class DataManager {
         writeObjectToDisk(taskData, file);
     }
 
+    //@author A0109239A
     //Writes all the task information to the desired location in the disk in human-readable form.    
     public void saveAsCsvToDisk(TaskData taskData) throws IOException {
         List<String[]> allEventDetails = HumanReadable.getDetailsAllEvents(taskData);
         writeListToDisk(allEventDetails);
     }
 
+    //@author A0109239A
     //Find the desired .csv file and returns its contents.
     public List<String[]> loadCSVFromDisk() throws IOException {
         List<String[]> allEventDetails = readListFromDisk();
@@ -58,6 +60,7 @@ public class DataManager {
         return taskData;
     }
 
+    //@author A0109239A
     private TaskData loadtaskDataFromBinaryFile(TaskData taskData) {
         FileInputStream fis;
         try {
@@ -90,6 +93,7 @@ public class DataManager {
         writer.close();
     }
 
+    //@author A0109239A
     //[External library OpenCSV used] finds a .csv file and returns its contencts.
     private List<String[]> readListFromDisk() throws IOException {
         CSVReader reader = setUpReader();
@@ -98,6 +102,7 @@ public class DataManager {
         return myEntries;
     }
    
+    //@author A0134704M
     //Writes an object to disk. Not human readable.
     private void writeObjectToDisk(TaskData taskData, File file) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(file);
@@ -106,16 +111,19 @@ public class DataManager {
         oos.close();
     }
     
+    //@author A0109239A
     private CSVWriter setUpWriter() throws IOException {
         CSVWriter writer = new CSVWriter(new FileWriter(getPathHumanReadable()));
         return writer;
     }
     
+    //@author A0109239A
     private CSVReader setUpReader() throws IOException {
         CSVReader reader = new CSVReader(new FileReader(getPathHumanReadable()));
         return reader;
     }
     
+    //@author A0109239A
     private File setUpFile() {
         File file = new File (getPathToSaveLoad());
         if (file.getParentFile() != null) {
@@ -124,6 +132,7 @@ public class DataManager {
         return file;
     }
     
+    //@author A0109239A
     //Figures out where the user wants to save.
     private String getPathHumanReadable() {
         if (pathToSaveHumanEditable == null) {
@@ -141,11 +150,13 @@ public class DataManager {
             return pathToSaveLoad;   
         }
     }
-    
+
+    //@author A0134704M
     public void setPathToSaveLoad(String pathToSaveLoad) {
         this.pathToSaveLoad = pathToSaveLoad;
     }
 
+    //@author A0134704M
     public static DataManager getInstance() {
         if (instance == null) {
             instance = new DataManager();

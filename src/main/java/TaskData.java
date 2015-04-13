@@ -193,7 +193,7 @@ public class TaskData implements Serializable {
 
     }
 
-    //@author A0105886
+    //@author A0105886W
     public ArrayList<Integer> getDateTasks(Date date) throws NoSuchElementException {
         Calendar cal = Calendar.getInstance();
         ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
@@ -588,7 +588,7 @@ public class TaskData implements Serializable {
         return eventMap;
     }
 
-    //@author A0109239
+    //@author A0109239A
     public void setEventMap(Map<Integer, Event> userEventMap) {
         this.eventMap = userEventMap;
     }

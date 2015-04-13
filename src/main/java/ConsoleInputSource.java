@@ -38,7 +38,6 @@ public class ConsoleInputSource implements IInputSource {
     public void addCommand(String s){
         this.addCommand = s; 
     }
-    
 
     //@author A0134704M
     @Override

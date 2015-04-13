@@ -153,7 +153,7 @@ public class AlterCommandHandler implements ICommandHandler {
         }
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     @Override
     public ICommand getCommand() {
         try {
@@ -252,7 +252,7 @@ public class AlterCommandHandler implements ICommandHandler {
         return (float) (mins / minsInHour);
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     @Override
     public boolean isExtraInputNeeded() {
         return false;

@@ -70,6 +70,7 @@ public class HelpCommandHandler implements ICommandHandler {
 
     }
 
+    //@author A0134704M
     public void printContent(Color color, String format, Object... content) {
         ConsoleUtility.printf(Color.RED, "＊ ");
         ConsoleUtility.printf(color, format, content);

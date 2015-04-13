@@ -42,6 +42,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals("medium", actualPriority);
     }
 
+    //@author A0134704M
     @Test
     public void testAddTodayTomorrow() {
         super.executeCommand("add foo today");
@@ -50,6 +51,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(2, taskData.getEventMap().size());
     }
 
+    //@author A0134704M
     @Test
     public void testAddDateTime() {
         super.executeCommand("add foo 5pm 11/11/2015");
@@ -70,6 +72,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
     }
 
+    //@author A0134704M
     @Test
     public void testAddTomorrowWithDuration() {
         super.executeCommand("add foo tomorrow for 60 mins");
@@ -82,6 +85,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(60, actualTaskDuration);
     }
 
+    //@author A0134704M
     @Test
     public void testAddTomorrowWithFancyDuration() {
         super.executeCommand("add foo tomorrow for 1.5 hours");
@@ -94,6 +98,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(90, actualTaskDuration);
     }
 
+    //@author A0134704M
     @Test
     public void testAddWithLocation() {
         super.executeCommand("add foo @ rc4");
@@ -106,6 +111,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals("rc4", actualTaskLocation);
     }
 
+    //@author A0134704M
     @Test
     public void testAddWithDayREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday");
@@ -120,6 +126,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
     }
 
+    //@author A0134704M
     @Test
     public void testAddWithDayLocationPriorityREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday @ RC4 setPrior HIGH");
@@ -139,6 +146,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals("RC4", actualTaskLocation);
     }
 
+    //@author A0134704M
     @Test
     public void testAddWithDayLocationTimeDurationMessedUpOrderREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday for 60 mins @ RC4 5pm");
@@ -160,6 +168,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals("RC4", actualTaskLocation);
     }
 
+    //@author A0134704M
     @Test
     public void testAddWithAllFieldsMessedUpOrderREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday desc \"work\" 5pm @ RC4 setPrior HIGH for 1.5 hours");

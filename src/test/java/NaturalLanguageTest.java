@@ -119,7 +119,7 @@ public class NaturalLanguageTest extends StringBasedTest {
         assertEquals("medium", actualPriority);
     }
     
-  //@author A0134704M
+    //@author A0134704M
     @Test
     public void testDuplicateWordsInLocationAndDateOfWeek() {
         super.executeCommand(COMMAND_NATURAL_5);

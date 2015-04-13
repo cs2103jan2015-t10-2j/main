@@ -101,6 +101,7 @@ public class AddCommand implements ICommand {
                 .toLowerCase());
     }
 
+    //@author A0134704M
     public void printConfirmFormat(String format, Object... content) {
         ConsoleUtility.printf(COLOUR_CONFIRM_MESSAGE, format, content);
     }

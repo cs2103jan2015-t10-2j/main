@@ -22,10 +22,7 @@ public class Event implements Serializable {
     private boolean isDone;
     private boolean isRecurring;
 
-    private static final String SIMPLE_DATE_FORMAT = "dd MMM, yyyy EEE h:mm a";
     private static final String toStringFormat = "ID: %d, Name: \"%s\", Location: \"%s\", Description: \"%s\", Date: %s, Duration: %d, Priority: %s, Done: %b, Recurring: %b";
-    private static final String TO_STRING_FIELDS_FORMAT = "%d~//~, \"%s\"~//~, \"%s\"~//~, \"%s\"~//~, %s~//~, %d~//~, %s~//~, %b~//~, %b";
-    private static final String SPLITTER_FOR_STRING_ARRAY = "~//~, ";
 
     //@author A0134704M
     public Event() {
@@ -92,6 +89,7 @@ public class Event implements Serializable {
         return taskDuration;
     }
 
+    //@author A0134704M
     public void setTaskDuration(int taskDuration) {
         this.taskDuration = taskDuration;
     }
@@ -136,12 +134,12 @@ public class Event implements Serializable {
         this.isDone = isDone;
     }
 
-    //@author UNKNOWN
+    //@author A0134704M
     public boolean isRecurring() {
         return isRecurring;
     }
 
-    //@author UNKNOWN
+    //@author A0134704M
     public void setRecurring(boolean isRecurring) {
         this.isRecurring = isRecurring;
     }
@@ -194,6 +192,7 @@ public class Event implements Serializable {
         return attributes.toArray(new String[0]);
     }
 
+    //@author A0134704M
     public static Event setEventDetails(String[] entry) throws Exception {
         try {
             Event event = new Event();
@@ -227,7 +226,8 @@ public class Event implements Serializable {
             throw e;
         }
     }
-    
+
+    //@author A0134704M
     private String getTimeString() {
         try {
             return getTaskDate().getTime().toString();
