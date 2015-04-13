@@ -114,7 +114,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         String actualTaskName = event.getTaskName();
         Calendar actualTaskDate = event.getTaskDate();
         assertEquals("foo", actualTaskName);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
     }
@@ -131,7 +131,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
         assertEquals("foo", actualTaskName);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals("high", actualPriority);
@@ -152,7 +152,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
 
         assertEquals(60, actualTaskDuration);
         assertEquals("foo", actualTaskName);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals("medium", actualPriority);
@@ -180,7 +180,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(Calendar.PM, actualTaskDate.get(Calendar.AM_PM));
         assertEquals(90, actualTaskDuration);
         assertEquals("high", actualPriority);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals("high", actualPriority);
