@@ -11,6 +11,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
     private static final String commandAdd1 = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String commandAdd2 = "add do homework for ever";
     private static final String commandAdd3 = "add 123";
+    private static final String commandAdd4 = "add 1/4/2015";
 
     //@author A0134704M
     @Override
@@ -19,7 +20,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         return taskData;
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     @Test
     public void testAddSimpleFloating() {
         super.executeCommand("add foo");
@@ -31,7 +32,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
         String actualTaskDescription = event.getTaskDescription();
-        Calendar actualTaskDate = event.getTaskDate();
         int actualTaskDuration = event.getTaskDuration();
         String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
@@ -42,17 +42,14 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals("medium", actualPriority);
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddTodayTomorrow() {
         super.executeCommand("add foo today");
         assertEquals(1, taskData.getEventMap().size());
-        // it's kinda complicated to test...
         super.executeCommand("add foo today");
         assertEquals(2, taskData.getEventMap().size());
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddDateTime() {
         super.executeCommand("add foo 5pm 11/11/2015");
@@ -73,7 +70,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddTomorrowWithDuration() {
         super.executeCommand("add foo tomorrow for 60 mins");
@@ -86,7 +82,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(60, actualTaskDuration);
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddTomorrowWithFancyDuration() {
         super.executeCommand("add foo tomorrow for 1.5 hours");
@@ -99,7 +94,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(90, actualTaskDuration);
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddWithLocation() {
         super.executeCommand("add foo @ rc4");
@@ -112,7 +106,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals("rc4", actualTaskLocation);
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddWithDayREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday");
@@ -122,12 +115,11 @@ public class AddCommandHandlerTest extends StringBasedTest {
         String actualTaskName = event.getTaskName();
         Calendar actualTaskDate = event.getTaskDate();
         assertEquals("foo", actualTaskName);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddWithDayLocationPriorityREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday @ RC4 setPrior HIGH");
@@ -140,14 +132,13 @@ public class AddCommandHandlerTest extends StringBasedTest {
         String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
         assertEquals("foo", actualTaskName);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals("high", actualPriority);
         assertEquals("RC4", actualTaskLocation);
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddWithDayLocationTimeDurationMessedUpOrderREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday for 60 mins @ RC4 5pm");
@@ -162,14 +153,13 @@ public class AddCommandHandlerTest extends StringBasedTest {
 
         assertEquals(60, actualTaskDuration);
         assertEquals("foo", actualTaskName);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals("medium", actualPriority);
         assertEquals("RC4", actualTaskLocation);
     }
 
-    //@author UNKNOWN
     @Test
     public void testAddWithAllFieldsMessedUpOrderREMEMBER_TO_CHANGE() {
         super.executeCommand("add foo on monday desc \"work\" 5pm @ RC4 setPrior HIGH for 1.5 hours");
@@ -191,7 +181,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
         assertEquals(Calendar.PM, actualTaskDate.get(Calendar.AM_PM));
         assertEquals(90, actualTaskDuration);
         assertEquals("high", actualPriority);
-        assertEquals(13, actualTaskDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, actualTaskDate.get(Calendar.DAY_OF_MONTH));
         assertEquals(Calendar.APRIL, actualTaskDate.get(Calendar.MONTH));
         assertEquals(2015, actualTaskDate.get(Calendar.YEAR));
         assertEquals("high", actualPriority);
@@ -199,6 +189,9 @@ public class AddCommandHandlerTest extends StringBasedTest {
     }
 
     //@author A0134704M
+    /**
+     * Test for Event with all elements
+     */
     @Test
     public void testExecuteCommand1() {
         super.executeCommand(commandAdd1);
@@ -229,6 +222,9 @@ public class AddCommandHandlerTest extends StringBasedTest {
     }
 
     //@author A0134704M
+    /**
+     * Test for invalid Duration
+     */
     @Test
     public void testExecuteCommand2() {
         super.executeCommand(commandAdd2);
@@ -243,6 +239,9 @@ public class AddCommandHandlerTest extends StringBasedTest {
     }
 
     //@author A0134704M
+    /**
+     * Test for Task with number as event name
+     */
     @Test
     public void testExecuteCommand3() {
         super.executeCommand(commandAdd3);
@@ -254,5 +253,22 @@ public class AddCommandHandlerTest extends StringBasedTest {
 
         String actualTaskName = event.getTaskName();
         assertEquals("123", actualTaskName);
+    }
+
+    //@author A0134704M
+    /**
+     * Test for Untitled Event
+     */
+    @Test
+    public void testExecuteCommand4() {
+        super.executeCommand(commandAdd4);
+
+        assertEquals(1, taskData.getEventMap().size());
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+
+        Event event = taskData.getEventMap().get(taskId);
+
+        String actualTaskName = event.getTaskName();
+        assertEquals("Untitled", actualTaskName);
     }
 }

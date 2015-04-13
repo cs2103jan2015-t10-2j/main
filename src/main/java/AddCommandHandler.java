@@ -20,7 +20,7 @@ public class AddCommandHandler implements ICommandHandler {
 
     //@author A0134704M
     /*
-     * add [name] at [time] [date] for [duration] mins @ [location] desc "[description]"
+     * add [name] at [time] [date] for [duration] mins @ [location] desc "[description]" setPrior [priority]
      * 
      * (non-Javadoc)
      * 
@@ -80,7 +80,7 @@ public class AddCommandHandler implements ICommandHandler {
         return event;
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

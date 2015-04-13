@@ -14,14 +14,13 @@ public class AlterCommandHandlerTest extends StringBasedTest {
     private static final String validCommandDisplay = "display month";
     private static final String validCommandDisplayFloating = "display checklist";
 
-    //@author UNKNOWN
+    //@author A0109239A
     @Override
     public TaskData createTaskData() {
         taskData = new TaskData();
         return taskData;
     }
 
-    //@author UNKNOWN
     @Test
     public void testAlterChangeTime() {
 
@@ -56,17 +55,14 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         
     }
     
-    //@author UNKNOWN
     @Test
     public void testAlterChangeDuration() {
 
-        // Add an event successfully
         super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
         Event event = taskData.getEventMap().get(taskId);
         testTimedTaskBefore(event);
 
-        // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
         super.executeCommand("alter 1 as len 4 hrs");
         
@@ -90,17 +86,14 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
 
-    //@author UNKNOWN
     @Test
     public void testAlterChangeLocation() {
 
-        // Add an event successfully
         super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
         Event event = taskData.getEventMap().get(taskId);
         testTimedTaskBefore(event);
 
-        // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
         super.executeCommand("alter 1 as @ RC4");
         
@@ -124,17 +117,14 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
-    //@author UNKNOWN
     @Test
     public void testAlterChangeDescription() {
 
-        // Add an event successfully
         super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
         Event event = taskData.getEventMap().get(taskId);
         testTimedTaskBefore(event);
 
-        // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
         super.executeCommand("alter 1 as desc \"foo\"");
         
@@ -158,17 +148,14 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
-    //@author UNKNOWN
     @Test
     public void testAlterChangePriority() {
 
-        // Add an event successfully
         super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
         Event event = taskData.getEventMap().get(taskId);
         testTimedTaskBefore(event);
 
-        // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
         super.executeCommand("alter 1 as setPrior LOW");
         
@@ -192,17 +179,14 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("low", actualPriority);
     }
     
-    //@author UNKNOWN
     @Test
     public void testAlterSetSnooze() {
 
-        // Add an event successfully
         super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
         Event event = taskData.getEventMap().get(taskId);
         testTimedTaskBefore(event);
 
-        // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
         super.executeCommand("alter 1 as snooze 40 days");
         
@@ -226,17 +210,14 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
-    //@author UNKNOWN
     @Test
-    public void testAlterAllFields() {
+    public void testAlterAllFieldsTogether() {
 
-        // Add an event successfully
         super.executeCommand(validCommandAddTimed);
         int taskId = taskData.getEventMap().keySet().iterator().next();
         Event event = taskData.getEventMap().get(taskId);
         testTimedTaskBefore(event);
 
-        // Display the event list successfully, and alter the event.
         super.executeCommand(validCommandDisplay);
         super.executeCommand("alter 1 as time 6:00 12/12/2016 len 4 hrs @ RC4 desc \"hello\" setPrior LOW");
         
@@ -260,11 +241,9 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("low", actualPriority);
     }
     
-    //@author UNKNOWN
     @Test
-    public void testAlterChangeFloating() {
+    public void testAlterChangeFloatingTask() {
 
-        // Add an event successfully
         super.executeCommand(validCommandAddFloating);
         int taskId = taskData.getEventMap().keySet().iterator().next();
         Event event = taskData.getEventMap().get(taskId);
@@ -298,8 +277,7 @@ public class AlterCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
     
-    //@author UNKNOWN
-    // This method compares the passed event to the original timed event.
+    // This method compares a given event to the original timed event.
     private void testTimedTaskBefore(Event event) {
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();

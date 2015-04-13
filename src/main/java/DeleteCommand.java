@@ -12,11 +12,12 @@ public class DeleteCommand implements ICommand {
 
     private static final String simpleDateFormat = "dd MMM, yyyy";
 
-    private static final String STRING_TO_BE_SCHEDULED = "To be scheduled";
+    private static final String STRING_TO_BE_SCHEDULED = "No Date was scheduled";
     
     private static final String MESSAGE_NUMBER_OF_EVENTS = "No. of events=%d";
 
     private static final String MESSAGE_DATE_FORMAT = "Date: %s\n";
+    private static final String MESSAGE_DUE_DATE_FORMAT = "Due Date: %s\n";
     private static final String MESSAGE_DESCRIPTION_FORMAT = "Description: %s\n";
     private static final String MESSAGE_DURATION_FORMAT = "Duration: %d minutes\n";
     private static final String MESSAGE_LOCATION_FORMAT = "Location: %s\n";
@@ -67,6 +68,12 @@ public class DeleteCommand implements ICommand {
                     format.format(event.getTaskDate().getTime()));
         } catch (NullPointerException e) {
             System.out.printf(MESSAGE_DATE_FORMAT, STRING_TO_BE_SCHEDULED);
+        }
+        try {
+            System.out.printf(MESSAGE_DUE_DATE_FORMAT,
+                    format.format(event.getTaskDueDate().getTime()));
+        } catch (NullPointerException e) {
+            System.out.printf(MESSAGE_DUE_DATE_FORMAT, STRING_TO_BE_SCHEDULED);
         }
         System.out.printf(MESSAGE_DURATION_FORMAT, event.getTaskDuration());
         System.out.printf(MESSAGE_LOCATION_FORMAT, event.getTaskLocation());

@@ -37,6 +37,8 @@ public class TaskHackerPro {
     private static final String MESSAGE_COMING_EVENT_COUNT = "\nThere are %d event(s) in coming %d day(s)\n";
     private static final String MESSAGE_OVERDUE_TASK_DISPLAY = "%3d [%s] %s\n";
     private static final String MESSAGE_COMING_EVENT_DISPLAY = "%3d [%s] %s\n";
+    private static final String MESSAGE_CANNOT_LOAD_FROM_CSV = "Cannot load from CSV";
+    private static final String MESSAGE_DAMAGE_CSV = "CSV file is damaged. Loaded from the last record.\n";
     
     //@author A0134704M
     public TaskHackerPro(Stack<Entry<ICommand, String>> undoStack,
@@ -57,8 +59,8 @@ public class TaskHackerPro {
 
     //@author A0134704M
     private void showWelcomeMessage() {
+        ConsoleUtility.printLogo();
         System.out.println(MESSAGE_WELCOME);
-        printLogo();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, yyyy hh:mm a");
         List<Integer> allActualIds = new ArrayList<Integer>();
@@ -123,15 +125,6 @@ public class TaskHackerPro {
                     displayId, timeString, comingEvent.getTaskName());
 
         }
-    }
-
-    private void printLogo() {
-        System.out.println("████████╗ █████╗ ███████╗██╗  ██╗██╗  ██╗ █████╗  ██████╗██╗  ██╗███████╗██████╗ ██████╗ ██████╗ ██████╗ ");
-        System.out.println("╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝██║  ██║██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔═══██╗");
-        System.out.println("   ██║   ███████║███████╗█████╔╝ ███████║███████║██║     █████╔╝ █████╗  ██████╔╝██████╔╝██████╔╝██║   ██║");
-        System.out.println("   ██║   ██╔══██║╚════██║██╔═██╗ ██╔══██║██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██║   ██║");
-        System.out.println("   ██║   ██║  ██║███████║██║  ██╗██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║██║     ██║  ██║╚██████╔╝");
-        System.out.println("   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ");
     }
 
     //@author A0134704M
@@ -243,13 +236,22 @@ public class TaskHackerPro {
     //@author A0134704M
     public static void main(String[] args) {
         ConsoleUtility.clearScreen();
-
         IInputSource inputSource = new ConsoleInputSource(System.in);
-        TaskData taskData = DataManager.getInstance().loadTaskDataFromFile();
+        TaskData taskData;
+        
+        try {
+            List<String[]> lines = DataManager.getInstance().loadCSVFromDisk();
+            taskData = HumanReadable.setDetailsAllEvents(lines);
+        } catch (Exception e) {
+            taskData = DataManager.getInstance().loadTaskDataFromFile();
+            System.out.printf(MESSAGE_DAMAGE_CSV);
+            logger.info(MESSAGE_CANNOT_LOAD_FROM_CSV);
+        }
+        
         new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
