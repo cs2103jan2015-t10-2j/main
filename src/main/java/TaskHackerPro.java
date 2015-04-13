@@ -240,7 +240,8 @@ public class TaskHackerPro {
         TaskData taskData;
         
         try {
-            taskData = HumanReadable.setDetailsAllEvents(DataManager.getInstance().loadCSVFromDisk());
+            List<String[]> lines = DataManager.getInstance().loadCSVFromDisk();
+            taskData = HumanReadable.setDetailsAllEvents(lines);
         } catch (Exception e) {
             taskData = DataManager.getInstance().loadTaskDataFromFile();
             System.out.printf(MESSAGE_DAMAGE_CSV);

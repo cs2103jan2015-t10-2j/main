@@ -40,19 +40,20 @@ public class SaveCommandHandler implements ICommandHandler {
         try {
             saveToDat();
             saveToCsv();
-            System.out.printf(MESSAGE_FILE_SAVE, fileSavePath);
+            System.out.printf(MESSAGE_FILE_SAVE, fileSavePathCSV);
             return saveCommand;
         } catch (IOException e) {
-            System.out.printf(MESSAGE_SAVE_FAILED, fileSavePath);
+            System.out.printf(MESSAGE_SAVE_FAILED, fileSavePathCSV);
             return null;
         }
     }
 
     //@author A0134704M
     public void saveToDat() throws IOException {
-        if (fileSavePath.toLowerCase().endsWith(".dat")) {
-        } else {
-            fileSavePath = fileSavePath + ".dat";
+        if (fileSavePath != null) {
+            if (!fileSavePath.toLowerCase().endsWith(".dat")) {
+                fileSavePath = fileSavePath + ".dat";
+            }
         }
         DataManager.getInstance().setPathToSaveLoad(fileSavePath);
         fileSavePath = DataManager.getInstance().getPathToSaveLoad();

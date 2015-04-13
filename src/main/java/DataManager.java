@@ -50,9 +50,16 @@ public class DataManager {
 
     //@author A0134704M
     public TaskData loadTaskDataFromFile() {
-        FileInputStream fis;
         TaskData taskData = null;
 
+        
+        taskData = loadtaskDataFromBinaryFile(taskData);
+
+        return taskData;
+    }
+
+    private TaskData loadtaskDataFromBinaryFile(TaskData taskData) {
+        FileInputStream fis;
         try {
             if (pathToSaveLoad == null) {
                 fis = new FileInputStream(DEFAULT_PATH_TO_LOAD_SAVE);
@@ -70,7 +77,6 @@ public class DataManager {
         } catch (ClassNotFoundException e) {
             System.out.printf(MESSAGE_DATA_FILE_FAIL_TO_LOAD);
         }
-
         return taskData;
     }
 
