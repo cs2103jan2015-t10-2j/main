@@ -1,11 +1,13 @@
-import java.util.Calendar;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Event implements Serializable {
 
 
+
+    private static final String UNTITLED = "Untitled";
 
     private static final long serialVersionUID = -6301813687015638579L;
 
@@ -53,7 +55,11 @@ public class Event implements Serializable {
 
     //@author A0134704M
     public String getTaskName() {
-        return taskName;
+        if (taskName == null || taskName.isEmpty()) {
+            return UNTITLED;
+        } else {
+            return taskName;            
+        }
     }
 
     //@author A0134704M

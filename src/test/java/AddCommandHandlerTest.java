@@ -11,6 +11,7 @@ public class AddCommandHandlerTest extends StringBasedTest {
     private static final String commandAdd1 = "add Homework at 4:00 11/3/2015 for 60 mins @ Tembusu College desc \"Work on CS2103 project\" setPrior HIGH";
     private static final String commandAdd2 = "add do homework for ever";
     private static final String commandAdd3 = "add 123";
+    private static final String commandAdd4 = "add 1/4/2015";
 
     //@author A0134704M
     @Override
@@ -188,6 +189,9 @@ public class AddCommandHandlerTest extends StringBasedTest {
     }
 
     //@author A0134704M
+    /**
+     * Test for Event with all elements
+     */
     @Test
     public void testExecuteCommand1() {
         super.executeCommand(commandAdd1);
@@ -218,6 +222,9 @@ public class AddCommandHandlerTest extends StringBasedTest {
     }
 
     //@author A0134704M
+    /**
+     * Test for invalid Duration
+     */
     @Test
     public void testExecuteCommand2() {
         super.executeCommand(commandAdd2);
@@ -232,6 +239,9 @@ public class AddCommandHandlerTest extends StringBasedTest {
     }
 
     //@author A0134704M
+    /**
+     * Test for Task with number as event name
+     */
     @Test
     public void testExecuteCommand3() {
         super.executeCommand(commandAdd3);
@@ -243,5 +253,22 @@ public class AddCommandHandlerTest extends StringBasedTest {
 
         String actualTaskName = event.getTaskName();
         assertEquals("123", actualTaskName);
+    }
+
+    //@author A0134704M
+    /**
+     * Test for Untitled Event
+     */
+    @Test
+    public void testExecuteCommand4() {
+        super.executeCommand(commandAdd4);
+
+        assertEquals(1, taskData.getEventMap().size());
+        int taskId = taskData.getEventMap().keySet().iterator().next();
+
+        Event event = taskData.getEventMap().get(taskId);
+
+        String actualTaskName = event.getTaskName();
+        assertEquals("Untitled", actualTaskName);
     }
 }
