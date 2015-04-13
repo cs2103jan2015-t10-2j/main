@@ -46,6 +46,7 @@ public class AddCommand implements ICommand {
         return true;
     }
 
+    //@author A0134704M
     private void addEventToRecord() {
         Event previousEvent = taskData.getEventMap().put(event.getTaskID(), event);
         assert (previousEvent == null);

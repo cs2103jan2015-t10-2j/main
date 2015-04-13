@@ -79,7 +79,6 @@ public class HelpCommandHandler implements ICommandHandler {
     //@author A0134704M
     @Override
     public boolean isExtraInputNeeded() {
-        // TODO Auto-generated method stub
         return false;
     }
 

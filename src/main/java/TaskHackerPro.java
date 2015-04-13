@@ -16,7 +16,6 @@ import org.fusesource.jansi.Ansi.Color;
 public class TaskHackerPro {
 
     
-    private static final String MESSAGE_DAMAGE_CSV = "CSV file is damaged. Loaded from the last record.\n";
     private IInputSource inputSource;
     private Stack<Entry<ICommand, String>> undoStack;
     private Stack<Entry<ICommand, String>> redoStack;
@@ -40,6 +39,7 @@ public class TaskHackerPro {
     private static final String MESSAGE_OVERDUE_TASK_DISPLAY = "%3d [%s] %s\n";
     private static final String MESSAGE_COMING_EVENT_DISPLAY = "%3d [%s] %s\n";
     private static final String MESSAGE_CANNOT_LOAD_FROM_CSV = "Cannot load from CSV";
+    private static final String MESSAGE_DAMAGE_CSV = "CSV file is damaged. Loaded from the last record.\n";
     
     //@author A0134704M
     public TaskHackerPro(Stack<Entry<ICommand, String>> undoStack,
@@ -237,9 +237,9 @@ public class TaskHackerPro {
     //@author A0134704M
     public static void main(String[] args) {
         ConsoleUtility.clearScreen();
-
         IInputSource inputSource = new ConsoleInputSource(System.in);
         TaskData taskData;
+        
         try {
             taskData = HumanReadable.setDetailsAllEvents(DataManager.getInstance().loadCSVFromDisk());
         } catch (Exception e) {
@@ -251,7 +251,7 @@ public class TaskHackerPro {
         new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
-    //@author UNKNOWN
+    //@author A0134704M
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
