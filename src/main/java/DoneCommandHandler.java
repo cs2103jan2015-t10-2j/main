@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public class DoneCommandHandler implements ICommandHandler {
 
     private TaskData taskData;
+    private IInputSource inputSource;
     private int displayId;
 
     private static final Pattern patternDoneCommand;
@@ -12,16 +13,20 @@ public class DoneCommandHandler implements ICommandHandler {
     private static final String doneCommandFormat = "^done (?<taskId>[0-9]+)$";
     private static final String taskIdDelimiter = "taskId";
 
+    private static final String COMMAND_DISPLAY_MONTH = "display month";
+    private static final String MESSAGE_EVENT_NOT_FOUND = "Event not found.";
+
     //@author A0134704M
     static {
         patternDoneCommand = Pattern.compile(doneCommandFormat, Pattern.CASE_INSENSITIVE);
     }
 
     //@author A0134704M
-    public DoneCommandHandler(TaskData taskData) {
-        assertObjectNotNull(this);
-        assertObjectNotNull(taskData);
+    public DoneCommandHandler(TaskData taskData, IInputSource inputSource) {
+        assert (taskData != null);
+        assert (inputSource != null);
         this.taskData = taskData;
+        this.inputSource = inputSource;
     }
 
     //@author A0134704M
@@ -54,14 +59,14 @@ public class DoneCommandHandler implements ICommandHandler {
             int actualId = taskData.getActualId(displayId);
             eventDone = taskData.getEventMap().get(actualId);
         } catch (NoSuchElementException e) {
+            if (taskData.isDisplayIdMapEmpty()) {
+                inputSource.addCommand(COMMAND_DISPLAY_MONTH);
+            } else {
+                System.out.println(MESSAGE_EVENT_NOT_FOUND);
+            }
             return null;
         }
         ICommand doneCommand = new DoneCommand(eventDone);
         return doneCommand;
-    }
-
-    //@author UNKNOWN
-    private void assertObjectNotNull(Object o) {
-        assert (o != null);
     }
 }

@@ -85,8 +85,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     // @author A0105886W
     static {
-        patternViewDate = Pattern.compile(viewCommandDate);
-        patternViewDay = Pattern.compile(viewCommadDay);
+        patternViewDate = Pattern.compile(viewCommandDate, Pattern.CASE_INSENSITIVE);
+        patternViewDay = Pattern.compile(viewCommadDay, Pattern.CASE_INSENSITIVE);
         dateFormat = new SimpleDateFormat(dateFormatString);
         dateFormatEMD = new SimpleDateFormat(simpleDateFormatEMD);
         dateFormatEEE = new SimpleDateFormat(simpleDateFormatEEE);

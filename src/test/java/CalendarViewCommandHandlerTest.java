@@ -24,8 +24,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
     private static final String validCommandDisplayMonth = "display month";
     private static final String validCommandDisplayDate = "display 12/12/2016";
     private static final String validCommandDisplayDate2 = "display 14/4/2015";
-   
-    
+
     private static final String validCommandprev = "2";
     private static final String commandDelete = "delete 1";
     private static final String commandDone = "done 1";
@@ -39,26 +38,24 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
 
     // @author A0105886
     @Test
-    public void testExecuteCOmmand0(){
+    public void testExecuteCOmmand0() {
         super.executeCommand(validCommandAdd1);
         super.executeCommand(validCommandAdd2);
         super.executeCommand(validCommandAdd3);
         super.executeCommand(validCommandAdd4);
         super.executeCommand(validCommandFloat);
-        
+
         super.executeCommand(validCommandDisplayToday);
         super.executeCommand(validCommandDisplayWeek);
         super.executeCommand(validCommandDisplayTuesday);
         super.executeCommand(validCommandDisplayDate2);
         super.executeCommand(validCommandDisplayFloat);
         super.executeCommand(validCommandDisplayPri);
-        
-        assertEquals(5, taskData.getEventMap().size());   
-    }
-    
-    
 
- // @author A0105886
+        assertEquals(5, taskData.getEventMap().size());
+    }
+
+    // @author A0105886
     @Test
     public void testExecuteCommand1() {
 
@@ -119,7 +116,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
     }
 
     @Test
- // @author A0105886
+    // @author A0105886
     public void testExecuteCommand2() {
 
         super.executeCommand(validCommandAdd1);
@@ -136,8 +133,8 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         super.executeCommand(commandDelete);
         assertEquals(0, taskData.getEventMap().size());
     }
-    
- // @author A0105886
+
+    // @author A0105886
     @Test
     public void testExecuteCommand3() {
 
@@ -155,8 +152,8 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         super.executeCommand(commandDelete);
         assertEquals(0, taskData.getEventMap().size());
     }
-    
- // @author A0105886
+
+    // @author A0105886
     @Test
     public void testExecuteCommand4() {
         super.executeCommand(validCommandAdd1);
@@ -172,11 +169,7 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         super.executeCommand(validCommandDisplayMonth);
         super.executeCommand(validCommandprev);
         super.executeCommand(commandDone);
-        assertTrue(event.isDone());    
+        assertTrue(event.isDone());
     }
-    
-    
-    
-    
 
 }

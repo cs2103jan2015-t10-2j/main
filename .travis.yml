@@ -14,4 +14,4 @@ before_script: gradle clean
 
 script: gradle check -i
 
-after_script: gradle cobertura coveralls
+after_script: gradle fatJar cobertura coveralls
