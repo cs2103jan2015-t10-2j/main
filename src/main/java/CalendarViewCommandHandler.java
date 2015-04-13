@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class CalendarViewCommandHandler implements ICommandHandler {
 
-    private static final String MESSAGE_KEY_IN_OPTION_AGAIN = "Please key in option 1 to 5 again or valid command again";
+    private static final String MESSAGE_KEY_IN_OPTION_AGAIN = "Please key in valid commands";
     private TaskData taskData;
     private IInputSource inputSource;
     private String command;
@@ -19,7 +19,6 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private Calendar dateViewing;
     private boolean exit = false;
     private boolean reEnter = false;
-    private ArrayList<Integer> floatingMonthIds = new ArrayList<Integer>();
 
     private boolean isExtraInputNeeded;
     private ViewOption chosenView = ViewOption.NOT_CHOSEN;
@@ -39,40 +38,39 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private static final String viewCommandPri = "display priority";
     private static final String viewCommadDay = "display (.+)";
     private static final String viewCommandDate = "display (?<date>.+)";
-    
 
     private static final String dateFormatString = "d/M/y";
     private static final String simpleDateFormatEMD = "EEE MMM dd";
     private static final String simpleDateFormatEEE = "EEEEEEEEE";
-    private static final String simpleDateFormatHHColonMM = "HH:mm";
-    private static final String simpleDateFormatMMM = "MMMMMMMMMMMMMMMM";
+    private static final String simpleDateFormatMMM = "MMMMMMMMMMMMMMMM YYYY";
+    private static final String simpleDateFormatTimeDayMthyr = "HH:mm dd MMM, yyyy";
 
     private static final String messageInvalidDate = "If you are entering date. Please enter in for e.g. display 11/3/2015";
     private static final String messageReenterDate = "Please either enter display week or display month";
     private static final String messageIncorrectFormat = "Incorrect format. please enter valid display commands.";
     private static final String dateDelimiter = "date";
-    private static final String messageNoFloating = "============== No tasks without time or date ==============\n\n";
-    private static final String messageNoMonthView= "============== No tasks for the month of %s ===============\n\n";
+    private static final String messageNoFloating = "============== No tasks without time or date ==============\n\n\n\n";
+    private static final String messageNoMonthView = "============== No tasks for the month of %s ===============\n\n";
     private static final String messageNoWeekView = "======== No tasks for the week of %s from %s to %s ========\n\n";
-    private static final String messageNoDone     = "====================== No done tasks ======================\n\n";
-    private static final String messageNoDayView  = "==================== No tasks for %s %s ===================\n\n";
-    private static final String messageNoPri      = "==================== No priority tasks ====================\n\n";
-    
-    private static final String messageMonthView  = "================ Month view from %s to %s =================\n\n";
-    private static final String messageWeekView   = "================= Week view from %s to %s =================\n\n";
-    private static final String messageDateView   = "===================== Date View of %s =====================\n\n";
-    private static final String messagePrintDate  = "[%s]===============================\n\n";
-    private static final String messageFloating   = "=============== Tasks without time and date ===============\n\n";
-    private static final String messageDone       = "======================== Done Tasks =======================\n\n";
-    private static final String messagePri        = "====================== Priority tasks =====================\n\n";
-    private static final String messageMoreEvents = "1. There are more tasks. Hit 1 to view more";
-    private static final String messageNoMoreEvents = "1. Hit 1 to display tasks again";
+    private static final String messageNoDone = "====================== No done tasks ======================\n\n\n\n";
+    private static final String messageNoDayView = "==================== No tasks for %s %s ===================\n\n";
+    private static final String messageNoPri = "==================== No priority tasks ====================\n\n";
 
+    private static final String messageMonthView = "====================== Month view of %s =================\n\n";
+    private static final String messageWeekView = "================= Week view from %s to %s =================\n\n";
+    private static final String messageDateView = "===================== Date View of %s =====================\n\n";
+    private static final String messagePrintDate = "[%s]===============================\n\n";
+    private static final String messagePrintPri = "[%s]===============================\n\n";
+    private static final String messageFloating = "=============== Tasks without time and date ===============\n\n";
+    private static final String messageDone = "======================== Done Tasks =======================\n\n";
+    private static final String messagePri = "====================== Priority tasks =====================\n\n";
+    private static final String messageMoreEvents = "1. There are more tasks. Hit 1 to view more";
+    private static final String messageNoMoreEvents = "1. Hit 1 to refresh scale";
 
     private static final SimpleDateFormat dateFormatEMD;
     private static final SimpleDateFormat dateFormatEEE;
     private static final SimpleDateFormat dateFormatMMM;
-    private static final SimpleDateFormat formatHHColonMM;
+    private static final SimpleDateFormat formatTimeDayMthYr;
 
     private int maxMonth = 0;
     private int maxWeek = 0;
@@ -85,7 +83,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
     private int moveDate = 0;
     private int moveToday = 0;
 
-    // @author UNKNOWN
+    // @author A0105886W
     static {
         patternViewDate = Pattern.compile(viewCommandDate);
         patternViewDay = Pattern.compile(viewCommadDay);
@@ -93,17 +91,17 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         dateFormatEMD = new SimpleDateFormat(simpleDateFormatEMD);
         dateFormatEEE = new SimpleDateFormat(simpleDateFormatEEE);
         dateFormatMMM = new SimpleDateFormat(simpleDateFormatMMM);
-        formatHHColonMM = new SimpleDateFormat(simpleDateFormatHHColonMM);
+        formatTimeDayMthYr = new SimpleDateFormat(simpleDateFormatTimeDayMthyr);
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public CalendarViewCommandHandler(TaskData taskData, IInputSource inputSource) {
         assertObjectNotNull(taskData);
         this.taskData = taskData;
         this.inputSource = inputSource;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     @Override
     public boolean parseCommand(String command) {
         this.command = command;
@@ -116,19 +114,17 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         Matcher dayMatcher = patternViewDay.matcher(command);
         if (isDisplayCommand) {
 
-            if (viewCommandWeek.equalsIgnoreCase(command.trim()) || viewCommandDisplay.equalsIgnoreCase(command.trim())) {
+            if (viewCommandWeek.equalsIgnoreCase(command.trim())
+                    || viewCommandDisplay.equalsIgnoreCase(command.trim())) {
                 this.command = command.substring(firstSpace + 1).trim();
-                if(viewCommandDisplay.equalsIgnoreCase(command.trim())){
-                this.saveCommand = "display week again";
-                }
-                else{
+                if (viewCommandDisplay.equalsIgnoreCase(command.trim())) {
+                    this.saveCommand = "display week again";
+                } else {
                     this.saveCommand = this.command;
                 }
                 isCommandFormatCorrect = true;
-            } 
-            
-            
-            
+            }
+
             else if (viewCommandMonth.equalsIgnoreCase(command.trim())) {
                 this.command = command.substring(firstSpace + 1).trim();
                 this.saveCommand = this.command;
@@ -174,8 +170,8 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 isCommandFormatCorrect = true;
 
             }
-            
-            else if (viewCommandPri.equals(command.trim())){
+
+            else if (viewCommandPri.equals(command.trim())) {
                 this.command = command.substring(firstSpace + 1).trim();
                 this.saveCommand = this.command;
                 isCommandFormatCorrect = true;
@@ -280,7 +276,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 reEnter = false;
                 return true;
             }
-            
+
             else if (firstWord.equalsIgnoreCase("undo")) {
                 isExtraInputNeeded = false;
                 inputSource.addCommand(command);
@@ -296,7 +292,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 reEnter = false;
                 return true;
             }
-            
+
             else if (firstWord.equalsIgnoreCase("history")) {
                 isExtraInputNeeded = false;
                 inputSource.addCommand(command);
@@ -304,7 +300,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 reEnter = false;
                 return true;
             }
-            
+
             try {
                 int chosenViewId = Integer.parseInt(command);
                 if (chosenViewId > 0 && chosenViewId < ViewOption.values().length) {
@@ -325,10 +321,10 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         }
 
         return isCommandFormatCorrect;
+
     }
 
-    // @author UNKNOWN
-    // Will be in use later. Don't delete
+    // @author A0105886W
     public boolean hasLogicalDate(String command) {
         int length = command.length();
         String subString;
@@ -436,7 +432,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     @Override
     public ICommand getCommand() {
         ICommand displayCommand = new NullCommand();
@@ -491,9 +487,9 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 return displayCommand;
             }
         }
-        
+
         if ("priority".equals(this.saveCommand)) {
-            if(processPriority()){
+            if (processPriority()) {
                 return displayCommand;
             }
         }
@@ -501,10 +497,11 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return null;
     }
 
-    private boolean processPriority(){
+    // @author A0105886W
+    private boolean processPriority() {
         System.out.println();
         ArrayList<Integer> sortedPriIds = new ArrayList<Integer>();
-        
+
         if (chosenView == ViewOption.NEXT || chosenView == ViewOption.PREV) {
             System.out.println("Please enter option 1 only");
         }
@@ -520,7 +517,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 }
 
                 System.out.println(messagePri);
-                if (displayFloating(sortedPriIds, maxFloat)) {
+                if (displayPriority(sortedPriIds, maxFloat)) {
                     System.out.println(messageMoreEvents);
                 } else {
                     System.out.println(messageNoMoreEvents);
@@ -532,14 +529,15 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 System.out.println("Note: Please add tasks");
             }
         }
-        
+
         System.out.println();
-        
+
         return true;
     }
-    
- 
+
+    // @author A0105886W
     private boolean processDone() {
+        System.out.println();
         ArrayList<Integer> doneIds = new ArrayList<Integer>();
         if (chosenView == ViewOption.NEXT || chosenView == ViewOption.PREV) {
             System.out.println("Please enter option 1 only");
@@ -565,16 +563,16 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
             } catch (NoSuchElementException e) {
                 System.out.printf(messageNoDone);
-                System.out.println("Tip: Please display any view except done and choose a task to you want it as done");
+                System.out
+                        .println("Tip: Please display any view except done and choose a task you want it as done first");
                 System.out.println("For example: display checklist then done 1");
             }
         }
-        
-        System.out.println();
 
         return true;
     }
 
+    // @author A0105886W
     private boolean processToday() {
 
         System.out.println();
@@ -608,7 +606,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
             if (taskData.hasFloatingTasks()) {
                 System.out
-                        .println("Note: There are floating tasks. Type \"display checklist\" to view them");
+                        .println("Note: There are tasks in checklist. Type \"display checklist\" to view them");
             } else {
                 System.out.println("Note: There are no floating tasks");
             }
@@ -628,6 +626,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return true;
     }
 
+    // @author A0105886W
     private boolean getTodayViewing(int maxToday) {
         Date beginDate;
         List<Integer> TodayIds;
@@ -653,9 +652,10 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
     }
 
+    // @author A0105886W
     public boolean displayTodayView(List<Integer> dateIds, Date date) {
         taskData.updateDisplayID(dateIds);
-        String taskName, taskLocation, taskDescription;
+        String taskName, taskLocation, taskDescription, taskDate, taskDuration;
         String printDate;
         Event event;
 
@@ -674,34 +674,44 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
             // 1st condition
             if (event.getTaskName() == null) {
-                taskName = "\"task name unspecified\"";
+                taskName = "";
             } else {
-                taskName = event.getTaskName();
+                taskName = event.getTaskName() + " ";
             }
 
-            // 2nd condition
-            if (event.getTaskLocation() == null) {
-                taskLocation = "\"location unspecified\"";
+            if (event.getTaskDate() != null) {
+                taskDate = formatTimeDayMthYr.format(event.getTaskDate().getTime()) + " ";
             } else {
-                taskLocation = event.getTaskLocation();
+                taskDate = "";
             }
 
-            // 3rd condition
+            if (event.getTaskDuration() < 1) {
+                taskDuration = "";
+            } else {
+                taskDuration = "for " + event.getTaskDuration() + "mins. ";
+            }
+
             if (event.getTaskDescription() == null) {
-                taskDescription = "description unspecified";
+                taskDescription = "";
             } else {
-                taskDescription = event.getTaskDescription();
+                taskDescription = "desc " + event.getTaskDescription() + " ";
             }
 
-            System.out.println(taskData.getDisplayId(dateIds.get(i)) + "." + " "
-                    + formatHHColonMM.format(event.getTaskDate().getTime()) + " "
-                    + taskName + " " + "@ " + taskLocation + " " + "desc " + "\""
-                    + taskDescription + "\"" + " " + event.getTaskPriority().toString());
+            if (event.getTaskLocation() == null) {
+                taskLocation = "";
+            } else {
+                taskLocation = "@ " + event.getTaskLocation() + " ";
+            }
+
+            System.out.println(taskData.getDisplayId(dateIds.get(i)) + "." + taskDate
+                    + taskDuration + taskName + taskLocation + taskDescription
+                    + event.getTaskPriority().toString());
         }
         System.out.printf("\n\n");
         return false;
     }
 
+    // @author A0105886W
     private boolean processFloating() {
         System.out.println();
         ArrayList<Integer> floatingIds = new ArrayList<Integer>();
@@ -722,27 +732,97 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 System.out.println(messageFloating);
                 if (displayFloating(floatingIds, maxFloat)) {
                     System.out.println(messageMoreEvents);
-                    System.out.printf("Tip: You can also display other options");
+                    System.out.println("Tip: You can also display other options");
                 } else {
                     System.out.println(messageNoMoreEvents);
-                    System.out.printf("Tip: You can also display other options");
+                    System.out.println("Tip: You can also display other options");
                     this.maxFloat = 0; // Needed for looping results
                 }
 
             } catch (NoSuchElementException e) {
                 System.out.printf(messageNoFloating);
-                System.out.println("Tip: You can add a task without time or date which will end up in the checklist");
+                System.out
+                        .println("Tip: You can add a task without time or date which will end up in the checklist");
+                System.out.println();
             }
+
         }
-        
-        System.out.println();
 
         return true;
     }
 
+    // @author A0105886W
+    public boolean displayPriority(ArrayList<Integer> floatingIds, int maxPri) {
+        Event event;
+        String taskName, taskLocation, taskDescription, taskDate, taskDuration;
+        String displayPri;
+        taskData.updateDisplayID(floatingIds);
+
+        displayPri = taskData.getEventMap().get(floatingIds.get(0)).getTaskPriority()
+                .toString();
+        System.out.printf(messagePrintPri, displayPri);
+
+        for (int i = 0; i < floatingIds.size(); i++) {
+
+            if (i >= maxFloat) {
+                System.out.printf("\n\n");
+                return true;
+            }
+
+            if (!(displayPri.equals(taskData.getEventMap().get(floatingIds.get(i))
+                    .getTaskPriority().toString()))) {
+                System.out.println();
+                displayPri = taskData.getEventMap().get(floatingIds.get(i))
+                        .getTaskPriority().toString();
+                System.out.printf(messagePrintPri, displayPri);
+            }
+
+            event = taskData.getEventMap().get(floatingIds.get(i));
+
+            displayPri = event.getTaskPriority().toString();
+
+            if (event.getTaskName() == null) {
+                taskName = "";
+            } else {
+                taskName = event.getTaskName() + " ";
+            }
+
+            if (event.getTaskDate() != null) {
+                taskDate = formatTimeDayMthYr.format(event.getTaskDate().getTime()) + " ";
+            } else {
+                taskDate = "";
+            }
+
+            if (event.getTaskDuration() < 1) {
+                taskDuration = "";
+            } else {
+                taskDuration = "for " + event.getTaskDuration() + "mins. ";
+            }
+
+            if (event.getTaskDescription() == null) {
+                taskDescription = "";
+            } else {
+                taskDescription = "desc " + event.getTaskDescription() + " ";
+            }
+
+            if (event.getTaskLocation() == null) {
+                taskLocation = "";
+            } else {
+                taskLocation = "@ " + event.getTaskLocation() + " ";
+            }
+
+            System.out.println(taskData.getDisplayId(floatingIds.get(i)) + "." + taskDate
+                    + taskDuration + taskName + taskLocation + taskDescription);
+        }
+        System.out.printf("\n\n");
+
+        return false;
+    }
+
+    // @author A0105886W
     public boolean displayFloating(ArrayList<Integer> floatingIds, int maxFloat) {
         Event event;
-        String taskName, taskLocation, taskDescription;
+        String taskName, taskLocation, taskDescription, taskDate, taskDuration;
         taskData.updateDisplayID(floatingIds);
 
         for (int i = 0; i < floatingIds.size(); i++) {
@@ -753,36 +833,46 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             }
             event = taskData.getEventMap().get(floatingIds.get(i));
 
-            // 1st condition
             if (event.getTaskName() == null) {
                 taskName = "";
             } else {
-                taskName = event.getTaskName();
+                taskName = event.getTaskName() + " ";
             }
 
-            // 2nd condition
-            if (event.getTaskLocation() == null) {
-                taskLocation = "";
+            if (event.getTaskDate() != null) {
+                taskDate = formatTimeDayMthYr.format(event.getTaskDate().getTime()) + " ";
             } else {
-                taskLocation = event.getTaskLocation();
+                taskDate = "";
             }
 
-            // 3rd condition
+            if (event.getTaskDuration() < 1) {
+                taskDuration = "";
+            } else {
+                taskDuration = "for " + event.getTaskDuration() + "mins. ";
+            }
+
             if (event.getTaskDescription() == null) {
                 taskDescription = "";
             } else {
-                taskDescription = event.getTaskDescription();
+                taskDescription = "desc " + event.getTaskDescription() + " ";
             }
 
-            System.out.println(taskData.getDisplayId(floatingIds.get(i)) + "." + " "
-                    + taskName + " " + taskLocation + " " + taskDescription + " " + event.getTaskPriority().toString());
+            if (event.getTaskLocation() == null) {
+                taskLocation = "";
+            } else {
+                taskLocation = "@ " + event.getTaskLocation() + " ";
+            }
+
+            System.out.println(taskData.getDisplayId(floatingIds.get(i)) + "." + taskDate
+                    + taskDuration + taskName + taskLocation + taskDescription
+                    + event.getTaskPriority().toString());
         }
         System.out.printf("\n\n");
 
         return false;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private boolean processDateView() {
         System.out.println();
         // 1st condition
@@ -815,7 +905,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
             if (taskData.hasFloatingTasks()) {
                 System.out
-                        .println("Note 1: There are floating tasks. Type \"display checklist\" to view them");
+                        .println("Note 1: There tasks in checklist. Type \"display checklist\" to view them");
             } else {
                 System.out.println("Note 1: There are no floating tasks");
             }
@@ -835,7 +925,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return true;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private boolean processWeekView() {
         // 1st condition
         System.out.println();
@@ -868,7 +958,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
             if (taskData.hasFloatingTasks()) {
                 System.out
-                        .println("Note 1: There are floating tasks. Type \"display checklist\" to view them");
+                        .println("Note 1: There are tasks in checklist. Type \"display checklist\" to view them");
             } else {
                 System.out.println("Note 1: There are no floating tasks");
             }
@@ -887,7 +977,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return true;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private boolean processMonthView() {
         System.out.println();
         if (chosenView == ViewOption.VIEW_MORE || chosenView == ViewOption.NOT_CHOSEN
@@ -919,7 +1009,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
         if (taskData.hasFloatingTasks()) {
             System.out
-                    .println("Note 1: There are floating tasks. Please type \"display checklist\" to view them");
+                    .println("Note 1: There are tasks in checklist. Please type \"display checklist\" to view them");
         } else {
             System.out.println("Note 1: There are no floating tasks");
         }
@@ -935,7 +1025,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return true;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private boolean getDateViewing(int maxDate) {
         Date beginDate;
         List<Integer> dateIds;
@@ -956,13 +1046,13 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             System.out.printf(messageNoDayView, dateFormatEEE.format(beginDate),
                     dateFormat.format(beginDate));
         }
-        
+
         System.out.println();
         return false;
 
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private boolean getWeekViewing(int maxWeek) {
         Calendar calStart = Calendar.getInstance();
         Date beginDate, endDate;
@@ -973,7 +1063,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         }
         calStart.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         beginDate = calStart.getTime();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 7; i++) {
             calStart.add(Calendar.DATE, 1);
         }
         endDate = calStart.getTime();
@@ -988,12 +1078,12 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             System.out.printf(messageNoWeekView, dateFormatMMM.format(beginDate),
                     dateFormat.format(beginDate), dateFormat.format(endDate));
         }
-        
+
         System.out.println();
         return false;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private boolean getMonthViewing(int maxMonth) {
         Date begining, end;
         List<Integer> monthIds;
@@ -1037,10 +1127,10 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         return false;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public boolean displayDateView(List<Integer> dateIds, Date date) {
         taskData.updateDisplayID(dateIds);
-        String taskName, taskLocation, taskDescription;
+        String taskName, taskLocation, taskDescription, taskDuration, taskDate;
         String printDate;
         Event event;
 
@@ -1059,43 +1149,51 @@ public class CalendarViewCommandHandler implements ICommandHandler {
 
             // 1st condition
             if (event.getTaskName() == null) {
-                taskName = "\"task name unspecified\"";
+                taskName = "";
             } else {
-                taskName = event.getTaskName();
+                taskName = event.getTaskName() + " ";
             }
 
-            // 2nd condition
-            if (event.getTaskLocation() == null) {
-                taskLocation = "\"location unspecified\"";
+            if (event.getTaskDate() != null) {
+                taskDate = formatTimeDayMthYr.format(event.getTaskDate().getTime()) + " ";
             } else {
-                taskLocation = event.getTaskLocation();
+                taskDate = "";
             }
 
-            // 3rd condition
+            if (event.getTaskDuration() < 1) {
+                taskDuration = "";
+            } else {
+                taskDuration = "for " + event.getTaskDuration() + "mins. ";
+            }
+
             if (event.getTaskDescription() == null) {
-                taskDescription = "description unspecified";
+                taskDescription = "";
             } else {
-                taskDescription = event.getTaskDescription();
+                taskDescription = "desc " + event.getTaskDescription() + " ";
             }
 
-            System.out.println(taskData.getDisplayId(dateIds.get(i)) + "." + " "
-                    + formatHHColonMM.format(event.getTaskDate().getTime()) + " "
-                    + taskName + " " + "@ " + taskLocation + " " + "desc " + "\""
-                    + taskDescription + "\"" + " " + event.getTaskPriority().toString());
+            if (event.getTaskLocation() == null) {
+                taskLocation = "";
+            } else {
+                taskLocation = "@ " + event.getTaskLocation() + " ";
+            }
+
+            System.out.println(taskData.getDisplayId(dateIds.get(i)) + "." + taskDate
+                    + taskDuration + taskName + taskLocation + taskDescription
+                    + event.getTaskPriority().toString());
         }
         System.out.printf("\n\n");
         return false;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public boolean displayMonthView(List<Integer> monthIds, Date begining, Date end) {
         taskData.updateDisplayID(monthIds);
         Event event;
-        String taskName, taskLocation, taskDescription;
+        String taskName, taskLocation, taskDescription, taskDate, taskDuration;
         String printDate;
 
-        System.out.printf(messageMonthView, dateFormat.format(begining),
-                dateFormat.format(end));
+        System.out.printf(messageMonthView, dateFormatMMM.format(begining));
 
         event = taskData.getEventMap().get(monthIds.get(0));
         printDate = dateFormatEMD.format(event.getTaskDate().getTime());
@@ -1113,42 +1211,50 @@ public class CalendarViewCommandHandler implements ICommandHandler {
                 System.out.printf(messagePrintDate, printDate);
             }
 
-            // 1st condition
             if (event.getTaskName() == null) {
-                taskName = "\"task name unspecified\"";
+                taskName = "";
             } else {
-                taskName = event.getTaskName();
+                taskName = event.getTaskName() + " ";
             }
 
-            // 2nd condition
-            if (event.getTaskLocation() == null) {
-                taskLocation = "\"location unspecified\"";
+            if (event.getTaskDate() != null) {
+                taskDate = formatTimeDayMthYr.format(event.getTaskDate().getTime()) + " ";
             } else {
-                taskLocation = event.getTaskLocation();
+                taskDate = "";
             }
 
-            // 3rd condition
+            if (event.getTaskDuration() < 1) {
+                taskDuration = "";
+            } else {
+                taskDuration = "for " + event.getTaskDuration() + "mins. ";
+            }
+
             if (event.getTaskDescription() == null) {
-                taskDescription = "description unspecified";
+                taskDescription = "";
             } else {
-                taskDescription = event.getTaskDescription();
+                taskDescription = "desc " + event.getTaskDescription() + " ";
             }
 
-            System.out.println(taskData.getDisplayId(monthIds.get(i)) + "." + " "
-                    + formatHHColonMM.format(event.getTaskDate().getTime()) + " "
-                    + taskName + " " + "@ " + taskLocation + " " + "desc " + "\""
-                    + taskDescription + "\"" + " " + event.getTaskPriority().toString());
+            if (event.getTaskLocation() == null) {
+                taskLocation = "";
+            } else {
+                taskLocation = "@ " + event.getTaskLocation() + " ";
+            }
+
+            System.out.println(taskData.getDisplayId(monthIds.get(i)) + "." + taskDate
+                    + taskDuration + taskName + taskLocation + taskDescription
+                    + event.getTaskPriority().toString());
         }
         System.out.printf("\n");
         return false;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public boolean displayWeekView(List<Integer> weekIds, Date begining, Date end) {
         taskData.updateDisplayID(weekIds);
         Event event;
         String printDate;
-        String taskName, taskLocation, taskDescription;
+        String taskName, taskLocation, taskDescription, taskDate, taskDuration;
 
         System.out.printf(messageWeekView, dateFormat.format(begining),
                 dateFormat.format(end));
@@ -1164,81 +1270,45 @@ public class CalendarViewCommandHandler implements ICommandHandler {
             }
 
             event = taskData.getEventMap().get(weekIds.get(i));
-            if (!(printDate.equals(dateFormatEMD.format(event.getTaskDate().getTime())))) {
-                System.out.println();
-                printDate = dateFormatEMD.format(event.getTaskDate().getTime());
-                System.out.printf(messagePrintDate, printDate);
-            }
-
-            // 1st condition
             if (event.getTaskName() == null) {
-                taskName = "\"task name unspecified\"";
+                taskName = "";
             } else {
-                taskName = event.getTaskName();
+                taskName = event.getTaskName() + " ";
             }
 
-            // 2nd condition
-            if (event.getTaskLocation() == null) {
-                taskLocation = "\"location unspecified\"";
+            if (event.getTaskDate() != null) {
+                taskDate = formatTimeDayMthYr.format(event.getTaskDate().getTime()) + " ";
             } else {
-                taskLocation = event.getTaskLocation();
+                taskDate = "";
             }
 
-            // 3rd condition
+            if (event.getTaskDuration() < 1) {
+                taskDuration = "";
+            } else {
+                taskDuration = "for " + event.getTaskDuration() + "mins. ";
+            }
+
             if (event.getTaskDescription() == null) {
-                taskDescription = "description unspecified";
+                taskDescription = "";
             } else {
-                taskDescription = event.getTaskDescription();
+                taskDescription = "desc " + event.getTaskDescription() + " ";
             }
 
-            System.out.println(taskData.getDisplayId(weekIds.get(i)) + "." + " "
-                    + formatHHColonMM.format(event.getTaskDate().getTime()) + " "
-                    + taskName + " " + "@ " + taskLocation + " " + "desc " + "\""
-                    + taskDescription + "\"" + " " + event.getTaskPriority().toString());
+            if (event.getTaskLocation() == null) {
+                taskLocation = "";
+            } else {
+                taskLocation = "@ " + event.getTaskLocation() + " ";
+            }
+
+            System.out.println(taskData.getDisplayId(weekIds.get(i)) + "." + taskDate
+                    + taskDuration + taskName + taskLocation + taskDescription
+                    + event.getTaskPriority().toString());
         }
         System.out.printf("\n\n");
         return false;
     }
 
-    // @author UNKNOWN
-    public void displayFloatingTasks(ArrayList<Integer> floatingIds) {
-        Event event;
-        String taskName, taskLocation, taskDescription;
-
-        System.out.printf(messageFloating);
-
-        for (int i = 0; i < floatingIds.size(); i++) {
-            event = taskData.getEventMap().get(floatingIds.get(i));
-
-            // 1st condition
-            if (event.getTaskName() == null) {
-                taskName = "\"task name unspecified\"";
-            } else {
-                taskName = event.getTaskName();
-            }
-
-            // 2nd condition
-            if (event.getTaskLocation() == null) {
-                taskLocation = "\"location unspecified\"";
-            } else {
-                taskLocation = event.getTaskLocation();
-            }
-
-            // 3rd condition
-            if (event.getTaskDescription() == null) {
-                taskDescription = "description unspecified";
-            } else {
-                taskDescription = event.getTaskDescription();
-            }
-
-            System.out.println(taskData.getDisplayId(floatingMonthIds.get(i)) + "." + " "
-                    + taskName + " @ " + taskLocation + " \"" + taskDescription + "\""
-                    + " " + event.getTaskPriority().toString());
-        }
-
-    }
-
-    // @author UNKNOWN
+    // @author A0105886W
     private static void setTimeToBeginningOfDay(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -1246,7 +1316,7 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private static void setTimeToEndofDay(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
@@ -1254,25 +1324,25 @@ public class CalendarViewCommandHandler implements ICommandHandler {
         calendar.set(Calendar.MILLISECOND, 999);
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private static Calendar getCalendarForNow() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         return calendar;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     @Override
     public boolean isExtraInputNeeded() {
         return isExtraInputNeeded;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     public static enum ViewOption {
         NOT_CHOSEN, VIEW_MORE, PREV, NEXT;
     }
 
-    // @author UNKNOWN
+    // @author A0105886W
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

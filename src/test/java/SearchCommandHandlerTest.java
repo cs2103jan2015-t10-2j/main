@@ -167,6 +167,7 @@ public class SearchCommandHandlerTest extends StringBasedTest {
     //@author UNKNOWN
     @Test
     // Boundary case for all valid inputs
+    //This is to test searchEmpty slots in taskdata
     public void testExecuteCase6() {
 
         // Add seven events successfully
