@@ -27,6 +27,8 @@ public class HumanReadable {
         }
     }
     
+    
+    
     //Iterates through the map of events, and finds all the values. Returns a list of those values.
     private static List<String[]> extractAllEvents(TaskData taskData) {
         List<String[]> allEventsDetails = new ArrayList<String[]>();
