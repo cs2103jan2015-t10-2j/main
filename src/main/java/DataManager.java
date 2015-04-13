@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,65 +27,25 @@ public class DataManager {
 
     //@author A0134704M
     private DataManager() {
-
     }
 
-    //@author A0134704M
+    //@author A0109239A
+    //Writes all the task information to the desired location in the disk.
     public void saveTaskDataToFile(TaskData taskData) throws IOException {
-        FileOutputStream fos = null;
-        File file;
-        if (pathToSaveLoad == null) {
-            file = new File(DEFAULT_PATH_TO_LOAD_SAVE);
-        } else {
-            file = new File(pathToSaveLoad);
-        }
-
-        if (file.getParentFile() != null) {
-            file.getParentFile().mkdirs();
-        }
-        fos = new FileOutputStream(file);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(taskData);
-        oos.close();
+        File file = setUpFile();
+        writeObjectToDisk(taskData, file);
     }
     
-    //@author A0109239A
+    //Writes all the task information to the desired location in the disk in human-readable form.    
     public void saveAsCsvToDisk(TaskData taskData) throws IOException {
-        CSVWriter writer = setUpWriter();
         List<String[]> allEventDetails = HumanReadable.getDetailsAllEvents(taskData);
-        for (String[] entry : allEventDetails) {
-            writer.writeNext(entry);
-        }
-        writer.close();
+        writeListToDisk(allEventDetails);
     }
     
-    //@author A0109239A
+    //Find the desired .csv file and returns its contents.
     public List<String[]> loadCSVFromDisk() throws IOException {
-        CSVReader reader = setUpReader();
-        List<String[]> myEntries = reader.readAll();
-        reader.close();
-        return myEntries;
-    }
-
-    //@author A0109239A
-    private CSVWriter setUpWriter() throws IOException {
-        CSVWriter writer = new CSVWriter(new FileWriter(getPath()));
-        return writer;
-    }
-    
-    //@author A0109239A
-    private CSVReader setUpReader() throws IOException {
-        CSVReader reader = new CSVReader(new FileReader(getPath()));
-        return reader;
-    }
-    
-    //@author A0109239A
-    private String getPath() {
-        if (pathToSaveHumanEditable == null) {
-            return DEFAULT_PATH_FOR_HUMAN_EDITABLE;
-        } else {
-            return pathToSaveHumanEditable ;
-        }
+        List<String[]> allEventDetails = readListFromDisk();
+        return allEventDetails;
     }
 
     //@author A0134704M
@@ -113,6 +74,59 @@ public class DataManager {
         return taskData;
     }
 
+    //@author A0109239A
+    //[External library OpenCSV used] writes a given list of String arrays to a .csv file.
+    private void writeListToDisk(List<String[]> allEventDetails) throws IOException {
+        CSVWriter writer = setUpWriter();
+        for (String[] entry : allEventDetails) {
+            writer.writeNext(entry);
+        }
+        writer.close();
+    }
+
+    //[External library OpenCSV used] finds a .csv file and returns its contencts.
+    private List<String[]> readListFromDisk() throws IOException {
+        CSVReader reader = setUpReader();
+        List<String[]> myEntries = reader.readAll();
+        reader.close();
+        return myEntries;
+    }
+   
+    //Writes an object to disk. Not human readable.
+    private void writeObjectToDisk(TaskData taskData, File file) throws FileNotFoundException, IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(taskData);
+        oos.close();
+    }
+    
+    private CSVWriter setUpWriter() throws IOException {
+        CSVWriter writer = new CSVWriter(new FileWriter(getPathHumanReadable()));
+        return writer;
+    }
+    
+    private CSVReader setUpReader() throws IOException {
+        CSVReader reader = new CSVReader(new FileReader(getPathHumanReadable()));
+        return reader;
+    }
+    
+    private File setUpFile() {
+        File file = new File (getPathToSaveLoad());
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+        return file;
+    }
+    
+    //Figures out where the user wants to save.
+    private String getPathHumanReadable() {
+        if (pathToSaveHumanEditable == null) {
+            return DEFAULT_PATH_FOR_HUMAN_EDITABLE;
+        } else {
+            return pathToSaveHumanEditable ;
+        }
+    }
+    
     //@author A0134704M
     public String getPathToSaveLoad() {
         if (pathToSaveLoad == null) {
@@ -121,13 +135,11 @@ public class DataManager {
             return pathToSaveLoad;   
         }
     }
-
-    //@author A0134704M
+    
     public void setPathToSaveLoad(String pathToSaveLoad) {
         this.pathToSaveLoad = pathToSaveLoad;
     }
 
-    //@author A0134704M
     public static DataManager getInstance() {
         if (instance == null) {
             instance = new DataManager();

@@ -80,7 +80,7 @@ public class AddCommandHandler implements ICommandHandler {
         return event;
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }

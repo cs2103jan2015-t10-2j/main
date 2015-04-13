@@ -240,7 +240,7 @@ public class TaskHackerPro {
         new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
-    //@author UNKNOWN
+    //@author A0109239A
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
