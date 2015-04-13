@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
 
 public class CommandParser {
 
+    private static final char CHAR_SPACE = ' ';
+    private static final String STRING_NULL = "";
     private static final String PATTERN_NAMED_GROUP = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
     private static final String PATTERN = "(?<%3$s>%1$s|%2$s) (((?<%4$s>\".*?\")(?=($| (%2$s)))|((?<%5$s>.*?)(?=($| (%2$s)( |$))))))";
     private static final String REGEX_OR = "|";
@@ -115,7 +117,7 @@ public class CommandParser {
             } else if (valueWithoutQuote != null) {
                 entry = new SimpleEntry<String, String>(keyword, valueWithoutQuote);
             } else {
-                entry = new SimpleEntry<String, String>(keyword, "");
+                entry = new SimpleEntry<String, String>(keyword, STRING_NULL);
             }
 
             resultList.add(entry);
@@ -166,7 +168,7 @@ public class CommandParser {
             List<Entry<String, String>> entryList = new ArrayList<Entry<String, String>>();
             Map<String, String> dateTimeMap = new HashMap<String, String>();
 
-            entryList.add(new AbstractMap.SimpleEntry<String, String>("", due));
+            entryList.add(new AbstractMap.SimpleEntry<String, String>(STRING_NULL, due));
             dateTimeMap.putAll(parseCommandSegment(patternDateCommand, dateGroups, entryList));
             logger.info(dateTimeMap.toString());
             
@@ -207,7 +209,7 @@ public class CommandParser {
         }
 
         String commandTaskName = taskDetailMap.remove(KEY_NAME);
-        String taskName = "";
+        String taskName = STRING_NULL;
         if (commandTaskName != null) {
             taskName += commandTaskName;
         }
@@ -393,7 +395,7 @@ public class CommandParser {
             String keyword = entry.getKey();
             String value = entry.getValue();
 
-            patternMatcher = pattern.matcher(keyword + ' ' + value);
+            patternMatcher = pattern.matcher(keyword + CHAR_SPACE + value);
             if (patternMatcher.find()) {
                 for (String group : groups) {
                     String matchedString = patternMatcher.group(group);
@@ -405,7 +407,7 @@ public class CommandParser {
                 int end = patternMatcher.end() - keyword.length() - 1;
                 String newValue = value.substring(0, start) + value.substring(end);
 
-                if ("".equals(newValue)) {
+                if (STRING_NULL.equals(newValue)) {
                     it.remove();
                 } else {
                     entry.setValue(newValue);
