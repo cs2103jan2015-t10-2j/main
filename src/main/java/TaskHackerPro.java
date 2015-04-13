@@ -15,7 +15,6 @@ import org.fusesource.jansi.Ansi.Color;
 
 public class TaskHackerPro {
 
-    
     private IInputSource inputSource;
     private Stack<Entry<ICommand, String>> undoStack;
     private Stack<Entry<ICommand, String>> redoStack;
@@ -251,7 +250,7 @@ public class TaskHackerPro {
         new TaskHackerProRunner(inputSource, taskData, Level.OFF).start();
     }
 
-    //@author A0134704M
+    //@author A0109239A
     private void assertObjectNotNull(Object o) {
         assert (o != null);
     }
