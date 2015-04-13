@@ -33,13 +33,13 @@ public class TaskData implements Serializable {
 
     private static final SimpleDateFormat formatDayMthYr;
 
-    // @author A0134704M
+    //@author A0134704M
     static {
         formatHHmm = new SimpleDateFormat(simpleDateFormatHHmm);
         formatDayMthYr = new SimpleDateFormat(simpleDateFormatDayMthYr);
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public TaskData() {
         eventMap = new LinkedHashMap<Integer, Event>();
         this.displayIDToActualIDMap = new LinkedHashMap<Integer, Integer>();
@@ -112,7 +112,7 @@ public class TaskData implements Serializable {
         return tasksId;
     }
 
-    // @author A0105886W
+    //@author A0105886W
     public boolean hasDonetasks() {
         Event event;
 
@@ -126,7 +126,7 @@ public class TaskData implements Serializable {
         return false;
     }
 
-    // @author a0105886W
+    //@author a0105886W
     public boolean hasFloatingTasks() {
 
         Event event;
@@ -144,7 +144,7 @@ public class TaskData implements Serializable {
 
     }
 
-    // @author a0105886W
+    //@author a0105886W
     public ArrayList<Integer> getDoneIds(ArrayList<Integer> doneIds)
             throws NoSuchElementException {
         Event event;
@@ -167,7 +167,7 @@ public class TaskData implements Serializable {
         return doneIds;
     }
 
-    // @author A0105886W
+    //@author A0105886W
     public ArrayList<Integer> getFloatingIds(ArrayList<Integer> floatingIds)
             throws NoSuchElementException {
         Event event;
@@ -193,7 +193,7 @@ public class TaskData implements Serializable {
 
     }
 
-    // @author A0105886
+    //@author A0105886
     public ArrayList<Integer> getDateTasks(Date date) throws NoSuchElementException {
         Calendar cal = Calendar.getInstance();
         ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
@@ -236,7 +236,7 @@ public class TaskData implements Serializable {
         return rangeTaskIds;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public List<Event> getTaskInDateRange(Calendar startTime, Calendar endTime,
             boolean isDueDate) {
         Stream<Event> eventStream = eventMap.values().stream();
@@ -247,7 +247,7 @@ public class TaskData implements Serializable {
         return selectedList;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public List<Event> getOverdueTask() {
         List<Event> selectedList = eventMap.values().stream()
                 .filter(getOverduePredicate()).filter(getIsDonePredicate(false))
@@ -297,7 +297,7 @@ public class TaskData implements Serializable {
         return predicate;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     private Predicate<Event> getOverduePredicate() {
         Calendar currentTime = Calendar.getInstance();
 
@@ -309,12 +309,12 @@ public class TaskData implements Serializable {
         return predicate;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     private Predicate<Event> getIsDonePredicate(boolean isDone) {
         return (event -> (event.isDone() == isDone));
     }
 
-    // @author A0134704M
+    //@author A0134704M
     private Comparator<? super Event> getDateComparator(boolean isDueDate) {
         return (e1, e2) -> {
             Calendar e1Time;
@@ -347,7 +347,7 @@ public class TaskData implements Serializable {
         };
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public List<Integer> getTaskWithinDateRange(Calendar startTime, Calendar endTime,
             boolean isDueDate, TaskType type) {
         ArrayList<Integer> taskIds = new ArrayList<Integer>();
@@ -371,7 +371,7 @@ public class TaskData implements Serializable {
         return taskIds;
     }
 
-    // @author A0105886W
+    //@author A0105886W
     public ArrayList<Integer> searchEmptySlots(Date parsedDateStart, Date parsedDateEnd)
             throws NoSuchElementException {
         ArrayList<Integer> rangeTaskIds = new ArrayList<Integer>();
@@ -402,7 +402,7 @@ public class TaskData implements Serializable {
         return sortedTaskIds;
     }
 
-    // @author A0105886W
+    //@author A0105886W
     public void sortDatesIncreasingOrder(ArrayList<Integer> rangeTaskIds) {
         int limit;
         int size = rangeTaskIds.size();
@@ -425,7 +425,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    // @author A0105886W
+    //@author A0105886W
     public ArrayList<Integer> processCommonDateTimes(ArrayList<Integer> rangeTaskIds) {
         ArrayList<Integer> tempArrayIds = new ArrayList<Integer>();
         ArrayList<Integer> sortedArrayIds = new ArrayList<Integer>();
@@ -466,7 +466,7 @@ public class TaskData implements Serializable {
         return sortedArrayIds;
     }
 
-    // @author A0105886W
+    //@author A0105886W
     public void sortTimeIncreasingOrder(ArrayList<Integer> rangeTaskIds) {
         int i;
         int limit;
@@ -490,7 +490,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public ArrayList<Integer> searchByKeyword(String keyword)
             throws NoSuchElementException {
         ArrayList<Integer> matchedTaskIds = new ArrayList<Integer>();
@@ -502,7 +502,7 @@ public class TaskData implements Serializable {
         return matchedTaskIds;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     private ArrayList<Integer> findMatchedIds(String keyword,
             ArrayList<Integer> matchedTaskIds) {
         for (Integer taskId : this.eventMap.keySet()) {
@@ -519,7 +519,7 @@ public class TaskData implements Serializable {
         return matchedTaskIds;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public int getActualId(int displayId) throws NoSuchElementException {
         Integer actualId = this.displayIDToActualIDMap.get(displayId);
 
@@ -530,7 +530,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public int getDisplayId(int actualId) throws NoSuchElementException {
         Integer displayId = this.actualIDToDisplayIDMap.get(actualId);
 
@@ -541,7 +541,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public void updateDisplayID(List<Integer> actualIDs) {
         int displayID = 1;
         this.displayIDToActualIDMap.clear();
@@ -554,7 +554,7 @@ public class TaskData implements Serializable {
         }
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public boolean hasKeyWord(Event event, String keyWord) {
 
         if (event == null || keyWord == null) {
@@ -583,17 +583,17 @@ public class TaskData implements Serializable {
         return false;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     public Map<Integer, Event> getEventMap() {
         return eventMap;
     }
 
-    // @author A0109239
+    //@author A0109239
     public void setEventMap(Map<Integer, Event> userEventMap) {
         this.eventMap = userEventMap;
     }
 
-    // @author A0134704M
+    //@author A0134704M
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof TaskData)) {

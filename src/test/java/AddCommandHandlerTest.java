@@ -31,7 +31,6 @@ public class AddCommandHandlerTest extends StringBasedTest {
         String actualTaskName = event.getTaskName();
         String actualTaskLocation = event.getTaskLocation();
         String actualTaskDescription = event.getTaskDescription();
-        Calendar actualTaskDate = event.getTaskDate();
         int actualTaskDuration = event.getTaskDuration();
         String actualPriority = event.getTaskPriority().toString().toLowerCase();
 
