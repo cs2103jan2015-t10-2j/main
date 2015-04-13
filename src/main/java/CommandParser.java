@@ -166,7 +166,7 @@ public class CommandParser {
             List<Entry<String, String>> entryList = new ArrayList<Entry<String, String>>();
             Map<String, String> dateTimeMap = new HashMap<String, String>();
 
-            entryList.add(new AbstractMap.SimpleEntry<String, String>(KEY_DUEDATE, due));
+            entryList.add(new AbstractMap.SimpleEntry<String, String>("", due));
             dateTimeMap.putAll(parseCommandSegment(patternDateCommand, dateGroups, entryList));
             logger.info(dateTimeMap.toString());
             
@@ -174,7 +174,9 @@ public class CommandParser {
             logger.info(dateTimeMap.toString());
             
             event.setTaskDueDate(getDateTime(dateTimeMap));
-            logger.info(event.getTaskDueDate().toString());
+            if (event.getTaskDueDate() != null) {
+                logger.info(event.getTaskDueDate().toString());                
+            }
         }
 
         String duration = taskDetailMap.remove(KEY_DURATION);

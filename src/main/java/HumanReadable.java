@@ -15,15 +15,15 @@ public class HumanReadable {
         }
     }
     
-    public static boolean setDetailsAllEvents(List<String[]> allEvents) {
+    public static TaskData setDetailsAllEvents(List<String[]> allEvents) {
         TaskData taskData = new TaskData();
         Map<Integer, Event> eventMap = taskData.getEventMap();
         try{
             eventMap = addEventsFromList(allEvents, eventMap);
             taskData.setEventMap(eventMap);
-            return true;
+            return taskData;
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
     
