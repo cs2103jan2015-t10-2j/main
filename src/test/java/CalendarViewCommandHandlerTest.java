@@ -116,9 +116,8 @@ public class CalendarViewCommandHandlerTest extends StringBasedTest {
         assertEquals("high", actualPriority);
     }
 
-    //@author A0134704M
+    //@author A0105886W
     @Test
-    // @author A0105886
     public void testExecuteCommand2() {
 
         super.executeCommand(validCommandAdd1);

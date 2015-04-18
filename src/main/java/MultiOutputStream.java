@@ -10,32 +10,32 @@ public class MultiOutputStream extends FilterOutputStream {
     private List<OutputStream> streams = new ArrayList<OutputStream>();
     private List<Boolean> autoFlushs = new ArrayList<Boolean>();
 
-    //@author A0134704M
+    //@author A0134704M-reused
     public MultiOutputStream(OutputStream out) {
         super(out);
         streams.add(out);
         autoFlushs.add(false);
     }
 
-    //@author A0134704M
+    //@author A0134704M-reused
     public MultiOutputStream(OutputStream out, boolean bAutoFlush) {
         super(out);
         streams.add(out);
         autoFlushs.add(bAutoFlush);
     }
 
-    //@author A0134704M
+    //@author A0134704M-reused
     public void addOutputStream(OutputStream out) {
         this.addOutputStream(out, false);
     }
 
-    //@author A0134704M
+    //@author A0134704M-reused
     public void addOutputStream(OutputStream out, boolean bAutoFlush) {
         streams.add(out);
         autoFlushs.add(bAutoFlush);
     }
 
-    //@author A0134704M
+    //@author A0134704M-reused
     @Override
     public void write(int b) throws IOException {
         for (int i = 0; i < streams.size(); i++) {
@@ -46,7 +46,7 @@ public class MultiOutputStream extends FilterOutputStream {
         }
     }
 
-    //@author A0134704M
+    //@author A0134704M-reused
     @Override
     public void write(byte[] data, int offset, int length) throws IOException {
         for (int i = 0; i < streams.size(); i++) {
@@ -57,7 +57,7 @@ public class MultiOutputStream extends FilterOutputStream {
         }
     }
 
-    //@author A0134704M
+    //@author A0134704M-reused
     @Override
     public void flush() throws IOException {
         Iterator<OutputStream> iterator = streams.iterator();
@@ -67,7 +67,7 @@ public class MultiOutputStream extends FilterOutputStream {
         }
     }
 
-    //@author A0134704M
+    //@author A0134704M-reused
     @Override
     public void close() throws IOException {
         Iterator<OutputStream> iterator = streams.iterator();
